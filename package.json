@@ -9,20 +9,23 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "test": "npm run test:fixtures",
-    "test:fixtures": "mocha test/fixtures/**/*.spec.js"
+    "test": "nyc mocha"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.2",
     "@types/node": "^10.3.2",
+    "@types/rimraf": "^2.0.2",
     "@types/yargs": "^11.0.0",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
     "rimraf": "^2.6.2",
     "sinon": "^6.0.0",
+    "ts-node": "^6.1.1",
     "typescript": "^2.9.1"
   },
   "dependencies": {

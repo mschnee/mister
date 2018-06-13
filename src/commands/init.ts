@@ -10,12 +10,9 @@ exports.builder = (yargs) => yargs;
  * create the .build/ folder
  * Create a package.json if it doesn't exist,
  * Create a .gitignore if it doesn't exist.
- * 
- * 
  */
 export function initCommand(argv:any) {
     const CWD = process.cwd();
-    console.log('init in', CWD)
     const PACKAGES_FILE = path.join(CWD, 'packages.json');
     const IGNORE_FILE = path.join(CWD, '.gitignore');
 
