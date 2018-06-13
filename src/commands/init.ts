@@ -32,7 +32,7 @@ export function initCommand(argv:any) {
 
 export function checkAndUpdateIgnoreFile(f: string) {
     const b = fs.readFileSync(f);
-    const hasBuildIgnore = b.toString().split('/n').some((line: string) => {
+    const hasBuildIgnore = b.toString().split('\n').some((line: string) => {
         if (line.trim() === '/.build') {
             return true;
         } else {
@@ -41,7 +41,6 @@ export function checkAndUpdateIgnoreFile(f: string) {
     });
 
     if (!hasBuildIgnore) {
-        b.write('\n/.build');
-        fs.writeFileSync(f, b);
+        fs.writeFileSync(f, Buffer.concat([b, new Buffer('\n/.mister')]));
     }
 }
