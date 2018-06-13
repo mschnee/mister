@@ -12,7 +12,7 @@ import * as spawn from 'cross-spawn';
 import { initCommand } from '../../../src/commands/init';
 
 const OCWD = process.cwd();
-const CWD = path.resolve(__dirname);
+const CWD = path.resolve(__dirname, 'fixtures', 'init');
 describe('Fixtures: Init' , () => {
     describe('empty-project', () => {
         const TDIR = path.join(CWD, 'empty-project');
