@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "commonjs",
+        "outDir": "dist"
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
