@@ -10,7 +10,9 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "nyc mocha",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "report": "npm run report:coveralls && npm run report:codeclimate",
+    "report:coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "report:codeclimate": "nyc report --reporter=text-lcov | codeclimate-test-reporter"
   },
   "keywords": [],
   "author": "",

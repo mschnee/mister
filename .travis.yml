@@ -13,4 +13,5 @@ script:
   - npm test
   - npm run build
 after_success:
-  - npm run report-coverage
+  - npm run report:coveralls
+  - npm run report:codeclimate
