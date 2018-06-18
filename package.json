@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [],
   "author": "",
