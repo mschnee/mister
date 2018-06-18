@@ -67,6 +67,9 @@ export function isPackageUpToDate(packageName: string) {
 
     return !filesToCheck.some(f => {
         const stat = fs.statSync(path.join(packagePath, f));
+        if (stat.isDirectory()) {
+            return false;
+        }
         if (stat.mtime >= lastBuildTime) {
             console.log(f, 'is out of date', stat.mtime, lastBuildTime)
             return true;
