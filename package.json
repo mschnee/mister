@@ -11,7 +11,8 @@
     "build": "tsc -p .",
     "test": "nyc mocha",
     "report": "npm run report:coveralls && npm run report:codeclimate",
-    "report:coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "report:coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "tslint -p ."
   },
   "keywords": [],
   "author": "",
@@ -30,6 +31,7 @@
     "rimraf": "^2.6.2",
     "sinon": "^6.0.0",
     "ts-node": "^6.1.1",
+    "tslint": "^5.10.0",
     "typescript": "^2.9.1"
   },
   "dependencies": {

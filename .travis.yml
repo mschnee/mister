@@ -15,6 +15,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - npm test
+  - npm run lint
   - npm run build
 after_script:
   - npm run report:coveralls

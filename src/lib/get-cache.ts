@@ -1,20 +1,23 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-let _cache = null;
+let buildCache = null;
+
 export default function getCache() {
     const CACHE_DIR = path.join(process.cwd(), '.mister');
     const buildFile = path.join(CACHE_DIR, 'build.json');
-    if (!_cache) {
+
+    if (!buildCache) {
         try {
             if (fs.existsSync(buildFile)) {
-                _cache = JSON.parse(fs.readFileSync(buildFile, 'utf8'));
+                buildCache = JSON.parse(fs.readFileSync(buildFile, 'utf8'));
             } else {
-                _cache = {};
+                buildCache = {};
             }
         } catch (e) {
-            _cache = {};
+            buildCache = {};
         }
-    } 
-    return _cache;
+    }
+
+    return buildCache;
 }

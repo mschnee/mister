@@ -6,12 +6,12 @@ exports.describe = 'Initializes the files/directories that mister requires';
 exports.handler = initCommand;
 exports.builder = (yargs) => yargs;
  /**
- * Initializes mister in the current directory:
- * create the .build/ folder
- * Create a package.json if it doesn't exist,
- * Create a .gitignore if it doesn't exist.
- */
-export function initCommand(argv:any) {
+  * Initializes mister in the current directory:
+  * create the .build/ folder
+  * Create a package.json if it doesn't exist,
+  * Create a .gitignore if it doesn't exist.
+  */
+export function initCommand(argv: any) {
     const CWD = process.cwd();
     const PACKAGES_FILE = path.join(CWD, 'packages.json');
     const IGNORE_FILE = path.join(CWD, '.gitignore');
