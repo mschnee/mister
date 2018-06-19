@@ -18,4 +18,4 @@ script:
   - npm run build
 after_script:
   - npm run report:coveralls
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -t lcov
