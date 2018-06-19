@@ -11,8 +11,7 @@
     "build": "tsc -p .",
     "test": "nyc mocha",
     "report": "npm run report:coveralls && npm run report:codeclimate",
-    "report:coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "report:codeclimate": "nyc report --reporter=text-lcov | codeclimate-test-reporter"
+    "report:coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +23,6 @@
     "@types/rimraf": "^2.0.2",
     "@types/yargs": "^11.0.0",
     "chai": "^4.1.2",
-    "codeclimate-test-reporter": "^0.5.0",
     "coveralls": "^3.0.1",
     "mocha": "^5.2.0",
     "mock-fs": "^4.5.0",
