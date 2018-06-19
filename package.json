@@ -10,8 +10,6 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "nyc mocha",
-    "report": "npm run report:coveralls && npm run report:codeclimate",
-    "report:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "tslint -p ."
   },
   "keywords": [],
@@ -24,7 +22,6 @@
     "@types/rimraf": "^2.0.2",
     "@types/yargs": "^11.0.0",
     "chai": "^4.1.2",
-    "coveralls": "^3.0.1",
     "mocha": "^5.2.0",
     "mock-fs": "^4.5.0",
     "nyc": "^12.0.2",
@@ -35,6 +32,7 @@
     "typescript": "^2.9.1"
   },
   "dependencies": {
+    "codecov": "^3.0.2",
     "cross-spawn": "^6.0.5",
     "glob": "^7.1.2",
     "glob-gitignore": "^1.0.6",
