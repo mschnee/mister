@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+
 import * as nodeGlob from 'glob';
 import * as filteredGlob from 'glob-gitignore';
 
@@ -18,7 +19,7 @@ export function getLocalPackages() {
     // CWD needs to be scoped because mister frequently changes directories.
     const PWD = process.cwd();
     if (!localPackages) {
-        const pdir = path.join(PWD, PACKAGE_DIR)
+        const pdir = path.join(PWD, PACKAGE_DIR);
         const tlPackages = nodeGlob
             .sync('*', {cwd: pdir})
             .filter((m: string) => m.substring(0, 1) !== '@');
@@ -41,11 +42,10 @@ export function arePackageDependenciesUpToDate(packageName: string) {
 export function isPackageUpToDate(packageName: string) {
     const cache = getCache();
     if (
-        !cache.hasOwnProperty('packages') 
+        !cache.hasOwnProperty('packages')
         || !cache.packages.hasOwnProperty(packageName)
         || !cache.packages[packageName].hasOwnProperty('lastBuildTime')
     ) {
-        console.log("missing something")
         return false;
     }
 
@@ -62,20 +62,19 @@ export function isPackageUpToDate(packageName: string) {
 
     const filesToCheck: string[] = filteredGlob.sync('**', {
         cwd: packagePath,
-        ignore
+        ignore,
     });
 
-    return !filesToCheck.some(f => {
+    return !filesToCheck.some((f) => {
         const stat = fs.statSync(path.join(packagePath, f));
         if (stat.isDirectory()) {
             return false;
         }
         if (stat.mtime >= lastBuildTime) {
-            console.log(f, 'is out of date', stat.mtime, lastBuildTime)
+            // console.log(f, 'is out of date', stat.mtime, lastBuildTime);
             return true;
         } else {
             return false;
         }
     });
 }
-
