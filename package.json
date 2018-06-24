@@ -17,6 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.1.4",
+    "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^5.2.3",
     "@types/node": "^10.3.5",
     "@types/rimraf": "^2.0.2",
