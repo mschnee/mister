@@ -10,7 +10,9 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "nyc mocha",
-    "lint": "tslint -p ."
+    "lint": "tslint -p .",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +38,8 @@
     "cross-spawn": "^6.0.5",
     "glob": "^7.1.2",
     "glob-gitignore": "^1.0.6",
-    "yargs": "^11.0.0"
-  }
+    "yargs": "^11.0.0",
+    "snyk": "^1.88.1"
+  },
+  "snyk": true
 }
