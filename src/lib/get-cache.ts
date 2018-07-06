@@ -3,7 +3,21 @@ import * as path from 'path';
 
 let buildCache = null;
 
-export default function getCache() {
+export interface BuildCache {
+    packages: {
+        [packageName: string]: BuildCacheEntry;
+    };
+}
+
+export interface BuildCacheEntry {
+    lastBuildTime: Date;
+    lastPackageTime?: Date;
+    dependencies?: {
+        [packageName: string]: Date;
+    };
+}
+
+export default function getCache(): BuildCache {
     const CACHE_DIR = path.join(process.cwd(), '.mister');
     const buildFile = path.join(CACHE_DIR, 'build.json');
 

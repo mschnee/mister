@@ -4,7 +4,11 @@ import * as path from 'path';
 import * as nodeGlob from 'glob';
 import * as filteredGlob from 'glob-gitignore';
 
+import cacheBuildTimestampExists from '../cache-entry-exists';
 import getCache from '../get-cache';
+
+import * as debug from 'debug';
+const cacheDebugger = debug('mister:cache');
 
 // The legit CWD
 const OCWD = process.cwd();
@@ -41,11 +45,7 @@ export function arePackageDependenciesUpToDate(packageName: string) {
  */
 export function isPackageUpToDate(packageName: string) {
     const cache = getCache();
-    if (
-        !cache.hasOwnProperty('packages')
-        || !cache.packages.hasOwnProperty(packageName)
-        || !cache.packages[packageName].hasOwnProperty('lastBuildTime')
-    ) {
+    if (!cacheBuildTimestampExists(cache, packageName)) {
         return false;
     }
 
@@ -71,7 +71,7 @@ export function isPackageUpToDate(packageName: string) {
             return false;
         }
         if (stat.mtime >= lastBuildTime) {
-            // console.log(f, 'is out of date', stat.mtime, lastBuildTime);
+            cacheDebugger(f, 'is out of date', stat.mtime, lastBuildTime);
             return true;
         } else {
             return false;

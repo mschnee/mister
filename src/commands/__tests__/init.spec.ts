@@ -2,12 +2,11 @@
  * Init fixture tests
  */
 
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 
 import * as chai from 'chai';
 import * as rimraf from 'rimraf';
-import * as spawn from 'cross-spawn';
 
 import { initCommand } from '../../../src/commands/init';
 
@@ -20,13 +19,13 @@ describe('Fixtures: Init' , () => {
         before(() => {
             process.chdir(TDIR);
         });
-        
+
         after(() => {
             rimraf.sync(path.join(TDIR, 'packages.json'));
             rimraf.sync(path.join(TDIR, '.gitignore'));
             rimraf.sync(path.join(TDIR, '.mister'));
             process.chdir(OCWD);
-            
+
         });
         it('should create the missing files and directories', () => {
             initCommand(null);
@@ -60,8 +59,8 @@ describe('Fixtures: Init' , () => {
             chai.expect(testArr.length).to.equal(3);
 
             ['/dist', '/node_modules', '/.mister'].forEach( (k, index) => {
-                chai.expect(testArr[index]).to.equal(k)
-            })
+                chai.expect(testArr[index]).to.equal(k);
+            });
 
             chai.expect(fs.existsSync(path.join(TDIR, 'packages.json'))).to.be.true;
         });
@@ -70,14 +69,13 @@ describe('Fixtures: Init' , () => {
     describe('existing-gitignore-with-dotfolder', () => {
         const TDIR = path.join(CWD, 'existing-gitignore-with-dotfolder');
         const origGitignore = fs.readFileSync(path.join(TDIR, '.gitignore'));
-        
+
         before(() => {
             process.chdir(TDIR);
         });
         after(() => {
             process.chdir(OCWD);
         });
-
 
         it('should not modify anything', () => {
             initCommand(null);

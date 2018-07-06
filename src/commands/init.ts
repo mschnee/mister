@@ -1,10 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { Argv } from 'yargs';
 
 exports.command = 'init';
 exports.describe = 'Initializes the files/directories that mister requires';
 exports.handler = initCommand;
-exports.builder = (yargs) => yargs;
+exports.builder = (yargs: Argv) => yargs;
+
  /**
   * Initializes mister in the current directory:
   * create the .build/ folder
