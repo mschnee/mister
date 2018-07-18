@@ -1,7 +1,10 @@
-import * as mockFs from 'mock-fs';
+/* tslint:disable: no-unused-expression */
 import * as fs from 'fs';
-import { expect } from 'chai';
 import * as path from 'path';
+
+import { expect } from 'chai';
+import * as mockFs from 'mock-fs';
+
 import { getLocalPackages, isPackageUpToDate } from '../cache';
 
 const OCWD = process.cwd();
@@ -21,28 +24,28 @@ describe('cache', () => {
         mockFs({
             [`.mister/build.json`]: buildjson,
             [tdir]: {
-                package1: {
-                    'old.js': mockFs.file({mtime: OLDTIME})
-                },
-                package2: {
-                    '.gitignore': '/ignored',
-                    ignored: {
-                        'index.js': mockFs.file({mtime: NEWTIME})
-                    }
-                },
                 '@test': {
                     package3: {
-                        'test.js': mockFs.file({mtime: NEWTIME})
+                        'test.js': mockFs.file({mtime: NEWTIME}),
                     },
                     package4: {
                         '.gitignore': '/ignored',
                         'fail.js': mockFs.file({mtime: NEWTIME}),
-                        ignored: {
-                            'index.js': mockFs.file({mtime: OLDTIME})
-                        }
-                    }
-                }
-            }
+                        'ignored': {
+                            'index.js': mockFs.file({mtime: OLDTIME}),
+                        },
+                    },
+                },
+                'package1': {
+                    'old.js': mockFs.file({mtime: OLDTIME}),
+                },
+                'package2': {
+                    '.gitignore': '/ignored',
+                    'ignored': {
+                        'index.js': mockFs.file({mtime: NEWTIME}),
+                    },
+                },
+            },
         }, null);
     });
     after(() => {
@@ -60,7 +63,7 @@ describe('cache', () => {
             expect(packageList.indexOf('@test/package4') >= 0);
         });
     });
-    
+
     describe('isPackageUpToDate()', () => {
         it('package1 should be up to date', () => {
             expect(isPackageUpToDate('package1')).to.be.true;
@@ -74,5 +77,5 @@ describe('cache', () => {
         it('package4 should be up to date', () => {
             expect(isPackageUpToDate('@test/package4')).to.be.false;
         });
-    })
+    });
 });

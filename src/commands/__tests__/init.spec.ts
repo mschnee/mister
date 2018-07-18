@@ -1,8 +1,6 @@
-/**
- * Init fixture tests
- */
-
+/* tslint:disable: no-unused-expression */
 import * as fs from 'fs';
+import { EOL } from 'os';
 import * as path from 'path';
 
 import * as chai from 'chai';
@@ -55,7 +53,7 @@ describe('Fixtures: Init' , () => {
 
             const newGitIgnore = fs.readFileSync(path.join(TDIR, '.gitignore'));
             chai.expect(newGitIgnore).to.not.equal(origGitignore);
-            const testArr = newGitIgnore.toString().split('\n');
+            const testArr = newGitIgnore.toString().split(EOL);
             chai.expect(testArr.length).to.equal(3);
 
             ['/dist', '/node_modules', '/.mister'].forEach( (k, index) => {

@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { EOL } from 'os';
 import * as path from 'path';
 
 import * as nodeGlob from 'glob';
@@ -46,6 +47,7 @@ export function arePackageDependenciesUpToDate(packageName: string) {
 export function isPackageUpToDate(packageName: string) {
     const cache = getCache();
     if (!cacheBuildTimestampExists(cache, packageName)) {
+        cacheDebugger(packageName, 'has no build timestamp');
         return false;
     }
 
@@ -57,7 +59,7 @@ export function isPackageUpToDate(packageName: string) {
 
     let ignore = [];
     if (fs.existsSync(gitIgnoreFile)) {
-        ignore = fs.readFileSync(gitIgnoreFile, 'utf8').split('\n');
+        ignore = fs.readFileSync(gitIgnoreFile, 'utf8').split(EOL);
     }
 
     const filesToCheck: string[] = filteredGlob.sync('**', {

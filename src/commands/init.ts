@@ -1,5 +1,7 @@
 import * as fs from 'fs';
+import { EOL } from 'os';
 import * as path from 'path';
+
 import { Argv } from 'yargs';
 
 exports.command = 'init';
@@ -31,7 +33,7 @@ export function initCommand(argv: any) {
 
 export function checkAndUpdateIgnoreFile(f: string) {
     const b = fs.readFileSync(f);
-    const hasBuildIgnore = b.toString().split('\n').some((line: string) => {
+    const hasBuildIgnore = b.toString().split(EOL).some((line: string) => {
         if (line.trim() === '/.build') {
             return true;
         } else {
@@ -40,6 +42,6 @@ export function checkAndUpdateIgnoreFile(f: string) {
     });
 
     if (!hasBuildIgnore) {
-        fs.writeFileSync(f, Buffer.concat([b, new Buffer('\n/.mister')]));
+        fs.writeFileSync(f, Buffer.concat([b, new Buffer(`${EOL}/.mister`)]));
     }
 }
