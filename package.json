@@ -8,7 +8,7 @@
     "mr": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsc -p .",
+    "build": "rimraf dist && tsc -p .",
     "test": "nyc mocha",
     "lint": "tslint -p ."
   },

@@ -5,7 +5,7 @@ import * as path from 'path';
 import { expect } from 'chai';
 import * as mockFs from 'mock-fs';
 
-import { getLocalPackages, isPackageUpToDate } from '../cache';
+import { getLocalPackages, getMatchingLocalPackages, isPackageUpToDate } from '../cache';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixtures');
@@ -61,6 +61,20 @@ describe('cache', () => {
             expect(packageList.indexOf('package2') >= 0);
             expect(packageList.indexOf('@test/package3') >= 0);
             expect(packageList.indexOf('@test/package4') >= 0);
+        });
+    });
+
+    describe('getMatchingLocalPackages()', () => {
+        it('with no params, should return nothing', () => {
+            const plist1 = getMatchingLocalPackages();
+            expect(plist1.length).to.equal(0);
+        });
+        it('Should return an in-order list of packages, filtered by params', () => {
+            const plist1 = getMatchingLocalPackages(['@test/package3', 'package1']);
+            expect(plist1.length).to.equal(2);
+            expect(plist1[0]).to.equal('package1');
+            expect(plist1[1]).to.equal('@test/package3');
+            expect(plist1[2]).to.be.undefined;
         });
     });
 

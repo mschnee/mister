@@ -6,11 +6,11 @@ import * as path from 'path';
 import * as chai from 'chai';
 import * as rimraf from 'rimraf';
 
-import { initCommand } from '../../../src/commands/init';
+import { initCommand } from '../../init';
 
 const OCWD = process.cwd();
-const CWD = path.resolve(__dirname, 'fixtures', 'init');
-describe('Fixtures: Init' , () => {
+const CWD = path.resolve(__dirname, 'fixtures');
+describe('Command: init' , () => {
     describe('empty-project', () => {
         const TDIR = path.join(CWD, 'empty-project');
 
