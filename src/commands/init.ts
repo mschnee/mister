@@ -4,10 +4,10 @@ import * as path from 'path';
 
 import { Argv } from 'yargs';
 
-exports.command = 'init';
-exports.describe = 'Initializes the files/directories that mister requires';
-exports.handler = initCommand;
-exports.builder = (yargs: Argv) => yargs;
+export const command = 'init';
+export const describe = 'Initializes the files/directories that mister requires';
+export const handler = initCommand;
+export const builder = (yargs: Argv) => yargs.help();
 
  /**
   * Initializes mister in the current directory:

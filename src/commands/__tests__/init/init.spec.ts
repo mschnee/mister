@@ -23,11 +23,10 @@ describe('Command: init' , () => {
             rimraf.sync(path.join(TDIR, '.gitignore'));
             rimraf.sync(path.join(TDIR, '.mister'));
             process.chdir(OCWD);
-
         });
+
         it('should create the missing files and directories', () => {
             initCommand(null);
-
             chai.expect(fs.existsSync(path.join(TDIR, 'packages.json'))).to.be.true;
             chai.expect(fs.existsSync(path.join(TDIR, '.gitignore'))).to.be.true;
         });
