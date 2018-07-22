@@ -2,7 +2,9 @@
     "compilerOptions": {
         "target": "esnext",
         "module": "commonjs",
-        "outDir": "dist"
+        "outDir": "dist",
+        "esModuleInterop": false,
+        "allowSyntheticDefaultImports": false
     },
     "include": [
         "src/**/*.ts"

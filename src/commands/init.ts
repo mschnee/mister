@@ -1,10 +1,14 @@
 import * as fs from 'fs';
+import { EOL } from 'os';
 import * as path from 'path';
 
-exports.command = 'init';
-exports.describe = 'Initializes the files/directories that mister requires';
-exports.handler = initCommand;
-exports.builder = (yargs) => yargs;
+import { Argv } from 'yargs';
+
+export const command = 'init';
+export const describe = 'Initializes the files/directories that mister requires';
+export const handler = initCommand;
+export const builder = (yargs: Argv) => yargs.help();
+
  /**
   * Initializes mister in the current directory:
   * create the .build/ folder
@@ -29,7 +33,7 @@ export function initCommand(argv: any) {
 
 export function checkAndUpdateIgnoreFile(f: string) {
     const b = fs.readFileSync(f);
-    const hasBuildIgnore = b.toString().split('\n').some((line: string) => {
+    const hasBuildIgnore = b.toString().split(EOL).some((line: string) => {
         if (line.trim() === '/.build') {
             return true;
         } else {
@@ -38,6 +42,6 @@ export function checkAndUpdateIgnoreFile(f: string) {
     });
 
     if (!hasBuildIgnore) {
-        fs.writeFileSync(f, Buffer.concat([b, new Buffer('\n/.mister')]));
+        fs.writeFileSync(f, Buffer.concat([b, new Buffer(`${EOL}/.mister`)]));
     }
 }

@@ -1,36 +1,32 @@
-/**
- * Init fixture tests
- */
-
-import * as path from 'path';
+/* tslint:disable: no-unused-expression */
 import * as fs from 'fs';
+import { EOL } from 'os';
+import * as path from 'path';
 
 import * as chai from 'chai';
 import * as rimraf from 'rimraf';
-import * as spawn from 'cross-spawn';
 
-import { initCommand } from '../../../src/commands/init';
+import { initCommand } from '../../init';
 
 const OCWD = process.cwd();
-const CWD = path.resolve(__dirname, 'fixtures', 'init');
-describe('Fixtures: Init' , () => {
+const CWD = path.resolve(__dirname, 'fixtures');
+describe('Command: init' , () => {
     describe('empty-project', () => {
         const TDIR = path.join(CWD, 'empty-project');
 
         before(() => {
             process.chdir(TDIR);
         });
-        
+
         after(() => {
             rimraf.sync(path.join(TDIR, 'packages.json'));
             rimraf.sync(path.join(TDIR, '.gitignore'));
             rimraf.sync(path.join(TDIR, '.mister'));
             process.chdir(OCWD);
-            
         });
+
         it('should create the missing files and directories', () => {
             initCommand(null);
-
             chai.expect(fs.existsSync(path.join(TDIR, 'packages.json'))).to.be.true;
             chai.expect(fs.existsSync(path.join(TDIR, '.gitignore'))).to.be.true;
         });
@@ -56,12 +52,12 @@ describe('Fixtures: Init' , () => {
 
             const newGitIgnore = fs.readFileSync(path.join(TDIR, '.gitignore'));
             chai.expect(newGitIgnore).to.not.equal(origGitignore);
-            const testArr = newGitIgnore.toString().split('\n');
+            const testArr = newGitIgnore.toString().split(EOL);
             chai.expect(testArr.length).to.equal(3);
 
             ['/dist', '/node_modules', '/.mister'].forEach( (k, index) => {
-                chai.expect(testArr[index]).to.equal(k)
-            })
+                chai.expect(testArr[index]).to.equal(k);
+            });
 
             chai.expect(fs.existsSync(path.join(TDIR, 'packages.json'))).to.be.true;
         });
@@ -70,14 +66,13 @@ describe('Fixtures: Init' , () => {
     describe('existing-gitignore-with-dotfolder', () => {
         const TDIR = path.join(CWD, 'existing-gitignore-with-dotfolder');
         const origGitignore = fs.readFileSync(path.join(TDIR, '.gitignore'));
-        
+
         before(() => {
             process.chdir(TDIR);
         });
         after(() => {
             process.chdir(OCWD);
         });
-
 
         it('should not modify anything', () => {
             initCommand(null);
