@@ -1,12 +1,13 @@
 {
-  "name": "mister",
-  "version": "0.0.1",
+  "name": "@mschnee/mister",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "bin": {
-    "mister": "dist/cli.js",
-    "mr": "dist/cli.js"
+    "mister": "dist/cli.js"
   },
+  "repository": "github:mschnee/mister",
+  "homepage": "https://github.com/mschnee/mister",
   "scripts": {
     "build": "rimraf dist && tsc -p .",
     "test": "nyc mocha",
@@ -42,5 +43,10 @@
     "yargs": "^12.0.1",
     "snyk": "^1.88.1"
   },
+  "files": [
+    "dist/",
+    "package.json",
+    "README.md"
+  ],
   "snyk": true
 }
