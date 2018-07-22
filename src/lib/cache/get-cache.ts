@@ -39,3 +39,7 @@ export default function getCache(): BuildCache {
 
     return buildCache;
 }
+
+export function resetCache() {
+    buildCache = null;
+}

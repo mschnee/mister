@@ -5,12 +5,13 @@ import * as path from 'path';
 import { expect } from 'chai';
 import * as mockFs from 'mock-fs';
 
+import getCache, { resetCache } from '../get-cache';
 import getLocalPackages from '../get-local-packages';
 import getMatchingLocalPackages from '../get-matching-local-packages';
 import isPackageUpToDate from '../is-package-up-to-date';
 
 const OCWD = process.cwd();
-const CWD = path.resolve(__dirname, 'fixtures');
+const CWD = path.resolve(__dirname, 'fixture1');
 
 const OLDTIME = new Date('2018-06-14T19:34:42.887Z');
 const BUIDDATE = new Date('2018-06-15T19:34:42.887Z');
@@ -18,7 +19,7 @@ const NEWTIME = new Date('2018-06-16T19:34:42.887Z');
 /**
  * Because git cannot actually store mtimes, we have to stub fs.statSync.
  */
-describe('cache', () => {
+describe('cache functions', () => {
     before(() => {
         process.chdir(CWD);
         const tdir = path.join(CWD, 'packages/node_modules');
@@ -53,7 +54,14 @@ describe('cache', () => {
     after(() => {
         process.chdir(OCWD);
         mockFs.restore();
+        resetCache();
     });
+    describe('getCache()', () => {
+        it('should get the actual cache as mocked', () => {
+            expect (getCache().packages).to.not.be.undefined;
+        });
+    });
+
     describe('getLocalPackages()', () => {
 
         it('Should correctly list all the packages', () => {

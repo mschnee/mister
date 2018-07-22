@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import { EOL } from 'os';
 import * as path from 'path';
 
-import * as nodeGlob from 'glob';
 import * as filteredGlob from 'glob-gitignore';
 
 import cacheBuildTimestampExists from './cache-entry-exists';
