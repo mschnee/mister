@@ -10,7 +10,9 @@
   "scripts": {
     "build": "rimraf dist && tsc -p .",
     "test": "nyc mocha",
-    "lint": "tslint -p ."
+    "lint": "tslint -p .",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +39,8 @@
     "debug": "^3.1.0",
     "glob": "^7.1.2",
     "glob-gitignore": "^1.0.6",
-    "yargs": "^12.0.1"
-  }
+    "yargs": "^12.0.1",
+    "snyk": "^1.88.1"
+  },
+  "snyk": true
 }
