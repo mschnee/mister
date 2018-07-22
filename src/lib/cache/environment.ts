@@ -1,1 +1,1 @@
-export const PACKAGE_DIR =  'packages/node_modules';
+export const PACKAGE_DIR = 'packages/node_modules';
