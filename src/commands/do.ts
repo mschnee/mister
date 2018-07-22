@@ -1,8 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { Argv } from 'yargs';
 
-import { getMatchingLocalPackages } from '../lib/cache';
+import getMatchingLocalPackages from '../lib/cache/get-matching-local-packages';
 import doTask from '../lib/do-task';
 import getMatchingPackageTasks from '../lib/get-matching-package-tasks';
 
@@ -10,10 +8,11 @@ export const command = 'do [packages...]';
 export const describe = 'Runs npm tasks on packages';
 export const usage = 'mister do package1 package2 --tasks=clean test build';
 export const handler = doCommand;
+
 export const builder = (yargs: Argv) => yargs.option('v', {
     alias: 'verbose',
     count: true,
-    description: 'Verbose messaging',
+    description: 'Enable Verbose messaging.  Add another to see subcommand stdout.',
 }).option('t', {
     alias: ['task', 'tasks'],
     default: ['build'],

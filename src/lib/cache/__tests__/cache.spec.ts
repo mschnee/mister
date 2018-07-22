@@ -5,7 +5,9 @@ import * as path from 'path';
 import { expect } from 'chai';
 import * as mockFs from 'mock-fs';
 
-import { getLocalPackages, getMatchingLocalPackages, isPackageUpToDate } from '../cache';
+import getLocalPackages from '../get-local-packages';
+import getMatchingLocalPackages from '../get-matching-local-packages';
+import isPackageUpToDate from '../is-package-up-to-date';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixtures');
