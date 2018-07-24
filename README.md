@@ -53,10 +53,12 @@ To take advantage of not having multiple dependency versions, you'll want to ins
 
 ## How does this even work?
 
-It helps to read up on how [node resolves module names](https://nodejs.org/api/modules.html#modules_loading_from_node_modules_folders).  The TLDR version is that, given `require('module-name')`, node will essentially walk up the filesystem until it discoveres a path matching `node_modules/module-name`.  Using `package/node_modules` to structure your monorepository means you can leverage this to `require('your-monorepository-package')` from inside of any other monorepository package, and also let you `require('external-dependency')` installed to your top-level `node_modules` folder.
+It helps to read up on how [node resolves module names](https://nodejs.org/api/modules.html#modules_loading_from_node_modules_folders).  The TLDR version is that, given `require('module-name')`, node will essentially walk up the filesystem until it discoveres a path matching `node_modules/module-name`.
+
+Using `package/node_modules` to structure your monorepository means you can leverage this to `require('your-monorepository-package')` from inside of any other monorepository package, and also let you `require('external-dependency')` installed to your top-level `node_modules` folder.
 
 ## Caveats
-A number of modules, like `app-root-dir`, make assumptions about where they are located and can return incorrect path resuilts.
+A number of modules, like `app-root-dir`, make assumptions about where they are located and can return incorrect path results.
 
 Even worse, some like `uglifyjs-webpack-plugin` can break your builds because they will write files assuming they have ownership of the package-local `node_modules` entry, creating directories and files that don't actually exist, and breaking subsequent runs.
 
@@ -64,7 +66,7 @@ Given this simplified structure:
 ```sh
 .
 ├── node_modules
-│   └── uglifyjs-webpack-plugin         # The first time, require('glifyjs-webpack-plugin') resolves here
+│   └── uglifyjs-webpack-plugin         # The first time, require('uglifyjs-webpack-plugin') resolves here
 │       └── index.js
 └── packages
     └── node_modules
@@ -81,14 +83,17 @@ Running webpack will create the file `./packages/node_modules/monorepo-package/n
     └── node_modules
         └── monorepo-package
             └── node_modules
-                └── uglifyjs-webpack-plugin  # but require('glifyjs-webpack-plugin') will now resolve this!!
+                └── uglifyjs-webpack-plugin  # but require('uglifyjs-webpack-plugin') will now resolve this!!
                     └── .cache
 ```
 
 The next time you build, node will resolve `require('uglify-webpack-plugin')` to that that folder instead.  That folder only has the cache file, the require will throw an error, and your build will fail.
 
 # Features in Active Development
-- Use `.mister/build.json` to track which packages have been successfully built, so that larger projects with multiple packages don't have to rebuild them.  See [this issue](#1)
-- Create a `mister pack` command that honors `bundledDependencies`.  See [this issue](#2).
-- Create a `mister pack --type=zip` variant that can be used to create zip files that include shared packages for deployment in AWS Lambda.  See [this issue](#3).
+- Use `.mister/build.json` to track which packages have been successfully built, so that larger projects with multiple packages don't have to rebuild them.  See [this issue](https://github.com/mschnee/mister/issues/4)
+- Create a `mister pack` command that honors `bundledDependencies`.  See [this issue](https://github.com/mschnee/mister/issues/5).
+- Create a `mister pack --type=zip` variant that can be used to create zip files that include shared packages for deployment in AWS Lambda.  See [this issue](https://github.com/mschnee/mister/issues/6).
 - Get `mocha` + `ts-node` working for unit tests.
+
+# Thanks
+A huge thanks to [`@a-z`](https://www.npmjs.com/~a-z) for agreeing to free up the name `mister`.

@@ -7,3 +7,6 @@ First Published version.
 Known issues:
 - At runtime, some npm modules (such as `app-root-dir`) can get confused and return an incorrect path when a monorepo package is run via `mister`.
 - Some npm modules (such as `uglify-webpack-plugin`) assume ownership of a folder under package-local `node_modules`, can write files there, and break module resolution on subsequent commands.
+
+## 1.0.1
+- Spellcheck the `README.md`, and thank [`@a-z`](https://www.npmjs.com/~a-z) for being awesome and freeing up the name `mister`.
