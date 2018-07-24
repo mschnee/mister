@@ -91,3 +91,4 @@ The next time you build, node will resolve `require('uglify-webpack-plugin')` to
 - Use `.mister/build.json` to track which packages have been successfully built, so that larger projects with multiple packages don't have to rebuild them.  See [this issue](#1)
 - Create a `mister pack` command that honors `bundledDependencies`.  See [this issue](#2).
 - Create a `mister pack --type=zip` variant that can be used to create zip files that include shared packages for deployment in AWS Lambda.  See [this issue](#3).
+- Get `mocha` + `ts-node` working for unit tests.
