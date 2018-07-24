@@ -4,7 +4,8 @@
         "module": "commonjs",
         "outDir": "dist",
         "esModuleInterop": false,
-        "allowSyntheticDefaultImports": false
+        "allowSyntheticDefaultImports": false,
+        "declaration": true
     },
     "include": [
         "src/**/*.ts"
