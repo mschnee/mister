@@ -1,6 +1,6 @@
 {
-  "name": "@mschnee/mister",
-  "version": "0.1.0",
+  "name": "mister",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "bin": {

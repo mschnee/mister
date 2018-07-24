@@ -15,6 +15,8 @@ export default function doTask(argv: any, taskName: string, packageName: string)
     if (process.env.hasOwnProperty('PATH')) {
         spawnOptions.env.PATH = `${process.env.PATH}${path.delimiter}${localBin}`;
     }
+
+    // This sometimes happens on Windows:
     if (process.env.hasOwnProperty('Path')) {
         spawnOptions.env.Path = `${process.env.Path}${path.delimiter}${localBin}`;
     }
