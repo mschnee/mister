@@ -1,7 +1,7 @@
 # MonoRepository build tools
 
 [![Build Status](https://travis-ci.org/mschnee/mister.svg?branch=master)](https://travis-ci.org/mschnee/mister)
-[![Coverage Status](https://coveralls.io/repos/github/mschnee/mister/badge.svg)](https://coveralls.io/github/mschnee/mister)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/17d688f89336cb34595a/test_coverage)](https://codeclimate.com/github/mschnee/mister/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/17d688f89336cb34595a/maintainability)](https://codeclimate.com/github/mschnee/mister/maintainability)
 [![dependencies Status](https://david-dm.org/mschnee/mister/status.svg)](https://david-dm.org/mschnee/mister)
 [![devDependencies Status](https://david-dm.org/mschnee/mister/dev-status.svg)](https://david-dm.org/mschnee/mister?type=dev)
