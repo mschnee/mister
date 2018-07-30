@@ -63,32 +63,6 @@ describe('cache functions', () => {
         });
     });
 
-    describe('getLocalPackages()', () => {
-
-        it('Should correctly list all the packages', () => {
-            const packageList = getLocalPackages();
-            expect(packageList.length).to.equal(4);
-            expect(packageList.indexOf('package1') >= 0);
-            expect(packageList.indexOf('package2') >= 0);
-            expect(packageList.indexOf('@test/package3') >= 0);
-            expect(packageList.indexOf('@test/package4') >= 0);
-        });
-    });
-
-    describe('getMatchingLocalPackages()', () => {
-        it('with no params, should return nothing', () => {
-            const plist1 = getMatchingLocalPackages();
-            expect(plist1.length).to.equal(0);
-        });
-        it('Should return an in-order list of packages, filtered by params', () => {
-            const plist1 = getMatchingLocalPackages(['@test/package3', 'package1']);
-            expect(plist1.length).to.equal(2);
-            expect(plist1[0]).to.equal('package1');
-            expect(plist1[1]).to.equal('@test/package3');
-            expect(plist1[2]).to.be.undefined;
-        });
-    });
-
     describe('isPackageUpToDate()', () => {
         it('package1 should be up to date', () => {
             expect(isPackageUpToDate('package1')).to.be.true;

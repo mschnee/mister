@@ -23,3 +23,7 @@ export default function getLocalPackages() {
 
     return localPackages;
 }
+
+export function clearLocalPackages() {
+    localPackages = null;
+}

@@ -5,7 +5,7 @@ import getPackageLocalDependencies from '../package/get-package-local-dependenci
 
 let cachedDep;
 export default function getFullDependencyGraph() {
-    if (cachedDep) {
+    if (!cachedDep) {
         cachedDep = new DepGraph({circular: false});
 
         getLocalPackages().forEach((packageName) => {
