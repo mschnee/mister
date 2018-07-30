@@ -8,8 +8,8 @@ const CWD = path.resolve(__dirname, 'fixture');
 
 import { clearLocalPackages } from '../../package/get-local-packages';
 import getPackageLocalDependencies from '../../package/get-package-local-dependencies';
-import getFullDependencyGraph from '../get-full-dependency-graph';
 import getDependencyGraph from '../get-dependency-graph';
+import getFullDependencyGraph from '../get-full-dependency-graph';
 
 describe('dependencies' , () => {
     const TDIR = path.join(CWD);
