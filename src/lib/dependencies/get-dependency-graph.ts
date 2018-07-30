@@ -1,12 +1,11 @@
 import { DepGraph } from 'dependency-graph';
 
-import getLocalPackages from './cache/get-local-packages';
-import getPackageLocalDependencies from './get-package-local-dependencies';
+import getPackageLocalDependencies from '../package/get-package-local-dependencies';
 
-export default function getDependencyGraph() {
+export default function getDependencyGraph(packages: string[]) {
     const dep = new DepGraph({circular: false});
 
-    getLocalPackages().forEach((packageName) => {
+    packages.forEach((packageName) => {
         dep.addNode(packageName);
 
         getPackageLocalDependencies(packageName).forEach((d) => {

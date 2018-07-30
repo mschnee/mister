@@ -1,8 +1,8 @@
 import { Argv } from 'yargs';
 
-import getMatchingLocalPackages from '../lib/cache/get-matching-local-packages';
 import doTask from '../lib/do-task';
-import getMatchingPackageTasks from '../lib/get-matching-package-tasks';
+import getMatchingLocalPackages from '../lib/package/get-matching-local-packages';
+import getMatchingPackageTasks from '../lib/package/get-matching-package-tasks';
 
 export const command = 'do [packages...]';
 export const describe = 'Runs npm tasks on packages';

@@ -5,9 +5,10 @@ import * as path from 'path';
 import { expect } from 'chai';
 import * as mockFs from 'mock-fs';
 
+import getLocalPackages from '../../package/get-local-packages';
+import getMatchingLocalPackages from '../../package/get-matching-local-packages';
+
 import getCache, { resetCache } from '../get-cache';
-import getLocalPackages from '../get-local-packages';
-import getMatchingLocalPackages from '../get-matching-local-packages';
 import isPackageUpToDate from '../is-package-up-to-date';
 
 const OCWD = process.cwd();

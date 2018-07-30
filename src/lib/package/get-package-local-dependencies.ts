@@ -1,4 +1,4 @@
-import getLocalPackages from './cache/get-local-packages';
+import getLocalPackages from './get-local-packages';
 import getPackagePjson from './get-package-pjson';
 
 export default function getPackageLocalDependencies(packageName) {
