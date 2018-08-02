@@ -3,9 +3,10 @@ import { DepGraph } from 'dependency-graph';
 import getLocalPackages from '../package/get-local-packages';
 import getPackageLocalDependencies from '../package/get-package-local-dependencies';
 
+import { TEST_NO_CACHE } from '../environment';
 let cachedDep;
 export default function getFullDependencyGraph() {
-    if (!cachedDep) {
+    if (TEST_NO_CACHE || !cachedDep) {
         cachedDep = new DepGraph({circular: false});
 
         getLocalPackages().forEach((packageName) => {

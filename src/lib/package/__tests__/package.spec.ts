@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { expect } from 'chai';
 
-import getLocalPackages, { clearLocalPackages } from '../get-local-packages';
+import getLocalPackages from '../get-local-packages';
 import getMatchingLocalPackages from '../get-matching-local-packages';
 
 const OCWD = process.cwd();
@@ -14,11 +14,9 @@ const CWD = path.resolve(__dirname, 'fixture1');
  */
 describe('package functions', () => {
     before(() => {
-        clearLocalPackages();
         process.chdir(CWD);
     });
     after(() => {
-        clearLocalPackages();
         process.chdir(OCWD);
     });
 

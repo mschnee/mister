@@ -13,8 +13,12 @@ const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixtures');
 describe('command: do --dependencies' , () => {
     const TDIR = path.join(CWD);
-    before(() => process.chdir(TDIR));
-    after(() => process.chdir(OCWD));
+    before(() => {
+        process.chdir(TDIR);
+    });
+    after(() => {
+        process.chdir(OCWD);
+    });
 
     it('runs with dependencies', () => {
         const spy = sinon.spy(doTask, 'default');

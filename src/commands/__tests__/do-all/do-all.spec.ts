@@ -13,8 +13,12 @@ const CWD = path.resolve(__dirname, 'fixtures');
 
 describe('command: do-all' , () => {
     const TDIR = path.join(CWD);
-    before(() => process.chdir(TDIR));
-    after(() => process.chdir(OCWD));
+    before(() => {
+        process.chdir(TDIR);
+    });
+    after(() => {
+        process.chdir(OCWD);
+    });
 
     it('runs two commands', () => {
         const spy = sinon.spy(doTask, 'default');
