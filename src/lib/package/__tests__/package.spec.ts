@@ -5,6 +5,7 @@ import { expect } from 'chai';
 
 import getLocalPackages from '../get-local-packages';
 import getMatchingLocalPackages from '../get-matching-local-packages';
+import getPackagesForArgs from '../get-packages-for-argv';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixture1');
@@ -42,6 +43,25 @@ describe('package functions', () => {
             expect(plist1[0]).to.equal('package1');
             expect(plist1[1]).to.equal('@test/package3');
             expect(plist1[2]).to.be.undefined;
+        });
+    });
+
+    describe('getPackagesForArgs()', () => {
+        it('with no params, should throw', () => {
+            expect(getPackagesForArgs).to.throw();
+        });
+        it('with argv.all should return all packages', () => {
+            const packageList = getPackagesForArgs({all: true});
+            expect(packageList.length).to.equal(4);
+            expect(packageList.indexOf('package1') >= 0);
+            expect(packageList.indexOf('package2') >= 0);
+            expect(packageList.indexOf('@test/package3') >= 0);
+            expect(packageList.indexOf('@test/package4') >= 0);
+        });
+        it('with argv.packages should return matching packages', () => {
+            const packageList = getPackagesForArgs({packages: ['not-real-package', 'package1']});
+            expect(packageList.length).to.equal(1);
+            expect(packageList.indexOf('package1') >= 0);
         });
     });
 });
