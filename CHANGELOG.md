@@ -10,3 +10,7 @@ Known issues:
 
 ## 1.0.1
 - Spellcheck the `README.md`, and thank [`@a-z`](https://www.npmjs.com/~a-z) for being awesome and freeing up the name `mister`.
+
+## 1.0.2
+- Updates [README](./README.md) with a ts-node solution.
+- Pipe sub-process output to stdout/stderr instead of `console.log`
