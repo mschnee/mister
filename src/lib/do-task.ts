@@ -21,9 +21,5 @@ export default function doTask(argv: any, taskName: string, packageName: string)
         spawnOptions.env.Path = `${process.env.Path}${path.delimiter}${localBin}`;
     }
 
-    if (argv.stdio) {
-        spawnOptions.stdio = 'inherit';
-    }
-
     return runProcess('npm', ['run', taskName], spawnOptions, !!argv.verbose);
 }

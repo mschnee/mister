@@ -1,15 +1,13 @@
 import { Argv } from 'yargs';
 
-import getDependencyGraph from '../lib/dependencies/get-dependency-graph';
-import doTask from '../lib/do-task';
+import getFullDependencyGraph from '../lib/dependencies/get-full-dependency-graph';
+import doTaskOnReducer from '../lib/do-task-reducer';
 import getLocalPackages from '../lib/package/get-local-packages';
-import getMatchingLocalPackages from '../lib/package/get-matching-local-packages';
-import getMatchingPackageTasks from '../lib/package/get-matching-package-tasks';
 
 export const command = 'do-all [tasks...]';
-export const describe = 'Runs npm tasks on all';
+export const describe = 'Runs npm tasks on all packages';
 export const usage = 'mister do-all clean test build';
-export const handler = doCommand;
+export const handler = doAllCommand;
 
 export const builder = (yargs: Argv) => yargs.option('v', {
     alias: 'verbose',
@@ -20,3 +18,24 @@ export const builder = (yargs: Argv) => yargs.option('v', {
     default: false,
     type: 'boolean',
 }).help();
+
+export function doAllCommand(argv) {
+    if (argv['with-dependencies']) {
+        return doCommandWithDependencies(argv);
+    } else {
+        return doCommandWithoutDependencies(argv);
+    }
+}
+
+export function doCommandWithoutDependencies(argv) {
+    const reduceFn = doTaskOnReducer.bind(this, argv);
+    return getLocalPackages()
+        .reduce(reduceFn, Promise.resolve());
+}
+
+export function doCommandWithDependencies(argv) {
+    const reduceFn = doTaskOnReducer.bind(this, argv);
+    return getFullDependencyGraph()
+        .overallOrder()
+        .reduce(reduceFn, Promise.resolve());
+}
