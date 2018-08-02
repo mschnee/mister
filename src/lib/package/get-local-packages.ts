@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as nodeGlob from 'glob';
 
 // This may eventually be configurable.
-import { TEST_NO_CACHE, PACKAGE_DIR } from '../environment';
+import { PACKAGE_DIR, TEST_NO_CACHE } from '../environment';
 
 // This will be the packages on disk.
 let localPackages: string[];
