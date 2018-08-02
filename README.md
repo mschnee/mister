@@ -47,6 +47,42 @@ Now, you can have `mister do` some things for you:
 mister do @scope/package4 --tasks clean test build
 ```
 
+## Reference
+### [do](#do)
+Usage
+```
+mister do [packages...] --tasks [tasks...] (--verbose) (--all) (--dependencies)
+```
+
+#### --tasks (required)
+
+Runs matching tasks on matching packages.  In this example, `clean`, `test`, and `build` in that order.
+```
+mister do package1 @scope/package2 --tasks clean test build
+```
+
+
+#### --dependencies
+
+Runs matching tasks on package1 and all of its local dependencies, in dependent order.
+```
+mister do package1 --dependencies --tasks clean test build
+```
+
+
+#### --all
+Runs matching tasks on all packages in dependent order.
+```
+mister do --all --tasks clean test build
+```
+
+### [do-all](#do-all)
+Usage
+```
+mister do-all clean test build
+```
+Synonymous to `mister do --all --tasks clean test build`.  Packages are run in dependent order.
+
 ## Any other recommendations?
 
 To take advantage of not having multiple dependency versions, you'll want to install all your dependencies at the top level (but you will still need to reference those dependencies in the `package.json` files of your packages).  *But you don't have to do that if you don't want to*.  Managing your dependencies is up to you ;)
@@ -93,7 +129,6 @@ The next time you build, node will resolve `require('uglify-webpack-plugin')` to
 - Use `.mister/build.json` to track which packages have been successfully built, so that larger projects with multiple packages don't have to rebuild them.  See [this issue](https://github.com/mschnee/mister/issues/4)
 - Create a `mister pack` command that honors `bundledDependencies`.  See [this issue](https://github.com/mschnee/mister/issues/5).
 - Create a `mister pack --type=zip` variant that can be used to create zip files that include shared packages for deployment in AWS Lambda.  See [this issue](https://github.com/mschnee/mister/issues/6).
-- Get `mocha` + `ts-node` working for unit tests.
 
 # Thanks
 A huge thanks to [`@a-z`](https://www.npmjs.com/~a-z) for agreeing to free up the name `mister`.

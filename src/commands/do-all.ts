@@ -13,27 +13,9 @@ export const builder = (yargs: Argv) => yargs.option('v', {
     alias: 'verbose',
     count: true,
     description: 'Enable Verbose messaging.  Add another to see subcommand stdout.',
-}).option('with-dependencies', {
-    alias: ['d'],
-    default: false,
-    type: 'boolean',
 }).help();
 
 export function doAllCommand(argv) {
-    if (argv['with-dependencies']) {
-        return doCommandWithDependencies(argv);
-    } else {
-        return doCommandWithoutDependencies(argv);
-    }
-}
-
-export function doCommandWithoutDependencies(argv) {
-    const reduceFn = doTaskOnReducer.bind(this, argv);
-    return getLocalPackages()
-        .reduce(reduceFn, Promise.resolve());
-}
-
-export function doCommandWithDependencies(argv) {
     const reduceFn = doTaskOnReducer.bind(this, argv);
     return getFullDependencyGraph()
         .overallOrder()
