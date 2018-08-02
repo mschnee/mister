@@ -1,9 +1,8 @@
 import { Argv } from 'yargs';
 
 import getDependencyGraph from '../lib/dependencies/get-dependency-graph';
-import doTask from '../lib/do-task';
-import getMatchingLocalPackages from '../lib/package/get-matching-local-packages';
-import getMatchingPackageTasks from '../lib/package/get-matching-package-tasks';
+import doTaskOnReducer from '../lib/do-task-reducer';
+import getPackagesForArgs from '../lib/package/get-packages-for-argv';
 
 export const command = 'do [packages...]';
 export const describe = 'Runs npm tasks on packages';
@@ -14,6 +13,10 @@ export const builder = (yargs: Argv) => yargs.option('v', {
     alias: 'verbose',
     count: true,
     description: 'Enable Verbose messaging.  Add another to see subcommand stdout.',
+}).option('all', {
+    default: false,
+    description: 'Run tasks on all packages',
+    type: 'boolean',
 }).option('tasks', {
     alias: ['task', 't'],
     default: ['build'],
@@ -34,20 +37,13 @@ export function doCommand(argv) {
 
 export function doCommandWithoutDependencies(argv) {
     const reduceFn = doTaskOnReducer.bind(this, argv);
-    return getMatchingLocalPackages(argv.packages)
+    return getPackagesForArgs(argv)
         .reduce(reduceFn, Promise.resolve());
 }
 
 export function doCommandWithDependencies(argv) {
     const reduceFn = doTaskOnReducer.bind(this, argv);
-    return getDependencyGraph(getMatchingLocalPackages(argv.packages))
+    return getDependencyGraph(getPackagesForArgs(argv))
         .overallOrder()
         .reduce(reduceFn, Promise.resolve());
-}
-
-function doTaskOnReducer(argv, accum, packageName) {
-    return getMatchingPackageTasks(packageName, argv.tasks).reduce((a, task) => {
-        a.then( () => doTask(argv, task, packageName));
-        return a;
-    }, accum);
 }
