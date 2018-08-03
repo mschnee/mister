@@ -48,6 +48,51 @@ mister do @scope/package4 --tasks clean test build
 ```
 
 ## Reference
+<table>
+    <thead>
+        <th colspan="3">do</th>
+    </thead>
+    <tr>
+        <td colspan="3">
+            <pre>mister do [packages...] --tasks [tasks...] <options></pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Required</td>
+        <td/>
+        <td/>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--tasks</code></td>
+        <td>The list of tasks to run on each package, if that package has a given task</td>
+    </tr>
+    <tr>
+        <td>Optional</td>
+        <td/>
+        <td/>
+    </tr>
+        <td/>
+        <td><code>packages</code></td>
+        <td>The list of packages to run the tasks against - required unless <code>--all</code> is set</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--all</code></td>
+        <td>Runs tasks on all packages, in order of dependencies</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--dependencies</code></td>
+        <td>Includes all dependencies of the provided packages</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verbose</code></td>
+        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+    </tr>
+</table>
+
 ### [do](#do)
 Usage
 ```
@@ -74,7 +119,7 @@ mister do package1 --dependencies --tasks clean test build
 Runs matching tasks on all packages in dependent order.
 ```
 mister do --all --tasks clean test build
-```
+```\
 
 ### [do-all](#do-all)
 Usage
