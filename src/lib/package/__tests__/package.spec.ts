@@ -48,7 +48,7 @@ describe('package functions', () => {
 
     describe('getPackagesForArgs()', () => {
         it('with no params, should throw', () => {
-            expect(getPackagesForArgs).to.throw();
+            expect(getPackagesForArgs).to.throw(Error);
         });
         it('with argv.all should return all packages', () => {
             const packageList = getPackagesForArgs({all: true});
