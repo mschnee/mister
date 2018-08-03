@@ -50,7 +50,7 @@ mister do @scope/package4 --tasks clean test build
 ## Reference
 <table>
     <thead>
-        <th colspan="3">do</th>
+        <td colspan="3">do</td>
     </thead>
     <tr>
         <td colspan="3">
@@ -91,42 +91,31 @@ mister do @scope/package4 --tasks clean test build
         <td><code>--verbose</code></td>
         <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
     </tr>
+    <thead>
+        <td colspan="3">do-all</td>
+    </thead>
+    <tr>
+        <td colspan="3">
+            <pre>mister do-all [tasks...] <options></pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Required</td>
+        <td/>
+        <td/>
+    </tr>
+    <tr>
+        <td></td>
+        <td><code>tasks</code></td>
+        <td>Performs the tasks against all packages in dependency order</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verbose</code></td>
+        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+    </tr>
 </table>
 
-### [do](#do)
-Usage
-```
-mister do [packages...] --tasks [tasks...] (--verbose) (--all) (--dependencies)
-```
-
-#### --tasks (required)
-
-Runs matching tasks on matching packages.  In this example, `clean`, `test`, and `build` in that order.
-```
-mister do package1 @scope/package2 --tasks clean test build
-```
-
-
-#### --dependencies
-
-Runs matching tasks on package1 and all of its local dependencies, in dependent order.
-```
-mister do package1 --dependencies --tasks clean test build
-```
-
-
-#### --all
-Runs matching tasks on all packages in dependent order.
-```
-mister do --all --tasks clean test build
-```\
-
-### [do-all](#do-all)
-Usage
-```
-mister do-all clean test build
-```
-Synonymous to `mister do --all --tasks clean test build`.  Packages are run in dependent order.
 
 ## Any other recommendations?
 
