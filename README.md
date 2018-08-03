@@ -50,13 +50,11 @@ mister do @scope/package4 --tasks clean test build
 ## Reference
 <table>
     <thead>
-        <td colspan="3"><h2>do</h2></td>
-    </thead>
-    <tr>
         <td colspan="3">
-            <pre>mister do [packages...] --tasks [tasks...] <options></pre>
+        <h3>do</h3>
+        <pre>mister do [packages...] --tasks [tasks...] <options></pre>
         </td>
-    </tr>
+    </thead>
     <tr>
         <td>Required</td>
         <td/>
@@ -94,13 +92,11 @@ mister do @scope/package4 --tasks clean test build
 </table>
 <table>
     <thead>
-        <td colspan="3"><h2>do-all</h2></td>
-    </thead>
-    <tr>
         <td colspan="3">
+            <h3>do-all</h3>
             <pre>mister do-all [tasks...] <options></pre>
         </td>
-    </tr>
+    </thead>
     <tr>
         <td>Required</td>
         <td/>
