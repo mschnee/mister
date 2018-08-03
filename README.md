@@ -50,7 +50,7 @@ mister do @scope/package4 --tasks clean test build
 ## Reference
 <table>
     <thead>
-        <td colspan="3">do</td>
+        <td colspan="3"><h2>do</h2></td>
     </thead>
     <tr>
         <td colspan="3">
@@ -91,8 +91,10 @@ mister do @scope/package4 --tasks clean test build
         <td><code>--verbose</code></td>
         <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
     </tr>
+</table>
+<table>
     <thead>
-        <td colspan="3">do-all</td>
+        <td colspan="3"><h2>do-all</h2></td>
     </thead>
     <tr>
         <td colspan="3">
