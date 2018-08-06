@@ -28,10 +28,10 @@ test.beforeEach(() => {
 test('command: do - should error' , async (t) => {
     const argv = {
         packages: ['package1', '@test/package3'],
-        tasks: ['fails1', 'test2'],
         stdio: false,
+        tasks: ['fails1', 'test2'],
     };
     return doCommand(argv).catch(e => {
-        t.is(e, 255);
+        t.not(e, 0);
     });
 });
