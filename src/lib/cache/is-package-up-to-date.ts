@@ -11,7 +11,7 @@ import * as debug from 'debug';
 const cacheDebugger = debug('mister:cache');
 
 // This may eventually be configurable.
-import { PACKAGE_DIR } from './environment';
+import { PACKAGE_DIR } from '../environment';
 
 /**
  * Checks if the package needs a rebuild, honoring it's gitignore.

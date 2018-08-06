@@ -17,5 +17,11 @@ export default function getPackagePjson(packageName: string) {
         pjsonCache[packageName] = fs.readFileSync(p);
     }
 
-    return JSON.parse(pjsonCache[packageName].toString());
+    try {
+        return JSON.parse(pjsonCache[packageName].toString());
+    } catch (e) {
+        // tslint:disable-next-line:no-console
+        console.error('Error parsing package.json for', packageName);
+        throw e;
+    }
 }

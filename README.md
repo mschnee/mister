@@ -47,6 +47,74 @@ Now, you can have `mister do` some things for you:
 mister do @scope/package4 --tasks clean test build
 ```
 
+## Reference
+<table>
+    <thead>
+        <td colspan="3">
+        <h3>do</h3>
+        <pre>mister do [packages...] --tasks [tasks...] <options></pre>
+        </td>
+    </thead>
+    <tr>
+        <td>Required</td>
+        <td/>
+        <td/>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--tasks</code></td>
+        <td>The list of tasks to run on each package, if that package has a given task</td>
+    </tr>
+    <tr>
+        <td>Optional</td>
+        <td/>
+        <td/>
+    </tr>
+        <td/>
+        <td><code>packages</code></td>
+        <td>The list of packages to run the tasks against - required unless <code>--all</code> is set</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--all</code></td>
+        <td>Runs tasks on all packages, in order of dependencies</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--dependencies</code></td>
+        <td>Includes all dependencies of the provided packages</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verbose</code></td>
+        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+    </tr>
+</table>
+<table>
+    <thead>
+        <td colspan="3">
+            <h3>do-all</h3>
+            <pre>mister do-all [tasks...] <options></pre>
+        </td>
+    </thead>
+    <tr>
+        <td>Required</td>
+        <td/>
+        <td/>
+    </tr>
+    <tr>
+        <td></td>
+        <td><code>tasks</code></td>
+        <td>Performs the tasks against all packages in dependency order</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verbose</code></td>
+        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+    </tr>
+</table>
+
+
 ## Any other recommendations?
 
 To take advantage of not having multiple dependency versions, you'll want to install all your dependencies at the top level (but you will still need to reference those dependencies in the `package.json` files of your packages).  *But you don't have to do that if you don't want to*.  Managing your dependencies is up to you ;)
@@ -68,7 +136,6 @@ Several tools, like `ts-node`, by default ignore `node_modules`, which means the
     }
 }
 ```
-
 
 ### Incorrect Paths
 A number of modules, like `app-root-dir`, make assumptions about where they are located and can return incorrect path results.
@@ -107,7 +174,6 @@ The next time you build, node will resolve `require('uglify-webpack-plugin')` to
 - Use `.mister/build.json` to track which packages have been successfully built, so that larger projects with multiple packages don't have to rebuild them.  See [this issue](https://github.com/mschnee/mister/issues/4)
 - Create a `mister pack` command that honors `bundledDependencies`.  See [this issue](https://github.com/mschnee/mister/issues/5).
 - Create a `mister pack --type=zip` variant that can be used to create zip files that include shared packages for deployment in AWS Lambda.  See [this issue](https://github.com/mschnee/mister/issues/6).
-- Get `mocha` + `ts-node` working for unit tests.
 
 # Thanks
 A huge thanks to [`@a-z`](https://www.npmjs.com/~a-z) for agreeing to free up the name `mister`.

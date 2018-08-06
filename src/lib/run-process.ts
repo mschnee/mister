@@ -1,11 +1,11 @@
 import { SpawnOptions } from 'child_process';
 import * as spawn from 'cross-spawn';
 
-export default function runProcess(command: string, args: string[], options: SpawnOptions, verbose: boolean = false) {
+export default function runProcess(command: string, args: string[], options: SpawnOptions, argv: any) {
     return new Promise((resolve, reject) => {
-        if (verbose) {
+        if (argv.verbose >= 2) {
             options.stdio = options.stdio || 'inherit';
-        } else {
+        } else if (argv.stdio) {
             options.stdio = options.stdio || ['pipe', 'pipe', process.stderr];
         }
 

@@ -1,8 +1,13 @@
 import * as cache from './cache';
 export { cache };
 
+import * as dependencies from './dependencies';
+export { dependencies };
+
+import * as packages from './package';
+export { packages };
+
 export { default as doTask } from './do-task';
-export { default as getMatchingPackageTasks } from './get-matching-package-tasks';
-export { default as getpackageDir } from './get-package-dir';
-export { default as getPackagePjson } from './get-package-pjson';
-export { default as getPackageTasks } from './get-package-tasks';
+export { default as doTaskReducer } from  './do-task-reducer';
+export { PACKAGE_DIR } from './environment';
+export { default as runProcess } from './run-process';
