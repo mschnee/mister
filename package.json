@@ -10,7 +10,7 @@
   "homepage": "https://github.com/mschnee/mister",
   "scripts": {
     "build": "rimraf dist && tsc -p .",
-    "test": "ava",
+    "test": "nyc ava",
     "lint": "tslint -p .",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"

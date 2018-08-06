@@ -1,51 +1,44 @@
-/* tslint:disable: no-unused-expression */
-import * as path from 'path';
+/* tslint:disable: no-unused-expression max-line-length */
+import test from 'ava';
 
-import { expect } from 'chai';
+import * as path from 'path';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixture');
+const TDIR = path.join(CWD);
 
 import getPackageLocalDependencies from '../../package/get-package-local-dependencies';
 import getDependencyGraph from '../get-dependency-graph';
 import getFullDependencyGraph from '../get-full-dependency-graph';
 
-describe('dependencies' , () => {
-    const TDIR = path.join(CWD);
-    before(() => {
-        process.chdir(TDIR);
-    });
-    after(() => {
-        process.chdir(OCWD);
-    });
+test.before(() => {
+    process.chdir(TDIR);
+});
+test.after(() => {
+    process.chdir(OCWD);
+});
 
-    describe('getFullDependencyGraph', () => {
-        it('should get all the dependencies in correct order', () => {
-
-            const graph = getFullDependencyGraph();
-            const deps = graph.overallOrder();
-            expect(deps.length).to.equal(14);
-            deps.reduce( (prev, name) => {
-                // each dependency should already have been satisfied.
-                getPackageLocalDependencies(name).forEach((d) => {
-                    expect(prev.find((n) => n === d)).to.not.be.null;
-                });
-                return prev.concat(name);
-            }, []);
+test('getFullDependencyGraph() - should get all the dependencies in correct order', (t) => {
+    const graph = getFullDependencyGraph();
+    const deps = graph.overallOrder();
+    t.is(deps.length, 14);
+    deps.reduce( (prev, name) => {
+        // each dependency should already have been satisfied.
+        getPackageLocalDependencies(name).forEach((d) => {
+            t.truthy(prev.find((n) => n === d));
         });
-    });
+        return prev.concat(name);
+    }, []);
+});
 
-    describe('getDependencyGraph', () => {
-        it('should get only the dependencies for @test-web/user-app', () => {
-            const graph = getDependencyGraph(['@test-web/user-app']);
-            const deps = graph.overallOrder();
-            expect(deps.length).to.equal(4);
-        });
+test('getDependencyGraph() - should get only the dependencies for @test-web/user-app', (t) => {
+    const graph = getDependencyGraph(['@test-web/user-app']);
+    const deps = graph.overallOrder();
+    t.is(deps.length, 4);
+});
 
-        it('should get only the dependencies for @test-web/admin-app and @test-server/notifications', () => {
-            const graph = getDependencyGraph(['@test-web/admin-app', '@test-server/notifications']);
-            const deps = graph.overallOrder();
-            expect(deps.length).to.equal(5);
-        });
-    });
+test('getDependencyGraph() - should get only the dependencies for @test-web/admin-app and @test-server/notifications', (t) => {
+    const graph = getDependencyGraph(['@test-web/admin-app', '@test-server/notifications']);
+    const deps = graph.overallOrder();
+    t.is(deps.length, 5);
 });

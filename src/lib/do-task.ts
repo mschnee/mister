@@ -21,5 +21,5 @@ export default function doTask(argv: any, taskName: string, packageName: string)
         spawnOptions.env.Path = `${process.env.Path}${path.delimiter}${localBin}`;
     }
 
-    return runProcess('npm', ['run', taskName], spawnOptions, argv.verbose);
+    return runProcess('npm', ['run', taskName], spawnOptions, argv);
 }
