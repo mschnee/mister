@@ -1,6 +1,6 @@
 {
   "name": "mister",
-  "version": "1.1.0-alpha",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/index.js",
   "bin": {
