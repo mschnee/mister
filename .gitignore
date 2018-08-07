@@ -5,3 +5,4 @@
 /coverage
 /test-cli.js
 /test-commands
+/*.tgz
