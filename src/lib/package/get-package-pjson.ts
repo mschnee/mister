@@ -25,3 +25,10 @@ export default function getPackagePjson(packageName: string) {
         throw e;
     }
 }
+
+export function restorePackagePjson(packageName: string) {
+    if (pjsonCache.hasOwnProperty(packageName)) {
+        const p = path.join(getPackageDir(packageName), 'package.json');
+        fs.writeFileSync(p, pjsonCache[packageName]);
+    }
+}

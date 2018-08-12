@@ -8,6 +8,6 @@ import * as packages from './package';
 export { packages };
 
 export { default as doTask } from './do-task';
-export { default as doTaskReducer } from  './do-task-reducer';
+export { default as doTaskReducer } from  './do-tasks-reducer';
 export { PACKAGE_DIR } from './environment';
 export { default as runProcess } from './run-process';

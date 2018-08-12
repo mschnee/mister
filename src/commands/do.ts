@@ -1,7 +1,7 @@
 import { Argv } from 'yargs';
 
 import getDependencyGraph from '../lib/dependencies/get-dependency-graph';
-import doTaskOnReducer from '../lib/do-task-reducer';
+import doTaskOnReducer from '../lib/do-tasks-reducer';
 import getPackagesForArgs from '../lib/package/get-packages-for-argv';
 
 export const command = 'do [packages...]';

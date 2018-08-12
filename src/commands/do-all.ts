@@ -1,7 +1,7 @@
 import { Argv } from 'yargs';
 
 import getFullDependencyGraph from '../lib/dependencies/get-full-dependency-graph';
-import doTaskOnReducer from '../lib/do-task-reducer';
+import doTaskOnReducer from '../lib/do-tasks-reducer';
 import getLocalPackages from '../lib/package/get-local-packages';
 
 export const command = 'do-all [tasks...]';
