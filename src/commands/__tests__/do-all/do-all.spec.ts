@@ -20,7 +20,7 @@ test.after(() => {
     process.chdir(OCWD);
 });
 
-test('command: do-all - runs two commands' , (t) => {
+test('command: do-all - runs three commands' , (t) => {
     const spy = sinon.spy(doTask, 'default');
     const argv = {
         tasks: ['test1', 'test2', 'test3'],
