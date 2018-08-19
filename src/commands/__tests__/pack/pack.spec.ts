@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { sync as rimraf } from 'rimraf';
 
+import runProcess from '../../../lib/run-process';
 import { packCommand } from '../../pack';
 
 const OCWD = process.cwd();
@@ -27,10 +28,13 @@ test.beforeEach(() => {
 test('command: pack', (t) => {
     const args = {
         _: ['@test-server/api'],
-        v: 2,
+        v: 1,
+        verbose: 1,
     };
-    return packCommand(args).then(() => {
+    return runProcess('npm', ['install'], {
+        cwd: path.join(CWD),
+    }, {}).then(() => packCommand(args).then(() => {
         // check that the tarballs exist.
-        t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.tgz')));
-    });
+        t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.tgz')))
+    }));
 });

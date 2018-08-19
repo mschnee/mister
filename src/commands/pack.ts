@@ -42,12 +42,13 @@ export function packCommand(argv) {
     return packageOrder.reduce((accum, packageName) => {
         return accum.then( () => {
             const newPjson = getUpdatedPjsonForDist(packageName);
-            writePackagePjson(packageName, newPjson);
+            writePackagePjson(argv, packageName, newPjson);
             rimraf(path.join(getPackageDir(packageName), 'node_modules'));
         })
         .then(() => runPackageProcess(argv, packageName, 'npm', ['install', '--production']))
         .then(() => runPackageProcess(argv, packageName, 'npm', ['pack']))
         .then(() => moveFile(
+            argv,
             path.join(getPackageDir(packageName), getPackageDistFileName(packageName)),
             resolveDistFileLocation(packageName),
         ))

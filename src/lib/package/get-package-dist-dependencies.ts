@@ -18,7 +18,7 @@ export default function getPackageDistDependencies(packageName: string) {
     return pnames.reduce((accum, depName) => {
         // if we need to bundle a local dependency, we need the absolute path to it's it's tarball.
         if (localPackages.indexOf(depName) >= 0) {
-            accum[depName] = resolveDistfileLocation(depName);
+            accum[depName] =  'file://' + resolveDistfileLocation(depName);
         } else if (!mrjson.dependencies.hasOwnProperty(depName)) {
             throw new Error(`Monorepo package.json is missing '${depName}' from dependencies, requested by package '${packageName}'`);
         } else {

@@ -11,6 +11,10 @@ export default function runPackageProcess(argv: any, packageName: string, comman
         env: Object.assign({}, process.env),
     };
 
+    if (argv.verbose >= 1) {
+        console.log(`[${packageName}] run-process (${packageDir}) ${command} ${args.join(' ')}`);
+    }
+
     const localBin = path.join(process.cwd(), 'node_modules', '.bin');
     if (process.env.hasOwnProperty('PATH')) {
         spawnOptions.env.PATH = `${process.env.PATH}${path.delimiter}${localBin}`;
