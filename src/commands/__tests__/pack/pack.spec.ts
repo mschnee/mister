@@ -1,6 +1,8 @@
 /* tslint:disable: no-unused-expression */
 import test from 'ava';
 
+import * as tar from 'tar';
+
 import * as fs from 'fs';
 import * as path from 'path';
 import { sync as rimraf } from 'rimraf';
@@ -35,5 +37,14 @@ test('command: pack', (t) => {
     }, {}).then(() => packCommand(args).then(() => {
         // check that the tarballs exist.
         t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.tgz')));
+        const entries = [];
+        tar.t({
+            file: path.join(CWD, 'dist', 'test-server-api-2.4.6.tgz'),
+            onentry: (e) => entries.push(e),
+        }).then(r => {
+            t.true(entries.indexOf('package/node_modules/@test-common/reducer1/package.json') >= 0);
+            t.true(entries.indexOf('package/node_modules/express/index.js') >= 0);
+            t.false(fs.existsSync(path.join(CWD, 'packages/node_modules/@test-server/api/node_modules')));
+        });
     }));
 });

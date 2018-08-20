@@ -4,5 +4,3 @@ const argv = require('yargs').option('v', {
     type: 'boolean',
     default: false
 }).argv;
-
-console.log(argv)

@@ -15,7 +15,6 @@ import getUpdatedPjsonForDist from '../lib/package/get-updated-pjson-for-dist';
 import resolveDistFileLocation from '../lib/package/resolve-dist-file-location';
 import runPackageProcess from '../lib/package/run-package-process';
 import writePackagePjson from '../lib/package/write-package-pjson';
-import { getLocalPackages } from '../lib/package';
 
 export const command = 'pack [packages...]';
 export const describe = 'Creates npm packages with bundledDependencies.  Does not check if they are built first.';
@@ -48,7 +47,6 @@ export function packCommand(argv) {
     // end debug block
     const packageOrder = getDependencyGraph(getMatchingLocalPackages(argv._)).overallOrder();
 
-    console.log(packageOrder);
     return packageOrder.reduce((accum, packageName) => {
         return accum.then( () => {
             const newPjson = getUpdatedPjsonForDist(packageName);
@@ -63,6 +61,7 @@ export function packCommand(argv) {
             resolveDistFileLocation(packageName),
         ))
         .then(() => restorePackagePjson(argv, packageName))
+        .then(() => rimraf(path.join(getPackageDir(packageName), 'node_modules')))
         .catch((e) => {
             restorePackagePjson(argv, packageName);
             throw e;

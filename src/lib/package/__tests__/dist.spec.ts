@@ -38,7 +38,6 @@ test('getPackageDistDependencies() - should get the correct bundleDependencies f
 test('getPackageDistDependencies() - should get the correct bundleDependencies for @test/package5', (t) => {
     const deps = getPackageDistDependencies('@test/package5');
     t.true(deps.hasOwnProperty('@test/package4'));
-    console.log('test', deps['@test/package4'])
     t.is(path.resolve(getPackageDir('@test/package5'), deps['@test/package4']), path.join(CWD, 'dist/test-package4-10.2.3.tgz'));
 });
 
