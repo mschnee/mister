@@ -30,7 +30,7 @@ test.beforeEach(() => {
 test('command: pack', (t) => {
     const args = {
         '_': ['@test-server/api'],
-        'debug-persist-package-json': false
+        'debug-persist-package-json': false,
     };
     return runProcess('npm', ['install'], {
         cwd: path.join(CWD),
@@ -41,7 +41,7 @@ test('command: pack', (t) => {
         tar.t({
             file: path.join(CWD, 'dist', 'test-server-api-2.4.6.tgz'),
             onentry: (e) => entries.push(e),
-        }).then(r => {
+        }).then((r) => {
             t.true(entries.indexOf('package/node_modules/@test-common/reducer1/package.json') >= 0);
             t.true(entries.indexOf('package/node_modules/express/index.js') >= 0);
             t.false(fs.existsSync(path.join(CWD, 'packages/node_modules/@test-server/api/node_modules')));
