@@ -7,6 +7,9 @@
 /test-commands
 /*.tgz
 
+## debug test pjson files
+package-debug.json
+
 ## Fixture related
 **/__tests__/**/node_modules
 **/__tests__/**/dist

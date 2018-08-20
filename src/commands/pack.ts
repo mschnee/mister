@@ -25,6 +25,10 @@ export const builder = (yargs: Argv) => yargs.option('v', {
     alias: 'verbose',
     count: true,
     description: 'Enable Verbose messaging.  Add another to see subcommand stdout.',
+}).option('debug-persist-package-json', {
+    default: false,
+    description: 'Persists changes made to package.json as package-debug.json for debug purposes.',
+    type: 'boolean',
 });
 
 /**
@@ -52,9 +56,9 @@ export function packCommand(argv) {
             path.join(getPackageDir(packageName), getPackageDistFileName(packageName)),
             resolveDistFileLocation(packageName),
         ))
-        .then(() => restorePackagePjson(packageName))
+        .then(() => restorePackagePjson(argv, packageName))
         .catch((e) => {
-            restorePackagePjson(packageName);
+            restorePackagePjson(argv, packageName);
             throw e;
         });
     }, Promise.resolve());

@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import getPackageDir from './get-package-dir';
+import moveFile from '../move-file';
 
 interface PackageJsonCache {
     [key: string]: Buffer;
@@ -26,9 +27,16 @@ export default function getPackagePjson(packageName: string) {
     }
 }
 
-export function restorePackagePjson(packageName: string) {
+export function restorePackagePjson(argv, packageName: string) {
     if (pjsonCache.hasOwnProperty(packageName)) {
         const p = path.join(getPackageDir(packageName), 'package.json');
-        fs.writeFileSync(p, pjsonCache[packageName]);
+        if (argv['debug-persist-package-json']) {
+            console.log('Writing package-debug.json file for', packageName);
+            return moveFile(argv, p, path.join(getPackageDir(packageName), 'package-debug.json')).then(() => {
+                fs.writeFileSync(p, pjsonCache[packageName]);
+            })
+        } else {
+            fs.writeFileSync(p, pjsonCache[packageName]);
+        }
     }
 }

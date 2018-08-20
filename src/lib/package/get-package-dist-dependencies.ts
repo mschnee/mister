@@ -1,5 +1,8 @@
+import * as path from 'path';
+
 import getLocalPackages from './get-local-packages';
 import getMonorepoPjson from './get-monorepo-pjson';
+import getPackageDir from './get-package-dir';
 import getPackagePjson from './get-package-pjson';
 import resolveDistfileLocation from './resolve-dist-file-location';
 
@@ -18,7 +21,7 @@ export default function getPackageDistDependencies(packageName: string) {
     return pnames.reduce((accum, depName) => {
         // if we need to bundle a local dependency, we need the absolute path to it's it's tarball.
         if (localPackages.indexOf(depName) >= 0) {
-            accum[depName] =  'file://' + resolveDistfileLocation(depName);
+            accum[depName] =  path.relative(getPackageDir(packageName), resolveDistfileLocation(depName));
         } else if (!mrjson.dependencies.hasOwnProperty(depName)) {
             throw new Error(`Monorepo package.json is missing '${depName}' from dependencies, requested by package '${packageName}'`);
         } else {

@@ -8,7 +8,7 @@ export default function writePackagePjson(argv, packageName, pjson) {
     // ensure the original buffer is cached
     getPackagePjson(packageName);
 
-    if (argv.verbose >= 2) {
+    if (argv.verbose >= 1) {
         console.log('Writing temp package.json for', packageName);
     }
     const p = path.join(getPackageDir(packageName), 'package.json');

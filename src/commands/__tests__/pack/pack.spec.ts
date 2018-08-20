@@ -27,14 +27,15 @@ test.beforeEach(() => {
 
 test('command: pack', (t) => {
     const args = {
-        _: ['@test-server/api'],
-        v: 1,
-        verbose: 1,
+        '_': ['@test-server/api'],
+        'debug-persist-package-json': true,
+        'v': 1,
+        'verbose': 1,
     };
     return runProcess('npm', ['install'], {
         cwd: path.join(CWD),
     }, {}).then(() => packCommand(args).then(() => {
         // check that the tarballs exist.
-        t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.tgz')))
+        t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.tgz')));
     }));
 });

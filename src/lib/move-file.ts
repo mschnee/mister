@@ -5,7 +5,7 @@ import { sync as mkdir } from 'mkdirp';
 
 export default function moveFile(argv, oldPath, newPath) {
     return new Promise((resolve, reject) => {
-        if (argv.verbose >= 2) {
+        if (argv.verbose >= 1) {
             console.log('rename', oldPath, newPath);
         }
 
