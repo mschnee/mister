@@ -29,8 +29,8 @@ test('command: pack', (t) => {
     const args = {
         '_': ['@test-server/api'],
         'debug-persist-package-json': true,
-        'v': 1,
-        'verbose': 1,
+        'v': 2,
+        'verbose': 2,
     };
     return runProcess('npm', ['install'], {
         cwd: path.join(CWD),
