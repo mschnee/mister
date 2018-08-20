@@ -8,7 +8,9 @@ export default function getDependencyGraph(packages: string[]) {
     packages.forEach((packageName) => {
         dep.addNode(packageName);
 
+        console.log(packageName)
         getPackageLocalDependencies(packageName).forEach((d) => {
+            console.log(d);
             if (!dep.hasNode(d)) {
                 dep.addNode(d);
             }

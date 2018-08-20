@@ -11,6 +11,6 @@ export default function getUpdatedPjsonForDist(packageName: string) {
     delete pjson.devDependencies;
 
     pjson.version = mrjson.version;
-    pjson.dependenceis = nd;
+    pjson.dependencies = nd;
     return pjson;
 }
