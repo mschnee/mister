@@ -3,9 +3,9 @@ import test from 'ava';
 import * as path from 'path';
 
 import getMonorepoPjson from '../get-monorepo-pjson';
+import getPackageDir from '../get-package-dir';
 import getPackageDistDependencies from '../get-package-dist-dependencies';
 import resolveDistFileLocation from '../resolve-dist-file-location';
-import getPackageDir from '../get-package-dir';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixture2');

@@ -9,7 +9,7 @@ export default function writePackagePjson(argv, packageName, pjson) {
     getPackagePjson(packageName);
 
     if (argv.verbose >= 1) {
-        console.log('Writing temp package.json for', packageName);
+        console.log('Writing temp package.json for', packageName); // tslint:disable-line
     }
     const p = path.join(getPackageDir(packageName), 'package.json');
     fs.writeFileSync(p, JSON.stringify(pjson, null, 4));

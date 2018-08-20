@@ -12,7 +12,7 @@ export default function runPackageProcess(argv: any, packageName: string, comman
     };
 
     if (argv.verbose >= 1) {
-        console.log(`[${packageName}] run-process (${packageDir}) ${command} ${args.join(' ')}`);
+        console.log(`[${packageName}] run-process (${packageDir}) ${command} ${args.join(' ')}`); // tslint:disable-line
     }
 
     const localBin = path.join(process.cwd(), 'node_modules', '.bin');
