@@ -8,6 +8,7 @@ export default function writePackagePjson(argv, packageName, pjson) {
     // ensure the original buffer is cached
     getPackagePjson(packageName);
 
+    /* istanbul ignore if */
     if (argv.verbose >= 1) {
         console.log('Writing temp package.json for', packageName); // tslint:disable-line
     }

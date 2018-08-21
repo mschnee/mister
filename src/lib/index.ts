@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 import * as cache from './cache';
 export { cache };
 

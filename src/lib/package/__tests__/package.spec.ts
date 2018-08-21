@@ -4,6 +4,8 @@ import * as path from 'path';
 
 import getLocalPackages from '../get-local-packages';
 import getMatchingLocalPackages from '../get-matching-local-packages';
+import getMonorepoPjson from '../get-monorepo-pjson';
+import getPackagePjson from '../get-package-pjson';
 import getPackagesForArgs from '../get-packages-for-argv';
 
 const OCWD = process.cwd();
@@ -20,7 +22,7 @@ test.after(() => {
 test('getLocalPackages() -- Should correctly list all the packages', async (t) => {
     const packageList = getLocalPackages();
     Promise.all([
-        t.is(packageList.length, 4),
+        t.is(packageList.length, 5),
         t.truthy(packageList.indexOf('package1') >= 0),
         t.truthy(packageList.indexOf('package2') >= 0),
         t.truthy(packageList.indexOf('@test/package3') >= 0),
@@ -47,7 +49,7 @@ test('getPackagesForArgs() - with no params should throw', (t) => {
 
 test('getPackagesForArgs() - with argv.all should return all packages', (t) => {
     const packageList = getPackagesForArgs({all: true});
-    t.is(packageList.length, 4);
+    t.is(packageList.length, 5);
     t.truthy(packageList.indexOf('package1') >= 0);
     t.truthy(packageList.indexOf('package2') >= 0);
     t.truthy(packageList.indexOf('@test/package3') >= 0);
@@ -58,4 +60,17 @@ test('getPackagesForArgs() - with argv.packages should return matching packages'
     const packageList = getPackagesForArgs({packages: ['not-real-package', 'package1']});
     t.is(packageList.length, 1);
     t.truthy(packageList.indexOf('package1') >= 0);
+});
+
+test('getMonorepoPjson() - fail with no package.json', (t) => {
+    process.chdir(path.resolve(__dirname, 'fixture3'));
+    t.throws(() => getMonorepoPjson(), Error);
+});
+
+test('getPackagePjson() - fail with no package.json', (t) => {
+    t.throws(() => getPackagePjson('no-package'), Error);
+});
+
+test('getPackagePjson() - fail with bad json', (t) => {
+    t.throws(() => getPackagePjson('package1'), Error);
 });

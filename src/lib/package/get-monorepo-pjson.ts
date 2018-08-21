@@ -1,10 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+/* istanbul ignore next */
 interface PjsonDeps {
     [key: string]: string;
 }
 
+/* istanbul ignore next */
 interface PjsonFile {
     name: string;
     version: string;

@@ -28,8 +28,10 @@ export default function getPackagePjson(packageName: string) {
 }
 
 export function restorePackagePjson(argv, packageName: string) {
+    /* istanbul ignore else */
     if (pjsonCache.hasOwnProperty(packageName)) {
         const p = path.join(getPackageDir(packageName), 'package.json');
+        /* istanbul ignore if */
         if (argv['debug-persist-package-json']) {
             return moveFile(argv, p, path.join(getPackageDir(packageName), 'package-debug.json')).then(() => {
                 fs.writeFileSync(p, pjsonCache[packageName]);
