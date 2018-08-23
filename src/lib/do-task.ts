@@ -12,11 +12,13 @@ export default function doTask(argv: any, taskName: string, packageName: string)
     };
 
     const localBin = path.join(process.cwd(), 'node_modules', '.bin');
+    /* istanbul ignore next */
     if (process.env.hasOwnProperty('PATH')) {
         spawnOptions.env.PATH = `${process.env.PATH}${path.delimiter}${localBin}`;
     }
 
     // This sometimes happens on Windows:
+    /* istanbul ignore next */
     if (process.env.hasOwnProperty('Path')) {
         spawnOptions.env.Path = `${process.env.Path}${path.delimiter}${localBin}`;
     }

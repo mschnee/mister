@@ -1,0 +1,9 @@
+{
+    "name": "monorepo-fixture",
+    "version": "10.2.3",
+    "dependencies": {
+        "express": "1.0.0",
+        "async": "^2.0.0",
+        "typescript": "3.0.0-rc.5"
+    }
+}

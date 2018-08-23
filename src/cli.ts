@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* tslint:disable-next-line */
-require('yargs')
+/* istanbul ignore next */
+require('yargs') // tslint:disable-line
     .help()
     .showHelpOnFail(true)
     .commandDir('commands')

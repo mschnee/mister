@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import moveFile from '../move-file';
 import getPackageDir from './get-package-dir';
 
 interface PackageJsonCache {
@@ -23,5 +24,20 @@ export default function getPackagePjson(packageName: string) {
         // tslint:disable-next-line:no-console
         console.error('Error parsing package.json for', packageName);
         throw e;
+    }
+}
+
+export function restorePackagePjson(argv, packageName: string) {
+    /* istanbul ignore else */
+    if (pjsonCache.hasOwnProperty(packageName)) {
+        const p = path.join(getPackageDir(packageName), 'package.json');
+        /* istanbul ignore if */
+        if (argv['debug-persist-package-json']) {
+            return moveFile(argv, p, path.join(getPackageDir(packageName), 'package-debug.json')).then(() => {
+                fs.writeFileSync(p, pjsonCache[packageName]);
+            });
+        } else {
+            fs.writeFileSync(p, pjsonCache[packageName]);
+        }
     }
 }

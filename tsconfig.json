@@ -5,7 +5,8 @@
         "outDir": "dist",
         "esModuleInterop": false,
         "allowSyntheticDefaultImports": false,
-        "declaration": true
+        "declaration": true,
+        "inlineSourceMap": true,
     },
     "include": [
         "src/**/*.ts"
