@@ -47,6 +47,20 @@ Now, you can have `mister do` some things for you:
 mister do @scope/package4 --tasks clean test build
 ```
 
+## How do I make packages?
+`mister` comes with a `pack` command, which honors `bundledDependencies`.
+
+```sh
+mister pack @scope/package2 package1
+```
+
+Note that due to `npm pack` not following symlinks or doing any module resolution at all (it assumes everything is in relative `node_modules`), `mister` will perform `npm install --production` for all local package dependencies, and rename package-local dependency versions in `package.json` with the relative file path to the dependency tarball.  Upon completion, all changes are reverted (the only side effects are tarballs in `./dist`).
+
+This process can be time-consuming.
+
+`mister pack` is a primitive that only creates packages.  You will need to build them first e.g. `mister do packageName --tasks build && mister pack packageName`
+
+
 ## Reference
 <table>
     <thead>
@@ -106,6 +120,29 @@ mister do @scope/package4 --tasks clean test build
         <td></td>
         <td><code>tasks</code></td>
         <td>Performs the tasks against all packages in dependency order</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verbose</code></td>
+        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+    </tr>
+</table>
+<table>
+    <thead>
+        <td colspan="3">
+            <h3>pack</h3>
+            <pre>mister pack [packages...] <options></pre>
+        </td>
+    </thead>
+    <tr>
+        <td>Required</td>
+        <td/>
+        <td/>
+    </tr>
+    <tr>
+        <td></td>
+        <td><code>packages</code></td>
+        <td>Runs <code>npm pack</code> on the given packages and their dependencies.  This honors <code>bundledDependencies</code>, and will include them (including your packages and their dependencies).</td>
     </tr>
     <tr>
         <td/>
