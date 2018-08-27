@@ -26,3 +26,16 @@ This is a simple extension of `mister do`.  As an example, if `package3` depends
 - Adds the command `do-all`, as in `mister do-all [task1, task2, ...taskN]`, which performs the tasks on all your packages in correct order of dependency.
 - Adds the `--all` flag to `do`, as in `mister do --all --tasks task1 task2 taskN`, which is synonymous to `mister do-all task1 task2 taskN`
 - Adds the `--with-dependencies` or `-d` flag to `do`, as in `mister do -d package3 --tasks task1 task2`, which would run `task1` and `task2` on `package3` after running them on all of its dependencies.
+
+## 1.2.0
+Adds `mister pack` for creating packages that honor bundledDependencies.
+
+This will also package the local dependencies, since they need to be packaged first if they are bundledDependencies of dependent package.
+
+```
+mister pack [package1, package2, packageN]
+```
+
+- Adds the command `mister pack`
+- Switches tests from `mocha` to `ava`, due to the use of `process.chdir()` to contextualize tests in fixture folders.
+- Removes a lot of switches necessary to make `mocha` testing work, which `ava` does not require.
