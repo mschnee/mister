@@ -1,7 +1,6 @@
 /* tslint:disable: no-unused-expression */
 import test from 'ava';
 
-import * as tar from 'tar';
 import * as unzip from 'unzip';
 
 import * as fs from 'fs';
@@ -30,7 +29,7 @@ test.beforeEach(() => {
 
 test('command: zip', (t) => {
     const args = {
-        '_': ['@test-server/api'],
+        _: ['@test-server/api'],
     };
     return runProcess('npm', ['install'], {
         cwd: path.join(CWD),

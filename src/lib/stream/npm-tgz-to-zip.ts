@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import { Transform } from 'stream';
 
+import * as archiver from 'archiver';
 import * as gunzip from 'gunzip-maybe';
 import * as tarStream from 'tar-stream';
-import * as archiver from 'archiver';
 
 /**
  * Takes a tgz created by `npm pack` and puts it's `./package/` contents into a zip file.
