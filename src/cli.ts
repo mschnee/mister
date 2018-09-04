@@ -2,6 +2,7 @@
 /* istanbul ignore next */
 require('yargs') // tslint:disable-line
     .help()
+    .strict()
     .showHelpOnFail(true)
     .commandDir('commands')
     .demandCommand(1)
