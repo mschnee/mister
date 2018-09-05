@@ -12,7 +12,7 @@ export default function runPackageProcess(argv: any, packageName: string, comman
     };
 
     /* istanbul ignore if */
-    if (argv.verbose >= 1) {
+    if (argv.verbose >= 2) {
         console.log(`[${packageName}] run-process (${packageDir}) ${command} ${args.join(' ')}`); // tslint:disable-line
     }
 

@@ -1,15 +1,22 @@
 import { SpawnOptions } from 'child_process';
 import * as spawn from 'cross-spawn';
 
+import chalk from 'chalk';
+import wrap from '../lib/output/wrap';
+
 export default function runProcess(command: string, args: string[], options: SpawnOptions, argv: any) {
     return new Promise((resolve, reject) => {
         /* istanbul ignore next */
-        if (argv.verbose >= 2) {
+        if (argv.verbose >= 3 || argv.stdio) {
             options.stdio = options.stdio || 'inherit';
-        } else if (argv.stdio) {
-            options.stdio = options.stdio || ['pipe', 'pipe', process.stderr];
         }
 
+        if (argv.verbose >= 2) {
+            console.log(wrap('[]', 'run-process', chalk.yellow));
+            console.log(chalk.yellow('      cwd:'), options.cwd);
+            console.log(chalk.yellow('  command:'), command);
+            console.log(chalk.yellow('     args:'), args.join(' '));
+        }
         const runProc = spawn(command, args, options);
 
         runProc.on('exit', (code: number, signal: string) => {

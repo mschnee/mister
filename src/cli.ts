@@ -7,7 +7,10 @@ require('yargs') // tslint:disable-line
     .commandDir('commands')
     .demandCommand(1)
     .options('stdio', {
-        default: true,
+        default: false,
         type: 'boolean',
+    })
+    .fail((msg, err, yargs) => {
+        // process.exit(1);
     })
     .argv;

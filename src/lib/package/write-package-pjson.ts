@@ -9,7 +9,7 @@ export default function writePackagePjson(argv, packageName, pjson) {
     getPackagePjson(packageName);
 
     /* istanbul ignore if */
-    if (argv.verbose >= 1) {
+    if (argv.verbose >= 2) {
         console.log('Writing temp package.json for', packageName); // tslint:disable-line
     }
     const p = path.join(getPackageDir(packageName), 'package.json');

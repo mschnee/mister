@@ -7,7 +7,7 @@ import { Argv } from 'yargs';
 
 import { packCommand } from './pack';
 
-import getMatchingLocalPackages from '../lib/package/get-matching-local-packages';
+import getPackagesForArgs from '../lib/package/get-packages-for-argv';
 import resolveDistFileLocation from '../lib/package/resolve-dist-file-location';
 import npmTgzToZip from '../lib/stream/npm-tgz-to-zip';
 
@@ -28,7 +28,7 @@ export const builder = (yargs: Argv) => yargs.option('v', {
 
 export function zipCommand(argv) {
     return packCommand(argv).then(() => {
-        return Promise.all(getMatchingLocalPackages(argv._).map(zipLocalPackage));
+        return Promise.all(getPackagesForArgs(argv).map(zipLocalPackage));
     });
 }
 
