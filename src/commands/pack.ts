@@ -60,6 +60,7 @@ export function packCommand(argv) {
         })
         .then(() => {
             if (argv.v >= 1) {
+                /* tslint:disable-next-line */
                 console.log(wrap('[]', 'mister pack'), packageName);
             }
         })
@@ -72,12 +73,14 @@ export function packCommand(argv) {
         ))
         .then(() => {
             if (argv.v >= 1) {
+                /* tslint:disable-next-line */
                 console.log(wrap('[]', 'mister pack'), 'created', chalk.bold.green(resolveDistFileLocation(packageName)));
             }
         })
         .then(() => restorePackagePjson(argv, packageName))
         .then(() => rimraf(path.join(getPackageDir(packageName), 'node_modules')))
         .catch((e: Error) => {
+            /* tslint:disable-next-line */
             console.error(wrap('[]', 'mister pack', chalk.bold.red), e.message)
             restorePackagePjson(argv, packageName);
             throw e;

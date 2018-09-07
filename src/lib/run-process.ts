@@ -12,10 +12,12 @@ export default function runProcess(command: string, args: string[], options: Spa
         }
 
         if (argv.verbose >= 2) {
+            /* tslint:disable */
             console.log(wrap('[]', 'run-process', chalk.yellow));
             console.log(chalk.yellow('      cwd:'), options.cwd);
             console.log(chalk.yellow('  command:'), command);
             console.log(chalk.yellow('     args:'), args.join(' '));
+            /* tslint:enable */
         }
         const runProc = spawn(command, args, options);
 

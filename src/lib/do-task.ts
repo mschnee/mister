@@ -28,6 +28,7 @@ export default function doTask(argv: any, taskName: string, packageName: string)
     }
 
     if (argv.verbose >= 2) {
+        /* tslint:disable-next-line */
         console.log(wrap('[]', 'do-task', chalk.yellow), 'running', chalk.bold(taskName), 'on', chalk.bold(packageName));
     }
     return runProcess('npm', ['run', taskName], spawnOptions, argv);
