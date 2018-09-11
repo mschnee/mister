@@ -29,7 +29,7 @@ test.beforeEach(() => {
 
 test('command: pack', (t) => {
     const args = {
-        '_': ['@test-server/api'],
+        'packages': ['@test-server/api'],
         'debug-persist-package-json': false,
     };
     return runProcess('npm', ['install'], {

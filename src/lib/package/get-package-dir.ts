@@ -1,12 +1,13 @@
 import * as path from 'path';
+import yargs from 'yargs';
+const argv = yargs.argv;
 
 const pdirCache = {};
 
 export default function getPackageDir(packageName: string) {
     if (!pdirCache.hasOwnProperty(packageName)) {
-        const PACKAGE_DIR = 'packages/node_modules';
         const PWD = process.cwd();
-        pdirCache[packageName] = path.join(PWD, PACKAGE_DIR, packageName);
+        pdirCache[packageName] = path.resolve(PWD, (argv && argv['package-prefix']) || 'packages', 'node_modules', packageName);
     }
     return pdirCache[packageName];
 }

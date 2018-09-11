@@ -1,9 +1,8 @@
 import * as path from 'path';
 
 import * as nodeGlob from 'glob';
-
-// This may eventually be configurable.
-import { PACKAGE_DIR } from '../environment';
+import yargs from 'yargs';
+const argv = yargs.argv;
 
 // This will be the packages on disk.
 let localPackages: string[];
@@ -11,7 +10,7 @@ export default function getLocalPackages() {
     // CWD needs to be scoped because mister frequently changes directories.
     const PWD = process.cwd();
     if (!localPackages) {
-        const pdir = path.join(PWD, PACKAGE_DIR);
+        const pdir = path.resolve(PWD, (argv && argv['package-prefix']) || 'packages', 'node_modules');
         const tlPackages = nodeGlob
             .sync('*', {cwd: pdir})
             .filter((m: string) => m.substring(0, 1) !== '@');

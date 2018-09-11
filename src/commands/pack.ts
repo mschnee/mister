@@ -26,11 +26,7 @@ export const describe = 'Creates npm packages with bundledDependencies.  Does no
 export const usage = 'mister pack package1 package2';
 export const handler = packCommand;
 
-export const builder = (yargs: Argv) => yargs.option('v', {
-    alias: 'verbose',
-    count: true,
-    description: 'Enable Verbose messaging.  Add another to see subcommand stdout.',
-}).option('debug-persist-package-json', {
+export const builder = (yargs: Argv) => yargs.option('debug-persist-package-json', {
     default: false,
     description: 'Persists changes made to package.json as package-debug.json for debug purposes.',
     type: 'boolean',

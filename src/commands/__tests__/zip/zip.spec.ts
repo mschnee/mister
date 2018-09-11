@@ -29,7 +29,7 @@ test.beforeEach(() => {
 
 test('command: zip', (t) => {
     const args = {
-        _: ['@test-server/api'],
+        packages: ['@test-server/api'],
     };
     return runProcess('npm', ['install'], {
         cwd: path.join(CWD),
