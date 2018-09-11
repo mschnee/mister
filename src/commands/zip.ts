@@ -25,4 +25,5 @@ export function zipCommand(argv) {
 function zipLocalPackage(packageName) {
     const tgzFile = resolveDistFileLocation(packageName);
     const zipFile = path.join(path.dirname(tgzFile), path.basename(tgzFile, '.tgz') + '.zip');
+    return npmTgzToZip(tgzFile, zipFile);
 }
