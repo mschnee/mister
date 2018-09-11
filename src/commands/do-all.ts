@@ -10,7 +10,7 @@ export const handler = doAllCommand;
 
 export function doAllCommand(argv) {
     const reduceFn = doTaskOnReducer.bind(this, argv);
-    return getFullDependencyGraph()
+    return getFullDependencyGraph(argv['package-prefix'])
         .overallOrder()
         .reduce(reduceFn, Promise.resolve());
 }

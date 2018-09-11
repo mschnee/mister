@@ -51,5 +51,5 @@ test.after(() => {
 });
 
 test('getCache should not fail when there is no cache file', (t) => {
-    return t.is(isPackageUpToDate('package1'), false);
+    return t.is(isPackageUpToDate('packages', 'package1'), false);
 });

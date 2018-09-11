@@ -19,12 +19,12 @@ test.after(() => {
 });
 
 test('getFullDependencyGraph() - should get all the dependencies in correct order', (t) => {
-    const graph = getFullDependencyGraph();
+    const graph = getFullDependencyGraph('packages');
     const deps = graph.overallOrder();
     t.is(deps.length, 14);
     deps.reduce( (prev, name) => {
         // each dependency should already have been satisfied.
-        getPackageLocalDependencies(name).forEach((d) => {
+        getPackageLocalDependencies('packages', name).forEach((d) => {
             t.truthy(prev.find((n) => n === d));
         });
         return prev.concat(name);
@@ -32,13 +32,13 @@ test('getFullDependencyGraph() - should get all the dependencies in correct orde
 });
 
 test('getDependencyGraph() - should get only the dependencies for @test-web/user-app', (t) => {
-    const graph = getDependencyGraph(['@test-web/user-app']);
+    const graph = getDependencyGraph('packages', ['@test-web/user-app']);
     const deps = graph.overallOrder();
     t.is(deps.length, 4);
 });
 
 test('getDependencyGraph() - should get only the dependencies for @test-web/admin-app and @test-server/notifications', (t) => {
-    const graph = getDependencyGraph(['@test-web/admin-app', '@test-server/notifications']);
+    const graph = getDependencyGraph(null, ['@test-web/admin-app', '@test-server/notifications']);
     const deps = graph.overallOrder();
     t.is(deps.length, 5);
 });

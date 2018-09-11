@@ -9,7 +9,7 @@ import runProcess from './run-process';
 import wrap from './output/wrap';
 
 export default function doTask(argv: any, taskName: string, packageName: string) {
-    const packageDir = getPackageDir(packageName);
+    const packageDir = getPackageDir(argv['package-prefix'], packageName);
     const spawnOptions: SpawnOptions = {
         cwd: packageDir,
         env: Object.assign({}, process.env),

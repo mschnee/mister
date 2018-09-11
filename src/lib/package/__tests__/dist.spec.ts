@@ -23,22 +23,22 @@ test('getMonorepoPjson()', (t) => {
 });
 
 test('getPackageDistDependencies() - should get the correct bundleDependencies for @test/package4', (t) => {
-    const deps = getPackageDistDependencies('@test/package4');
+    const deps = getPackageDistDependencies(null, '@test/package4');
     t.true(deps.hasOwnProperty('package2'));
-    t.is(path.resolve(getPackageDir('@test/package4'), deps.package2), path.join(CWD, 'dist/package2-10.2.3.tgz'));
+    t.is(path.resolve(getPackageDir(null, '@test/package4'), deps.package2), path.join(CWD, 'dist/package2-10.2.3.tgz'));
 });
 
 test('getPackageDistDependencies() - should get the correct bundleDependencies for package2', (t) => {
-    const deps = getPackageDistDependencies('package2');
+    const deps = getPackageDistDependencies(null, 'package2');
     t.true(deps.hasOwnProperty('package1'));
     t.true(deps.hasOwnProperty('express'));
     t.is(deps.express, '1.0.0');
 });
 
 test('getPackageDistDependencies() - should get the correct bundleDependencies for @test/package5', (t) => {
-    const deps = getPackageDistDependencies('@test/package5');
+    const deps = getPackageDistDependencies(null, '@test/package5');
     t.true(deps.hasOwnProperty('@test/package4'));
-    t.is(path.resolve(getPackageDir('@test/package5'), deps['@test/package4']), path.join(CWD, 'dist/test-package4-10.2.3.tgz'));
+    t.is(path.resolve(getPackageDir(null, '@test/package5'), deps['@test/package4']), path.join(CWD, 'dist/test-package4-10.2.3.tgz'));
 });
 
 test('resolveDistFileLocation() - should get the path for @test/package5', (t) => {

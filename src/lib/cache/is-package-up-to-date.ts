@@ -4,19 +4,17 @@ import * as path from 'path';
 
 import * as filteredGlob from 'glob-gitignore';
 
+import getPackageDir from '../package/get-package-dir';
 import cacheBuildTimestampExists from './cache-entry-exists';
 import getCache from './get-cache';
 
 import * as debug from 'debug';
 const cacheDebugger = debug('mister:cache');
 
-// This may eventually be configurable.
-import { PACKAGE_DIR } from '../environment';
-
 /**
  * Checks if the package needs a rebuild, honoring it's gitignore.
  */
-export default function isPackageUpToDate(packageName: string) {
+export default function isPackageUpToDate(packagePrefix, packageName: string) {
     const cache = getCache();
     if (!cacheBuildTimestampExists(cache, packageName)) {
         cacheDebugger(packageName, 'has no build timestamp');
@@ -26,7 +24,7 @@ export default function isPackageUpToDate(packageName: string) {
     const lastBuildTime = new Date(cache.packages[packageName].lastBuildTime);
 
     const PWD = process.cwd();
-    const packagePath = path.join(PWD, PACKAGE_DIR, packageName);
+    const packagePath = getPackageDir(packagePrefix, packageName);
     const gitIgnoreFile = path.join(packagePath, '.gitignore');
 
     let ignore = [];

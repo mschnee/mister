@@ -39,7 +39,7 @@ export function doCommandWithoutDependencies(argv) {
 
 export function doCommandWithDependencies(argv) {
     const reduceFn = doTaskOnReducer.bind(this, argv);
-    const packageOrder = getDependencyGraph(getPackagesForArgs(argv)).overallOrder();
+    const packageOrder = getDependencyGraph(argv['package-prefix'], getPackagesForArgs(argv)).overallOrder();
 
     return packageOrder.reduce(reduceFn, Promise.resolve());
 }

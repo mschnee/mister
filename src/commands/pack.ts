@@ -42,17 +42,12 @@ export const builder = (yargs: Argv) => yargs.option('debug-persist-package-json
  * @param argv
  */
 export function packCommand(argv) {
-
-    // debugging block
-
-    // end debug block
-    const packageOrder = getDependencyGraph(getPackagesForArgs(argv)).overallOrder();
-
+    const packageOrder = getDependencyGraph(argv['package-prefix'], getPackagesForArgs(argv)).overallOrder();
     return packageOrder.reduce((accum, packageName) => {
-        return accum.then(() => verifyPackageName(packageName)).then( () => {
-            const newPjson = getUpdatedPjsonForDist(packageName);
+        return accum.then(() => verifyPackageName(argv['package-prefix'], packageName)).then( () => {
+            const newPjson = getUpdatedPjsonForDist(argv['package-prefix'], packageName);
             writePackagePjson(argv, packageName, newPjson);
-            rimraf(path.join(getPackageDir(packageName), 'node_modules'));
+            rimraf(path.join(getPackageDir(argv['package-prefix'], packageName), 'node_modules'));
         })
         .then(() => {
             if (argv.v >= 1) {
@@ -64,7 +59,7 @@ export function packCommand(argv) {
         .then(() => runPackageProcess(argv, packageName, 'npm', ['pack']))
         .then(() => moveFile(
             argv,
-            path.join(getPackageDir(packageName), getPackageDistFileName(packageName)),
+            path.join(getPackageDir(argv['package-prefix'], packageName), getPackageDistFileName(packageName)),
             resolveDistFileLocation(packageName),
         ))
         .then(() => {
@@ -74,7 +69,7 @@ export function packCommand(argv) {
             }
         })
         .then(() => restorePackagePjson(argv, packageName))
-        .then(() => rimraf(path.join(getPackageDir(packageName), 'node_modules')))
+        .then(() => rimraf(path.join(getPackageDir(argv['package-prefix'], packageName), 'node_modules')))
         .catch((e: Error) => {
             /* tslint:disable-next-line */
             console.error(wrap('[]', 'mister pack', chalk.bold.red), e.message)

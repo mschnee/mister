@@ -20,7 +20,7 @@ test.after(() => {
 });
 
 test('getLocalPackages() -- Should correctly list all the packages', async (t) => {
-    const packageList = getLocalPackages();
+    const packageList = getLocalPackages(null);
     Promise.all([
         t.is(packageList.length, 5),
         t.truthy(packageList.indexOf('package1') >= 0),
@@ -31,12 +31,12 @@ test('getLocalPackages() -- Should correctly list all the packages', async (t) =
 });
 
 test('getMatchingLocalPackages() -- Should correctly list all the packages', async (t) => {
-    const plist1 = getMatchingLocalPackages();
+    const plist1 = getMatchingLocalPackages(null);
     t.is(plist1.length, 0);
 });
 
 test('getMatchingLocalPackages() -- Should return an in-order list of packages, filtered by params', async (t) => {
-    const plist1 = getMatchingLocalPackages(['@test/package3', 'package1']);
+    const plist1 = getMatchingLocalPackages(null, ['@test/package3', 'package1']);
     t.is(plist1.length, 2);
     t.is(plist1[0], 'package1');
     t.is(plist1[1], '@test/package3');
@@ -68,9 +68,9 @@ test('getMonorepoPjson() - fail with no package.json', (t) => {
 });
 
 test('getPackagePjson() - fail with no package.json', (t) => {
-    t.throws(() => getPackagePjson('no-package'), Error);
+    t.throws(() => getPackagePjson(null, 'no-package'), Error);
 });
 
 test('getPackagePjson() - fail with bad json', (t) => {
-    t.throws(() => getPackagePjson('package1'), Error);
+    t.throws(() => getPackagePjson(null, 'package1'), Error);
 });

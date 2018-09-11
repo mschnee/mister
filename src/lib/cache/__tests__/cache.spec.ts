@@ -57,9 +57,9 @@ test.after(() => {
 test('getCache() packages should be up to date', (t) => {
     Promise.all([
         t.truthy(getCache().packages),
-        t.truthy(isPackageUpToDate('package1')),
-        t.truthy(isPackageUpToDate('package2')),
-        t.falsy(isPackageUpToDate('@test/package3')),
-        t.falsy(isPackageUpToDate('@test/package4')),
+        t.truthy(isPackageUpToDate('packages', 'package1')),
+        t.truthy(isPackageUpToDate('packages', 'package2')),
+        t.falsy(isPackageUpToDate('packages', '@test/package3')),
+        t.falsy(isPackageUpToDate('packages', '@test/package4')),
     ]);
 });

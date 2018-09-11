@@ -5,7 +5,7 @@ import runProcess from '../run-process';
 import getPackageDir from './get-package-dir';
 
 export default function runPackageProcess(argv: any, packageName: string, command: string, args: string[]) {
-    const packageDir = getPackageDir(packageName);
+    const packageDir = getPackageDir(argv['package-prefix'], packageName);
     const spawnOptions: SpawnOptions = {
         cwd: packageDir,
         env: Object.assign({}, process.env),
