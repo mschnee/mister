@@ -10,6 +10,7 @@ import getPackagePjson, { restorePackagePjson } from '../lib/package/get-package
 
 import moveFile from '../lib/move-file';
 import getMatchingLocalPackages from '../lib/package/get-matching-local-packages';
+import getMonorepoPjson from '../lib/package/get-monorepo-pjson';
 import getPackageDir from '../lib/package/get-package-dir';
 import getPackageDistFileName from '../lib/package/get-package-dist-filename';
 import getPackagesForArgs from '../lib/package/get-packages-for-argv';
@@ -42,6 +43,11 @@ export const builder = (yargs: Argv) => yargs.option('debug-persist-package-json
  * @param argv
  */
 export function packCommand(argv) {
+    const mrjson = getMonorepoPjson();
+    const manifestFile = {
+        packages: {},
+        version:  mrjson.version,
+    };
     const packageOrder = getDependencyGraph(argv['package-prefix'], getPackagesForArgs(argv)).overallOrder();
     return packageOrder.reduce((accum, packageName) => {
         return accum.then(() => verifyPackageName(argv['package-prefix'], packageName)).then( () => {
@@ -57,11 +63,17 @@ export function packCommand(argv) {
         })
         .then(() => runPackageProcess(argv, packageName, 'npm', ['install', '--production']))
         .then(() => runPackageProcess(argv, packageName, 'npm', ['pack']))
-        .then(() => moveFile(
-            argv,
-            path.join(getPackageDir(argv['package-prefix'], packageName), getPackageDistFileName(packageName)),
-            resolveDistFileLocation(packageName),
-        ))
+        .then(() => {
+            manifestFile.packages[packageName] = {
+                tgzFileName: getPackageDistFileName(packageName),
+                tgzFilePath: resolveDistFileLocation(packageName),
+            };
+            return  moveFile(
+                argv,
+                path.join(getPackageDir(argv['package-prefix'], packageName), getPackageDistFileName(packageName)),
+                resolveDistFileLocation(packageName),
+            );
+        })
         .then(() => {
             if (argv.v >= 1) {
                 /* tslint:disable-next-line */
@@ -76,5 +88,5 @@ export function packCommand(argv) {
             restorePackagePjson(argv, packageName);
             throw e;
         });
-    }, Promise.resolve());
+    }, Promise.resolve()).then(() => manifestFile);
 }
