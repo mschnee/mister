@@ -35,7 +35,7 @@ test('command: pack', (t) => {
         'debug-persist-package-json': false,
         'packages': ['@test-server/api'],
     };
-    return runProcess('npm', ['install'], {
+    return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),
     }, {}).then(() => packCommand(args).then(() => {
         // check that the tarballs exist.

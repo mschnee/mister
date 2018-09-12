@@ -61,7 +61,7 @@ export function packCommand(argv) {
                 console.log(wrap('[]', 'mister pack'), packageName);
             }
         })
-        .then(() => runPackageProcess(argv, packageName, 'npm', ['install', '--production']))
+        .then(() => runPackageProcess(argv, packageName, 'npm', ['install', '--production', '--skip-package-lock']))
         .then(() => runPackageProcess(argv, packageName, 'npm', ['pack']))
         .then(() => {
             manifestFile.packages[packageName] = {

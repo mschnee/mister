@@ -34,7 +34,7 @@ test('command: zip', (t) => {
     const args = {
         packages: ['@test-server/api'],
     };
-    return runProcess('npm', ['install'], {
+    return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),
     }, {}).then(() => zipCommand(args).then(() => {
         // check that the tarballs exist.
