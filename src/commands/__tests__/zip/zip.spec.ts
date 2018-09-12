@@ -16,10 +16,13 @@ const TDIR = path.join(CWD);
 
 test.before(() => {
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
+    rimraf(path.join(CWD, 'packages/node_modules/**/*.zip'));
     process.chdir(TDIR);
 });
 
 test.after(() => {
+    rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
+    rimraf(path.join(CWD, 'packages/node_modules/**/*.zip'));
     process.chdir(OCWD);
 });
 
