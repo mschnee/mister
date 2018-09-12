@@ -37,7 +37,7 @@ test('command: zip --package-prefix=alternate-package-dir', (t) => {
         'package-prefix': path.join(CWD, 'alternate-package-dir'),
         'packages': ['@test-server/api'],
     };
-    return runProcess('npm', ['install'], {
+    return runProcess('npm', ['install', '--no-package-lock'], {
         cwd: path.join(CWD),
     }, {}).then(() => zipCommand(args).then(() => {
         // check that the tarballs exist.
