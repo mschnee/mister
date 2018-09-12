@@ -2,11 +2,13 @@ import * as path from 'path';
 
 const pdirCache = {};
 
-export default function getPackageDir(packageName: string) {
+export default function getPackageDir(packagePrefix, packageName: string) {
+    if (!packageName) {
+        throw new Error('missing arguments');
+    }
     if (!pdirCache.hasOwnProperty(packageName)) {
-        const PACKAGE_DIR = 'packages/node_modules';
         const PWD = process.cwd();
-        pdirCache[packageName] = path.join(PWD, PACKAGE_DIR, packageName);
+        pdirCache[packageName] = path.resolve(PWD, packagePrefix || 'packages', 'node_modules', packageName);
     }
     return pdirCache[packageName];
 }

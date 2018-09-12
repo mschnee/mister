@@ -9,11 +9,7 @@ export const describe = 'Runs npm tasks on packages';
 export const usage = 'mister do package1 package2 --tasks=clean test build';
 export const handler = doCommand;
 
-export const builder = (yargs: Argv) => yargs.option('v', {
-    alias: 'verbose',
-    count: true,
-    description: 'Enable Verbose messaging.  Add another to see subcommand stdout.',
-}).option('all', {
+export const builder = (yargs: Argv) => yargs.option('all', {
     default: false,
     description: 'Run tasks on all packages',
     type: 'boolean',
@@ -43,7 +39,7 @@ export function doCommandWithoutDependencies(argv) {
 
 export function doCommandWithDependencies(argv) {
     const reduceFn = doTaskOnReducer.bind(this, argv);
-    const packageOrder = getDependencyGraph(getPackagesForArgs(argv)).overallOrder();
+    const packageOrder = getDependencyGraph(argv['package-prefix'], getPackagesForArgs(argv)).overallOrder();
 
     return packageOrder.reduce(reduceFn, Promise.resolve());
 }

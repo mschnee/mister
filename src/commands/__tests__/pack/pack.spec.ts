@@ -16,10 +16,13 @@ const TDIR = path.join(CWD);
 
 test.before(() => {
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
+    rimraf(path.join(CWD, 'dist'));
     process.chdir(TDIR);
 });
 
 test.after(() => {
+    rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
+    rimraf(path.join(CWD, 'dist'));
     process.chdir(OCWD);
 });
 
@@ -29,10 +32,10 @@ test.beforeEach(() => {
 
 test('command: pack', (t) => {
     const args = {
-        '_': ['@test-server/api'],
         'debug-persist-package-json': false,
+        'packages': ['@test-server/api'],
     };
-    return runProcess('npm', ['install'], {
+    return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),
     }, {}).then(() => packCommand(args).then(() => {
         // check that the tarballs exist.

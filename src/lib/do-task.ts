@@ -1,11 +1,15 @@
 import { SpawnOptions } from 'child_process';
 import * as path from 'path';
 
+import chalk from 'chalk';
+
 import getPackageDir from './package/get-package-dir';
 import runProcess from './run-process';
 
+import wrap from './output/wrap';
+
 export default function doTask(argv: any, taskName: string, packageName: string) {
-    const packageDir = getPackageDir(packageName);
+    const packageDir = getPackageDir(argv['package-prefix'], packageName);
     const spawnOptions: SpawnOptions = {
         cwd: packageDir,
         env: Object.assign({}, process.env),
@@ -23,5 +27,9 @@ export default function doTask(argv: any, taskName: string, packageName: string)
         spawnOptions.env.Path = `${process.env.Path}${path.delimiter}${localBin}`;
     }
 
+    if (argv.verbose >= 2) {
+        /* tslint:disable-next-line */
+        console.log(wrap('[]', 'do-task', chalk.yellow), 'running', chalk.bold(taskName), 'on', chalk.bold(packageName));
+    }
     return runProcess('npm', ['run', taskName], spawnOptions, argv);
 }

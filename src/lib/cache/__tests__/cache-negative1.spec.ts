@@ -51,5 +51,5 @@ test.after(() => {
 });
 
 test('invoke getCache exception handler (file not json)', (t) => {
-    return t.is(isPackageUpToDate('package1'), false);
+    return t.is(isPackageUpToDate('packages', 'package1'), false);
 });

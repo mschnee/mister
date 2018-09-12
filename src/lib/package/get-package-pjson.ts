@@ -9,9 +9,9 @@ interface PackageJsonCache {
 }
 
 const pjsonCache: PackageJsonCache = {};
-export default function getPackagePjson(packageName: string) {
+export default function getPackagePjson(packagePrefix, packageName: string) {
     if (!pjsonCache.hasOwnProperty(packageName)) {
-        const p = path.join(getPackageDir(packageName), 'package.json');
+        const p = path.join(getPackageDir(packagePrefix, packageName), 'package.json');
         if (!fs.existsSync(p)) {
             throw new Error(`Package ${packageName} does not have a package.json file`);
         }
@@ -30,10 +30,10 @@ export default function getPackagePjson(packageName: string) {
 export function restorePackagePjson(argv, packageName: string) {
     /* istanbul ignore else */
     if (pjsonCache.hasOwnProperty(packageName)) {
-        const p = path.join(getPackageDir(packageName), 'package.json');
+        const p = path.join(getPackageDir(argv['package-prefix'], packageName), 'package.json');
         /* istanbul ignore if */
         if (argv['debug-persist-package-json']) {
-            return moveFile(argv, p, path.join(getPackageDir(packageName), 'package-debug.json')).then(() => {
+            return moveFile(argv, p, path.join(getPackageDir(argv['package-prefix'], packageName), 'package-debug.json')).then(() => {
                 fs.writeFileSync(p, pjsonCache[packageName]);
             });
         } else {

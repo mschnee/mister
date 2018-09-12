@@ -4,14 +4,14 @@ import getLocalPackages from '../package/get-local-packages';
 import getPackageLocalDependencies from '../package/get-package-local-dependencies';
 
 let cachedDep;
-export default function getFullDependencyGraph() {
+export default function getFullDependencyGraph(packagePrefix) {
     if (!cachedDep) {
         cachedDep = new DepGraph({circular: false});
 
-        getLocalPackages().forEach((packageName) => {
+        getLocalPackages(packagePrefix).forEach((packageName) => {
             cachedDep.addNode(packageName);
 
-            getPackageLocalDependencies(packageName).forEach((d) => {
+            getPackageLocalDependencies(packagePrefix, packageName).forEach((d) => {
                 if (!cachedDep.hasNode(d)) {
                     cachedDep.addNode(d);
                 }
