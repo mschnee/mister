@@ -15,6 +15,7 @@ import getPackageDir from '../lib/package/get-package-dir';
 import getPackageDistFileName from '../lib/package/get-package-dist-filename';
 import getPackagesForArgs from '../lib/package/get-packages-for-argv';
 import getUpdatedPjsonForDist from '../lib/package/get-updated-pjson-for-dist';
+import preparePackage from '../lib/package/prepare-package';
 import resolveDistFileLocation from '../lib/package/resolve-dist-file-location';
 import runPackageProcess from '../lib/package/run-package-process';
 import verifyPackageName from '../lib/package/verify-package-name';
@@ -61,6 +62,7 @@ export function packCommand(argv) {
                 console.log(wrap('[]', 'mister pack'), packageName);
             }
         })
+        .then(() => preparePackage(argv['package-prefix'], packageName))
         .then(() => runPackageProcess(argv, packageName, 'npm', ['install', '--production', '--skip-package-lock']))
         .then(() => runPackageProcess(argv, packageName, 'npm', ['pack']))
         .then(() => {
