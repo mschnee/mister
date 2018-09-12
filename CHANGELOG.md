@@ -39,3 +39,17 @@ mister pack [package1, package2, packageN]
 - Adds the command `mister pack`
 - Switches tests from `mocha` to `ava`, due to the use of `process.chdir()` to contextualize tests in fixture folders.
 - Removes a lot of switches necessary to make `mocha` testing work, which `ava` does not require.
+
+## 1.3.0
+Adds `mister zip` for creating zip file distributions, for AWS, Azure, or wherever you want.
+
+This is based off of `mister pack` and will include all local and external `bundledDependencies`, however only the packages you specify will be zipped.
+
+```
+mister zip package3 @scope/package2
+```
+Will create
+```
+./dist/package3-1.0.0.zip
+./dist/scope-package2-1.0.0.zip
+```

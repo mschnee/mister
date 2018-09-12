@@ -7,6 +7,7 @@
 /test-commands
 /*.tgz
 
+
 ## debug test pjson files
 package-debug.json
 
@@ -14,3 +15,4 @@ package-debug.json
 **/__tests__/**/node_modules
 **/__tests__/**/dist
 **/__tests__/**/*.tgz
+**/__tests__/**/package-lock.json
