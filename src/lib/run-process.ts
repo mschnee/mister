@@ -19,11 +19,22 @@ export default function runProcess(command: string, args: string[], options: Spa
             console.log(chalk.yellow('     args:'), args.join(' '));
             /* tslint:enable */
         }
+
         const runProc = spawn(command, args, options);
+        let errBuffer;
+
+        runProc.stdout.on('data', (d: Buffer) => {
+            errBuffer = errBuffer ? Buffer.concat([errBuffer, d]) : d;
+        });
+        runProc.stderr.on('data', (d: Buffer) => {
+            errBuffer = errBuffer ? Buffer.concat([errBuffer, Buffer.from(chalk.red(d.toString()))]) : d;
+        });
 
         runProc.on('exit', (code: number, signal: string) => {
             if (code !== 0) {
-                reject(code);
+                const e = new Error(`${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer.toString()}`);
+                e.stack = errBuffer.toString();
+                reject(e);
             } else {
                 resolve();
             }

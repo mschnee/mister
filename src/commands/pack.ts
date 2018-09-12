@@ -84,7 +84,7 @@ export function packCommand(argv) {
         .then(() => rimraf(path.join(getPackageDir(argv['package-prefix'], packageName), 'node_modules')))
         .catch((e: Error) => {
             /* tslint:disable-next-line */
-            console.error(wrap('[]', 'mister pack', chalk.bold.red), e.message)
+            console.error(wrap('[]', 'mister pack', chalk.bold.red), e)
             restorePackagePjson(argv, packageName);
             throw e;
         });
