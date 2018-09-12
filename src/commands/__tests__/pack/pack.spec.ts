@@ -32,8 +32,8 @@ test.beforeEach(() => {
 
 test('command: pack', (t) => {
     const args = {
-        'packages': ['@test-server/api'],
         'debug-persist-package-json': false,
+        'packages': ['@test-server/api'],
     };
     return runProcess('npm', ['install'], {
         cwd: path.join(CWD),
