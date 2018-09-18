@@ -1,0 +1,16 @@
+{
+    "packages": {
+        "@test/package3": {
+            "lastBuildTime": "2018-06-15T19:34:42.887Z"
+        },
+        "@test/package4": {
+            "lastBuildTime": "2018-06-15T19:34:42.887Z"
+        },
+        "package1": {
+            "lastBuildTime": "2018-06-15T20:34:42.887Z"
+        },
+        "package2": {
+            "lastBuildTime": "2018-06-15T20:34:42.887Z"
+        }
+    }
+}

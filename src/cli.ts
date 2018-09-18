@@ -6,6 +6,11 @@ require('yargs') // tslint:disable-line
     .showHelpOnFail(true)
     .commandDir('commands')
     .demandCommand(1)
+    .option('cache', {
+        default: true,
+        description: 'Use the command cache to prevent re-building of dependencies',
+        type: 'boolean',
+    })
     .option('stdio', {
         default: false,
         type: 'boolean',

@@ -11,7 +11,7 @@
   "scripts": {
     "build": "rimraf dist && tsc -p .",
     "test": "nyc ava",
-    "lint": "tslint -p .",
+    "lint": "tslint -p . --fix ",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
   },
@@ -30,11 +30,13 @@
     "mock-fs": "^4.7.0",
     "mock-require": "^3.0.2",
     "nyc": "^13.0.1",
+    "prettier": "^1.14.2",
     "rimraf": "^2.6.2",
     "sinon": "^6.2.0",
     "source-map-support": "^0.5.9",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.0.3",
     "unzip": "^0.1.11"
   },

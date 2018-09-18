@@ -1,6 +1,4 @@
 /* istanbul ignore next */
-import * as cache from './cache';
-export { cache };
 
 import * as dependencies from './dependencies';
 export { dependencies };

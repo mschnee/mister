@@ -1,0 +1,16 @@
+{
+    "packages": {
+        "@test/package3": {
+            "commandTimestamps": {"build":  "2018-06-15T19:34:42.887Z"}
+        },
+        "@test/package4": {
+            "commandTimestamps": {"build": "2018-06-15T19:34:42.887Z"}
+        },
+        "package1": {
+            "commandTimestamps": {"build": "2018-06-15T20:34:42.887Z"}
+        },
+        "package2": {
+            "commandTimestamps": {"build": "2018-06-15T20:34:42.887Z"}
+        }
+    }
+}
