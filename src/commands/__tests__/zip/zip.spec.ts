@@ -8,7 +8,7 @@ import * as path from 'path';
 import { sync as rimraf } from 'rimraf';
 
 import runProcess from '../../../lib/run-process';
-import { zipCommand } from '../../zip';
+import { handler } from '../../zip';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixture');
@@ -36,7 +36,7 @@ test('command: zip', (t) => {
     };
     return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),
-    }, {}).then(() => zipCommand(args).then(() => {
+    }, {}).then(() => handler(args).then(() => {
         // check that the tarballs exist.
         t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.zip')));
         const entries = [];

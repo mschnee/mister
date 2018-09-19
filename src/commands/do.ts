@@ -1,13 +1,10 @@
 import { Argv } from 'yargs';
 
-import getDependencyGraph from '../lib/dependencies/get-dependency-graph';
-import doTaskOnReducer from '../lib/do-tasks-reducer';
-import getPackagesForArgs from '../lib/package/get-packages-for-argv';
+import App from '../lib/App';
 
 export const command = 'do [packages...]';
 export const describe = 'Runs npm tasks on packages';
 export const usage = 'mister do package1 package2 --tasks=clean test build';
-export const handler = doCommand;
 
 export const builder = (yargs: Argv) => yargs.option('all', {
     default: false,
@@ -23,23 +20,7 @@ export const builder = (yargs: Argv) => yargs.option('all', {
     type: 'boolean',
 }).help();
 
-export function doCommand(argv) {
-    if (argv['with-dependencies']) {
-        return doCommandWithDependencies(argv);
-    } else {
-        return doCommandWithoutDependencies(argv);
-    }
-}
-
-export function doCommandWithoutDependencies(argv) {
-    const reduceFn = doTaskOnReducer.bind(this, argv);
-    return getPackagesForArgs(argv)
-        .reduce(reduceFn, Promise.resolve());
-}
-
-export function doCommandWithDependencies(argv) {
-    const reduceFn = doTaskOnReducer.bind(this, argv);
-    const packageOrder = getDependencyGraph(argv['package-prefix'], getPackagesForArgs(argv)).overallOrder();
-
-    return packageOrder.reduce(reduceFn, Promise.resolve());
+export function handler(argv) {
+    const app = new App(argv);
+    return app.doCommand();
 }

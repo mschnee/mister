@@ -40,7 +40,7 @@ export default class PackageCache {
         this.packageManager = manager;
         this.verbosity = (options && options.verbosity) || 0;
 
-        this.cacheFilePath = path.join(process.cwd(), ".mister", "cache.json");
+        this.cacheFilePath = path.resolve(process.cwd(), ".mister", "cache.json");
     }
 
     public resetCache() {
