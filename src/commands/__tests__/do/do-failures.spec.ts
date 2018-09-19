@@ -22,8 +22,7 @@ test('command: do - should error', (t) => {
     const argv = {
         packages: ['package1', '@test/package3'],
         stdio: false,
-        tasks: ['fails1', 'test2'],
-        'verbose': 2,
+        tasks: ['fails1', 'test2']
     };
 
     const app = new App(argv);

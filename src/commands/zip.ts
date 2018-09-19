@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import App from '../lib/App';
 
 export const command = 'zip [packages...]';

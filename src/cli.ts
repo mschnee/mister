@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* istanbul ignore next */
+/* istanbul ignore file */
 require('yargs') // tslint:disable-line
     .help()
     .strict()

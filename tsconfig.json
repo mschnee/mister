@@ -6,8 +6,7 @@
         "esModuleInterop": false,
         "allowSyntheticDefaultImports": false,
         "declaration": true,
-        "inlineSourceMap": true,
-        "sourceMap": true
+        "inlineSourceMap": true
     },
     "include": [
         "src/**/*.ts"

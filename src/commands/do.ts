@@ -4,6 +4,7 @@ import App from '../lib/App';
 
 export const command = 'do [packages...]';
 export const describe = 'Runs npm tasks on packages';
+/* istanbul ignore file */
 export const usage = 'mister do package1 package2 --tasks=clean test build';
 
 export const builder = (yargs: Argv) => yargs.option('all', {

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Argv } from 'yargs';
 
 import App from '../lib/App';
