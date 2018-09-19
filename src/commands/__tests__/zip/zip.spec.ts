@@ -24,10 +24,10 @@ test.before(() => {
 });
 
 test.after(() => {
+    rimraf(tempDir);
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
     rimraf(path.join(CWD, 'packages/node_modules/**/*.zip'));
     process.chdir(OCWD);
-    rimraf(tempDir);
 });
 
 test.beforeEach(() => {
