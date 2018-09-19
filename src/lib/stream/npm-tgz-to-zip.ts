@@ -14,7 +14,7 @@ export default function npmTgzToZip(tgzFileName, zipFileName) {
     return new Promise((resolve, reject) => {
         const inStream = fs.createReadStream(tgzFileName);
         const archive = archiver('zip', {
-            zlib: { level: 9 },
+
         });
         const oStream = fs.createWriteStream(zipFileName);
 
