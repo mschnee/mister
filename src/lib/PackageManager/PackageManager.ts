@@ -15,7 +15,11 @@ export interface PackageManagerOptions {
 }
 
 interface PackageJsonCache {
-    [key: string]: Buffer;
+    [key: string]: {
+        buffer: Buffer;
+        atime: Date;
+        mtime: Date;
+    }
 }
 
 /* istanbul ignore next */
@@ -213,11 +217,17 @@ export default class PackageManager {
                     `Package ${packageName} does not have a package.json file`,
                 );
             }
-            this.pjsonCache[packageName] = fs.readFileSync(p);
+            const fstat = fs.statSync(p);
+            const fbuf = fs.readFileSync(p);
+            this.pjsonCache[packageName] = {
+                atime: fstat.atime,
+                buffer: fbuf,
+                mtime: fstat.mtime
+            }
         }
 
         try {
-            return JSON.parse(this.pjsonCache[packageName].toString());
+            return JSON.parse(this.pjsonCache[packageName].buffer.toString());
         } catch (e) {
             // tslint:disable-next-line:no-console
             console.error("Error parsing package.json for", packageName);
@@ -292,6 +302,9 @@ export default class PackageManager {
         return runProcess(command, args, spawnOptions, argv);
     }
 
+    /**
+     * Restores the content, atime, and mtime of package.json
+     */
     public restorePackagePjson(argv, packageName: string) {
         /* istanbul ignore else */
         if (this.pjsonCache.hasOwnProperty(packageName)) {
@@ -303,11 +316,14 @@ export default class PackageManager {
                     p,
                     path.join(this.getPackageDir(packageName), "package-debug.json"),
                 ).then(() => {
-                    fs.writeFileSync(p, this.pjsonCache[packageName]);
+                    fs.writeFileSync(p, this.pjsonCache[packageName].buffer);
                 });
             } else {
-                fs.writeFileSync(p, this.pjsonCache[packageName]);
+                fs.writeFileSync(p, this.pjsonCache[packageName].buffer);
             }
+
+            // restore the atime/mtime of the file.
+            fs.utimesSync(p, this.pjsonCache[packageName].atime, this.pjsonCache[packageName].mtime);
         }
     }
 

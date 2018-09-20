@@ -107,6 +107,10 @@ export default class PackageCache {
     }
 
     public isPackageCommandUpToDate(packageName: string, commandName: string) {
+        if (this.verbosity >= 3) {
+            // tslint:disable-next-line:no-console
+            console.log('Checking if', commandName, 'is up to date for', packageName)
+        }
         if (!this.doesCommandTimestampExist(packageName, commandName)) {
             if (this.verbosity >= 2) {
                 // tslint:disable-next-line:no-console

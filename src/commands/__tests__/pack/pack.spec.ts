@@ -17,12 +17,14 @@ const TDIR = path.join(CWD);
 test.before(() => {
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
     rimraf(path.join(CWD, 'dist'));
+    rimraf(path.join(CWD, '.mister'));
     process.chdir(TDIR);
 });
 
 test.after(() => {
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
     rimraf(path.join(CWD, 'dist'));
+    rimraf(path.join(CWD, '.mister'));
     process.chdir(OCWD);
 });
 
