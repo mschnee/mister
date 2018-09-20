@@ -26,7 +26,7 @@ test('command: do --with-dependencies', (t) => {
         'tasks': ['test3'],
         'with-dependencies': true,
     };
-    const app = new App(argv);
+    const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');
 
     return app.doCommand().then(() => {

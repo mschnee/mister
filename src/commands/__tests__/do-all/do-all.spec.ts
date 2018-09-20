@@ -25,7 +25,7 @@ test('command: do-all - runs three commands' , (t) => {
     const argv = {
         tasks: ['test1', 'test2', 'test3'],
     };
-    const app = new App(argv);
+    const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');
     return app.doCommandOnAll().then(() => {
         return Promise.all([

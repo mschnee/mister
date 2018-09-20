@@ -222,6 +222,9 @@ export default class PackageCache {
     }
 
     private flushFile(newCache) {
+        if (!fs.existsSync(path.dirname(this.cacheFilePath))) {
+            fs.mkdirSync(path.dirname(this.cacheFilePath));
+        }
         fs.writeFileSync(
             this.cacheFilePath,
             JSON.stringify(newCache, null, 4),

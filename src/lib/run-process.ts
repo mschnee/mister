@@ -46,7 +46,6 @@ export default function runProcess(command: string, args: string[], options: Spa
                 }
             });
         } catch (e) {
-            console.log(e)
             reject(e)
         }
     });

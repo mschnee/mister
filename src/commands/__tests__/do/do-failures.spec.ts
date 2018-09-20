@@ -25,7 +25,7 @@ test('command: do - should error', (t) => {
         tasks: ['fails1', 'test2']
     };
 
-    const app = new App(argv);
+    const app = new App(argv, {writeCache: false});
 
     return app.doCommand().then(() => {
         t.fail('Running fails1 on package1 should fail')

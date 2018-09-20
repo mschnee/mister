@@ -1,0 +1,19 @@
+{
+    "packages": {
+        "@test-common/reducer1": {
+            "commandTimestamps": {
+                "pack": "2018-09-20T02:45:41.976Z"
+            },
+            "dependencies": {}
+        },
+        "@test-server/api": {
+            "commandTimestamps": {
+                "pack": "2018-09-20T02:46:02.416Z"
+            },
+            "dependencies": {
+                "pack": "2018-09-20T02:45:41.976Z"
+            }
+        }
+    },
+    "version": "1.0.0"
+}

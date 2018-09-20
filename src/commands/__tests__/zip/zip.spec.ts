@@ -19,6 +19,7 @@ let tempDir;
 test.before(() => {
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
     rimraf(path.join(CWD, 'packages/node_modules/**/*.zip'));
+    rimraf(path.join(CWD, '.mister'));
     process.chdir(TDIR);
     tempDir = mktemp.createDirSync('zip-test-XXXX');
 });
@@ -27,6 +28,7 @@ test.after(() => {
     rimraf(tempDir);
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
     rimraf(path.join(CWD, 'packages/node_modules/**/*.zip'));
+    rimraf(path.join(CWD, '.mister'));
     process.chdir(OCWD);
 });
 
@@ -40,7 +42,7 @@ test('command: zip', (t) => {
     };
     return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),
-    }, {}).then(() => handler(args).then(() => {
+    }, {}).then(() => handler(args)).then(() => {
         // check that the tarballs exist.
         t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.zip')));
 
@@ -53,5 +55,5 @@ test('command: zip', (t) => {
             const fl = JSON.parse(fs.readFileSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json'), 'utf8'))
             t.is(fl, {"name": "unscoped-lib1"})
         });
-    }));
+    });
 });

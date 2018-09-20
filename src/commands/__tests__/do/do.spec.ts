@@ -25,7 +25,7 @@ test('command: do - runs two commands on two packages' , async (t) => {
         packages: ['package1', '@test/package3'],
         tasks: ['test1', 'test2']
     };
-    const app = new App(argv);
+    const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');
 
     return app.doCommand().then(() => {
@@ -40,7 +40,7 @@ test('command: do - runs two commands given four packages but only two matching 
         packages: ['package1', 'package2', '@test/package3', '@test/package4'],
         tasks: ['test1', 'test2']
     };
-    const app = new App(argv);
+    const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');
 
     return app.doCommand().then(() => {

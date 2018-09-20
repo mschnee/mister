@@ -13,15 +13,21 @@ import npmTgzToZip from '../stream/npm-tgz-to-zip';
 import PackageCache from '../PackageCache';
 import PackageManager from '../PackageManager';
 
+export interface AppOptions {
+    writeCache: boolean;
+}
+
 export default class App {
     private args: Argv;
+    private writeCache: boolean;
     private verbosity: number;
     private packageManager: PackageManager;
     private packageCache: PackageCache;
 
-    constructor(args: Argv) {
+    constructor(args: Argv, options?: AppOptions) {
         this.args = args;
         this.verbosity = this.args.verbose || 0;
+        this.writeCache = options && options.writeCache || true;
 
         this.packageManager = new PackageManager({
             packagePrefix: args.packagePrefix || 'packages',
@@ -95,6 +101,7 @@ export default class App {
                         /* tslint:disable-next-line */
                         console.log(wrap('[]', 'mister pack'), 'created', chalk.bold.green(this.packageManager.resolveDistfileLocation(packageName)));
                     }
+                    this.packageCache.writeTimestampForCommand(packageName, 'pack')
                 })
                 .then(() => this.packageManager.restorePackagePjson(this.args, packageName))
                 .then(() => rimraf(path.join(this.packageManager.getPackageDir(packageName), 'node_modules')))
@@ -136,7 +143,6 @@ export default class App {
         try {
             return runProcess('npm', ['run', taskName], spawnOptions, this.args);
         } catch (e) {
-            console.log(e)
             return Promise.reject(e);
         }
     }
@@ -154,13 +160,23 @@ export default class App {
 
     public zipCommand() {
         return this.packCommand().then(() => {
-            return Promise.all(this.packageManager.getPackagesForArgs(this.args).map((i) => this.zipLocalPackage(i)));
+            return Promise.all(this.packageManager.getPackagesForArgs(this.args).map((packageName) => this.zipLocalPackage(packageName).then((zipName) => {
+
+                    if (this.verbosity >= 1) {
+                        /* tslint:disable-next-line */
+                        console.log(wrap('[]', 'mister zip'), 'created', chalk.bold.green(zipName));
+                    }
+                    this.packageCache.writeTimestampForCommand(packageName, 'zip')
+
+            })));
         });
     }
 
-    public zipLocalPackage(packageName) {
+    public async zipLocalPackage(packageName) {
         const tgzFile = this.packageManager.resolveDistfileLocation(packageName);
-        const zipFile = path.join(path.dirname(tgzFile), path.basename(tgzFile, '.tgz') + '.zip');
-        return npmTgzToZip(tgzFile, zipFile);
+        const shortName = path.basename(tgzFile, '.tgz') + '.zip';
+        const zipFile = path.join(path.dirname(tgzFile), shortName);
+        await npmTgzToZip(tgzFile, zipFile);
+        return shortName;
     }
 }
