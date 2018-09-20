@@ -1,9 +1,13 @@
 import * as fs from 'fs';
-import { Transform } from 'stream';
 
-import * as archiver from 'archiver';
-import * as gunzip from 'gunzip-maybe';
-import * as tarStream from 'tar-stream';
+import * as tarToZip from 'tar-to-zip';
+
+
+function fileRename(file: any) {
+    return {
+        name: file.name.replace('package/', '')
+    }
+}
 
 /**
  * Takes a tgz created by `npm pack` and puts it's `./package/` contents into a zip file.
@@ -12,33 +16,11 @@ import * as tarStream from 'tar-stream';
  */
 export default function npmTgzToZip(tgzFileName, zipFileName) {
     return new Promise((resolve, reject) => {
-        const inStream = fs.createReadStream(tgzFileName);
-        const archive = archiver('zip', {
-
-        });
-        const oStream = fs.createWriteStream(zipFileName);
-
-        archive.pipe(oStream);
-
-        const xstream = tarStream.extract();
-        xstream.on('entry', (header, stream, done) => {
-            archive.append(stream, { name: header.name.replace('package/', '')});
-            stream.on('end', done);
-            stream.resume();
-        });
-
-        xstream.on('finish', () => {
-            archive.finalize();
-        });
-
-        xstream.on('error', (e) => {
-            reject(e);
-        });
-
-        inStream.pipe(gunzip()).pipe(xstream);
-
-        oStream.on('close', () => {
-            resolve();
-        });
+        const ofile = fs.createWriteStream(zipFileName);
+        tarToZip(tgzFileName, {map: fileRename})
+            .on('error', reject)
+            .getStream()
+            .pipe(ofile)
+            .on('finish', resolve);
     });
 }
