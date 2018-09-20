@@ -53,3 +53,9 @@ Will create
 ./dist/package3-1.0.0.zip
 ./dist/scope-package2-1.0.0.zip
 ```
+
+## 1.4.0
+Implements `--cache=true` for `mister pack` and `mister zip`.  You can always `--no-cache` to force full repackaging and re-zipping.
+Fixes `zip` functionality.  It was creating empty files, now they have content.
+
+Under the hood, there's a significant refactor of the package functions into a PackageManager class.  There will be more cleanup in the future.
