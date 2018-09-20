@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /*
 * WARNING
 * importing mister is done at your own risk.

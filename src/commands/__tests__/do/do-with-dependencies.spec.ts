@@ -4,8 +4,9 @@ import test from 'ava';
 import * as path from 'path';
 import * as sinon from 'sinon';
 
-import * as doTask from '../../../lib/do-task';
-import { doCommand } from '../../do';
+import App from '../../../lib/App';
+
+import { handler } from '../../do';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixtures');
@@ -20,20 +21,18 @@ test.after(() => {
 });
 
 test('command: do --with-dependencies', (t) => {
-    const spy = sinon.spy(doTask, 'default');
     const argv = {
         'packages': ['@test/package4'],
         'tasks': ['test3'],
         'with-dependencies': true,
     };
-    return doCommand(argv).then(() => {
-        return Promise.all([
-            t.is(spy.called, true),
-            t.is(spy.calledWith(argv, 'test3', 'package2'), true),
-            t.is(spy.calledWith(argv, 'test3', '@test/package3'), true),
-            t.is(spy.calledWith(argv, 'test3', '@test/package4'), true),
-        ]).then(() => {
-            spy.restore();
-        });
+    const app = new App(argv, {writeCache: false});
+    const spy = sinon.spy(app, 'doTask');
+
+    return app.doCommand().then(() => {
+        t.is(spy.called, true);
+        t.is(spy.calledWith('package2', 'test3'), true);
+        t.is(spy.calledWith('@test/package3', 'test3'), true);
+        t.is(spy.calledWith('@test/package4', 'test3'), true);
     });
 });

@@ -2,16 +2,13 @@
 import test from 'ava';
 
 import * as path from 'path';
-import * as sinon from 'sinon';
 
-import * as doTask from '../../../lib/do-task';
-import { doCommand } from '../../do';
+import App from '../../../lib/App';
 
 const OCWD = process.cwd();
 const CWD = path.resolve(__dirname, 'fixtures');
 const TDIR = path.join(CWD);
 
-const spy = sinon.spy(doTask, 'default');
 
 test.before(() => {
     process.chdir(TDIR);
@@ -21,17 +18,18 @@ test.after(() => {
     process.chdir(OCWD);
 });
 
-test.beforeEach(() => {
-    spy.resetHistory();
-});
-
-test('command: do - should error' , async (t) => {
+test('command: do - should error', (t) => {
     const argv = {
         packages: ['package1', '@test/package3'],
         stdio: false,
-        tasks: ['fails1', 'test2'],
+        tasks: ['fails1', 'test2']
     };
-    return doCommand(argv).catch(e => {
+
+    const app = new App(argv, {writeCache: false});
+
+    return app.doCommand().then(() => {
+        t.fail('Running fails1 on package1 should fail')
+    }).catch(e => {
         t.not(e, 0);
-    });
+    })
 });

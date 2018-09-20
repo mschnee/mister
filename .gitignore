@@ -12,7 +12,7 @@
 package-debug.json
 
 ## Fixture related
-**/__tests__/**/node_modules
+**/__tests__/**/fixture*/node_modules
 **/__tests__/**/dist
 **/__tests__/**/*.tgz
 **/__tests__/**/package-lock.json

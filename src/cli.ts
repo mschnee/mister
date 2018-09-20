@@ -1,11 +1,16 @@
 #!/usr/bin/env node
-/* istanbul ignore next */
+/* istanbul ignore file */
 require('yargs') // tslint:disable-line
     .help()
     .strict()
     .showHelpOnFail(true)
     .commandDir('commands')
     .demandCommand(1)
+    .option('cache', {
+        default: true,
+        description: 'Use the command cache to prevent re-building of dependencies',
+        type: 'boolean',
+    })
     .option('stdio', {
         default: false,
         type: 'boolean',

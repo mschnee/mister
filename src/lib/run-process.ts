@@ -20,24 +20,33 @@ export default function runProcess(command: string, args: string[], options: Spa
             /* tslint:enable */
         }
 
-        const runProc = spawn(command, args, options);
-        let errBuffer;
+        try {
+            const runProc = spawn(command, args, options);
+            let errBuffer;
 
-        runProc.stdout.on('data', (d: Buffer) => {
-            errBuffer = errBuffer ? Buffer.concat([errBuffer, d]) : d;
-        });
-        runProc.stderr.on('data', (d: Buffer) => {
-            errBuffer = errBuffer ? Buffer.concat([errBuffer, Buffer.from(chalk.red(d.toString()))]) : d;
-        });
-
-        runProc.on('exit', (code: number, signal: string) => {
-            if (code !== 0) {
-                const e = new Error(`${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer.toString()}`);
-                e.stack = errBuffer.toString();
-                reject(e);
-            } else {
-                resolve();
+            if (runProc.stdout) {
+                runProc.stdout.on('data', (d: Buffer) => {
+                    errBuffer = errBuffer ? Buffer.concat([errBuffer, d]) : d;
+                });
             }
-        });
+
+            if (runProc.stderr) {
+                runProc.stderr.on('data', (d: Buffer) => {
+                    errBuffer = errBuffer ? Buffer.concat([errBuffer, Buffer.from(chalk.red(d.toString()))]) : d;
+                });
+            }
+
+            runProc.on('exit', (code: number, signal: string) => {
+                if (code !== 0) {
+                    const e = new Error(`${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer.toString()}`);
+                    e.stack = errBuffer.toString();
+                    reject(e);
+                } else {
+                    resolve();
+                }
+            });
+        } catch (e) {
+            reject(e)
+        }
     });
 }
