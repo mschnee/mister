@@ -140,9 +140,42 @@ This process can be time-consuming.
         <td/>
     </tr>
     <tr>
+    <td></td>
+        <td><code>packages</code></td>
+        <td>Runs <code>npm pack</code> on the given packages and their dependencies.  This honors <code>bundledDependencies</code>, and will include them (including your packages and their dependencies).  <br/> This command honors the build cache: dependencies and packages that haven't changed will not be re-packaged.</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verno-cache</code></td>
+        <td>Skips cache checks and re-zips, even if the code and dependencies haven't changed</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verbose</code></td>
+        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+    </tr>
+</table>
+<table>
+    <thead>
+        <td colspan="3">
+            <h3>pack</h3>
+            <pre>mister zip [packages...] <options></pre>
+        </td>
+    </thead>
+    <tr>
+        <td>Required</td>
+        <td/>
+        <td/>
+    </tr>
+    <tr>
         <td></td>
         <td><code>packages</code></td>
-        <td>Runs <code>npm pack</code> on the given packages and their dependencies.  This honors <code>bundledDependencies</code>, and will include them (including your packages and their dependencies).</td>
+        <td>Creates zip file distributions of the named files, including all bundled dependencies.  Only the packages named will be zipped. <br/> This command honors the build cache: dependencies that haven't changed will not be re-packaged, and packages that haven't changed will not be re-zipped</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--verno-cache</code></td>
+        <td>Skips cache checks and re-zips, even if the code and dependencies haven't changed</td>
     </tr>
     <tr>
         <td/>
