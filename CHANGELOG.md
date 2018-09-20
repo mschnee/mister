@@ -62,3 +62,6 @@ Under the hood, there's a significant refactor of the package functions into a P
 
 ### 1.4.1
 Fixes a bug in writing the cache file dependencies.
+
+### 1.4.2
+Fixes a bug in dependency timestamp checking
