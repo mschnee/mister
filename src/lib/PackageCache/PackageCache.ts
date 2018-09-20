@@ -45,6 +45,7 @@ export default class PackageCache {
 
     public resetCache() {
         this.buildCache = null;
+        this.flushFile({});
     }
 
     public doesPackageEntryExist(packageName: string) {
@@ -81,7 +82,7 @@ export default class PackageCache {
         return !dependencies.some(d => {
             const currentTimestamp =
                 cache.packages[packageName].commandTimestamps[commandName];
-            const depTimestamp =
+            const  depTimestamp =
                 cache.packages[d].commandTimestamps[commandName];
             const refTime =
                 cache.packages[packageName].dependencies[d][commandName];
@@ -204,24 +205,25 @@ export default class PackageCache {
             cache.packages = {};
         }
 
-        const dependencies = this.packageManager.getPackageLocalDependencies(
-            packageName
-        );
-
         if (!cache.packages.hasOwnProperty(packageName)) {
             cache.packages[packageName] = {
                 commandTimestamps: {},
-                dependencies: dependencies.reduce((accum, d) => {
-                    // these should always be in order.
-                    accum[packageCommand] =
-                        cache.packages[d].commandTimestamps[packageCommand];
-                    return accum;
-                }, {})
+                dependencies: {}
             };
         }
 
         cache.packages[packageName].commandTimestamps[packageCommand] = time;
 
+        const dependencies = this.packageManager.getPackageLocalDependencies(
+            packageName
+        );
+
+        dependencies.forEach(d => {
+            if (!cache.packages[packageName].dependencies.hasOwnProperty(d)) {
+                cache.packages[packageName].dependencies[d] = {}
+            }
+            cache.packages[packageName].dependencies[d][packageCommand] = time;
+        })
         this.flushFile(cache);
     }
 
