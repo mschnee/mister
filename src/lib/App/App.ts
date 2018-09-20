@@ -1,4 +1,5 @@
 import { SpawnOptions } from 'child_process';
+import * as fs from 'fs';
 import * as path from 'path';
 
 import chalk from 'chalk';
@@ -79,10 +80,13 @@ export default class App {
 
         return packageOrder.reduce((accum, packageName) => {
             return accum.then(async () => {
+                const packageDir = this.packageManager.getPackageDir(packageName);
+                const distFileName = this.packageManager.getPackageDistFileName(packageName);
+                const distFileLocation = this.packageManager.resolveDistfileLocation(packageName);
 
                 // do I need to build ?
                 if (!this.force && this.checkCommandCache) {
-                    if (this.packageCache.isPackageCommandUpToDate(packageName, 'pack')) {
+                    if (fs.existsSync(distFileLocation) && this.packageCache.isPackageCommandUpToDate(packageName, 'pack')) {
                         return;
                     }
                 }
@@ -91,7 +95,7 @@ export default class App {
                 await this.packageManager.verifyPackageName(packageName);
                 const newPjson = this.packageManager.getUpdatedPjsonForDist(packageName);
                 this.packageManager.writePackagePjson(this.args, packageName, newPjson);
-                rimraf(path.join(this.packageManager.getPackageDir(packageName), 'node_modules'));
+                rimraf(path.join(packageDir, 'node_modules'));
 
                 if (this.verbosity >= 1) {
                     /* tslint:disable-next-line */
@@ -102,23 +106,23 @@ export default class App {
                 await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock']);
                 await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['pack']);
                 manifestFile.packages[packageName] = {
-                    tgzFileName: this.packageManager.getPackageDistFileName(packageName),
-                    tgzFilePath: this.packageManager.resolveDistfileLocation(packageName),
+                    tgzFileName: distFileName,
+                    tgzFilePath: distFileLocation,
                 };
                 await moveFile(
                     this.args,
-                    path.join(this.packageManager.getPackageDir(packageName), this.packageManager.getPackageDistFileName(packageName)),
-                    this.packageManager.resolveDistfileLocation(packageName),
+                    path.join(packageDir, distFileName),
+                    distFileLocation,
                 );
 
                 if (this.verbosity >= 1) {
                     /* tslint:disable-next-line */
-                    console.log(wrap('[]', 'mister pack'), 'created', chalk.bold.green(this.packageManager.resolveDistfileLocation(packageName)));
+                    console.log(wrap('[]', 'mister pack'), 'created', chalk.bold.green(distFileLocation));
                 }
                 this.packageCache.writeTimestampForCommand(packageName, 'pack')
 
                 this.packageManager.restorePackagePjson(this.args, packageName);
-                rimraf(path.join(this.packageManager.getPackageDir(packageName), 'node_modules'));
+                rimraf(path.join(packageDir, 'node_modules'));
             }).catch((e: Error) => {
                 /* tslint:disable-next-line */
                 console.error(wrap('[]', 'mister pack', chalk.bold.red), e)
@@ -183,13 +187,13 @@ export default class App {
     public async zipLocalPackage(packageName) {
         const tgzFile = this.packageManager.resolveDistfileLocation(packageName);
         const shortName = path.basename(tgzFile, '.tgz') + '.zip';
+        const zipFile = path.join(path.dirname(tgzFile), shortName);
 
         if (!this.force && this.checkCommandCache) {
-            if (this.packageCache.isPackageCommandUpToDate(packageName, 'zip')) {
+            if (fs.existsSync(zipFile) && this.packageCache.isPackageCommandUpToDate(packageName, 'zip')) {
                 return;
             }
         }
-        const zipFile = path.join(path.dirname(tgzFile), shortName);
         await npmTgzToZip(tgzFile, zipFile);
 
         if (this.verbosity >= 1) {
