@@ -123,7 +123,7 @@ export default class PackageManager {
 
     public getMatchingPackageTasks(packageName, tasks?: string[]) {
         return this.getPackageTasks(packageName).filter((taskName) =>
-            tasks.find((t) => t === taskName),
+            tasks.find((t) => t.replace(/^\!/, '') === taskName)
         );
     }
 

@@ -169,8 +169,19 @@ export default class App {
         return packages.reduce((accum, packageName) => {
             const tasks  = this.packageManager.getMatchingPackageTasks(packageName, this.args.tasks || this.args._)
             return tasks.reduce((a: any, task) => {
-                return a.then( () => {
-                    return this.doTask(packageName, task);
+                return a.then(async () => {
+                    const realTask = task.replace(/^\!/, '');
+                    const checkCache = task.substring(0, 1) === '!';
+                    if (checkCache) {
+                        if (this.packageCache.isPackageTaskUpToDate(packageName, realTask)) {
+                            return;
+                        } else {
+                            await this.doTask(packageName, realTask);
+                            this.packageCache.writeTimestampForTask(packageName, realTask);
+                        }
+                    } else {
+                        return this.doTask(packageName, realTask);
+                    }
                 }); }
             ,accum);
         }, Promise.resolve());
