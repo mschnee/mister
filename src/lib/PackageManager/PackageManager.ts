@@ -281,7 +281,11 @@ export default class PackageManager {
         const packageDir = this.getPackageDir(packageName);
         const spawnOptions: SpawnOptions = {
             cwd: packageDir,
-            env: Object.assign({}, process.env),
+            env: Object.assign({}, {
+                MISTER_PACKAGE: packageName,
+                MISTER_PACKAGE_PATH: packageDir,
+                MISTER_ROOT: path.resolve(process.cwd()),
+            }, process.env),
         };
 
         /* istanbul ignore if */

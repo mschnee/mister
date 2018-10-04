@@ -11,6 +11,8 @@
   "scripts": {
     "build": "rimraf dist && tsc -p .",
     "test": "nyc ava",
+    "test:ci": "ava --reset-cache && npm run test && npm run test:xunit",
+    "test:xunit": "ava --tap | tap-xunit > coverage/xunit.xml",
     "lint": "tslint -p . --fix ",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
@@ -32,6 +34,7 @@
     "prettier": "^1.14.3",
     "rimraf": "^2.6.2",
     "sinon": "^6.3.4",
+    "tap-xunit": "^2.3.0",
     "transit-js": "^0.8.861",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",

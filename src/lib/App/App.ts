@@ -171,7 +171,7 @@ export default class App {
             return tasks.reduce((a: any, task) => {
                 return a.then(async () => {
                     const realTask = task.replace(/^\!/, '');
-                    const checkCache = task.substring(0, 1) === '!';
+                    const checkCache = task.substring(0, 1) !== '!';
                     if (checkCache) {
                         if (this.packageCache.isPackageTaskUpToDate(packageName, realTask)) {
                             return;

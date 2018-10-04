@@ -38,8 +38,12 @@ export default function runProcess(command: string, args: string[], options: Spa
 
             runProc.on('exit', (code: number, signal: string) => {
                 if (code !== 0) {
-                    const e = new Error(`${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer.toString()}`);
-                    e.stack = errBuffer.toString();
+                    const e = new Error(`${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer && errBuffer.toString()}`);
+
+                    if (errBuffer) {
+                        e.stack = errBuffer.toString();
+                    }
+
                     reject(e);
                 } else {
                     resolve();
