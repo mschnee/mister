@@ -193,8 +193,12 @@ export default class PackageCache {
                         fs.readFileSync(this.cacheFilePath, "utf8")
                     );
                 } else {
-                    if (this.verbosity >= 2) {
-                        console.log(this.cacheFilePath, "does not exist"); // tslint:disable-line:no-console
+                    if (this.verbosity >=3) {
+                        // tslint:disable-next-line:no-console
+                        console.log(
+                            wrap("[]", "mister cache", chalk.gray),
+                            'cache file does not exist'
+                        );
                     }
                     this.buildCache = {
                         packages: {},
@@ -203,7 +207,8 @@ export default class PackageCache {
                 }
             } catch (e) {
                 if (this.verbosity >= 2) {
-                    console.log(e); // tslint:disable-line:no-console
+                    // tslint:disable-next-line no-console
+                    console.log(e);
                 }
                 this.buildCache = {
                     packages: {},
@@ -246,6 +251,13 @@ export default class PackageCache {
     private flushFile(newCache) {
         if (!fs.existsSync(path.dirname(this.cacheFilePath))) {
             fs.mkdirSync(path.dirname(this.cacheFilePath));
+        }
+        if (this.verbosity >=3) {
+            // tslint:disable-next-line:no-console
+            console.log(
+                wrap("[]", "mister cache", chalk.gray),
+                'writing cache file'
+            );
         }
         fs.writeFileSync(
             this.cacheFilePath,
@@ -362,6 +374,9 @@ export default class PackageCache {
     ) {
         const time = timestamp || new Date();
         const cache = this.getCache();
+        if (this.verbosity >= 3) {
+            console.log(cache);
+        }
         const key = `${thing}Timestamps`;
         if (!cache.hasOwnProperty("packages")) {
             cache.packages = {};
@@ -369,9 +384,12 @@ export default class PackageCache {
 
         if (!cache.packages.hasOwnProperty(packageName)) {
             cache.packages[packageName] = {
-                commandTimestamps: {},
                 dependencies: {}
             };
+        }
+
+        if (!cache.packages[packageName].hasOwnProperty(key)) {
+            cache.packages[packageName][key] = {};
         }
 
         cache.packages[packageName][key][thingName] = time;
@@ -392,6 +410,13 @@ export default class PackageCache {
     // Migrations
 
     private migrate_1_0_0__to__1_0_1() {
+        if (this.verbosity >=3) {
+            // tslint:disable-next-line:no-console
+            console.log(
+                wrap("[]", "mister cache", chalk.gray),
+                'migrating cache file from v1.0.0 to v1.0.1'
+            );
+        }
         // First, fix the keys
         Object.keys(this.buildCache.packages).forEach(p => {
             if (this.buildCache.packages[p].hasOwnProperty('dependencies')) {

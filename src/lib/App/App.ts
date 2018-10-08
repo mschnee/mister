@@ -182,8 +182,8 @@ export default class App {
                     } else {
                         return this.doTask(packageName, realTask);
                     }
-                }); }
-            ,accum);
+                });
+            }, accum);
         }, Promise.resolve());
     }
 
