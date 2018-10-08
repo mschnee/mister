@@ -374,9 +374,6 @@ export default class PackageCache {
     ) {
         const time = timestamp || new Date();
         const cache = this.getCache();
-        if (this.verbosity >= 3) {
-            console.log(cache);
-        }
         const key = `${thing}Timestamps`;
         if (!cache.hasOwnProperty("packages")) {
             cache.packages = {};
