@@ -48,12 +48,17 @@ export default function runProcess(command: string, args: string[], options: Spa
             }
 
             runProc.on('error', (e) => {
+                errBuffer.toString().split(EOL).forEach(l => {
+                    /* tslint:disable-next-line no-console */
+                    console.log(wrap('[]', 'run-process', chalk.gray), chalk.red(l));
+                });
                 reject(e);
             });
 
             runProc.on('exit', (code: number, signal: string) => {
                 if (code !== 0) {
-                    const e = new Error(`${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer && errBuffer.toString()}`);
+                    const e = new Error(
+                        `${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer && errBuffer.toString()}`);
 
                     if (errBuffer) {
                         e.stack = errBuffer.toString();

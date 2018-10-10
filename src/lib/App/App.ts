@@ -182,6 +182,15 @@ export default class App {
                     } else {
                         return this.doTask(packageName, realTask);
                     }
+                }).catch(e => {
+                    console.log(
+                        wrap('[]', 'do task', chalk.bold.red),
+                        'error running',
+                        wrap('[]', task, chalk.red),
+                        'on',
+                        wrap('[]', packageName, chalk.red)
+                        );
+                    throw e;
                 });
             }, accum);
         }, Promise.resolve());
