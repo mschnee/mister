@@ -1,11 +1,13 @@
 import { SpawnOptions } from 'child_process';
 import * as spawn from 'cross-spawn';
-import { EOL } from 'os';
 
 import chalk from 'chalk';
 import wrap from '../lib/output/wrap';
 
-export default function runProcess(command: string, args: string[], options: SpawnOptions, argv: any) {
+
+const EOL = '\n'; // powershell outputs \n instead of \r\n ?
+
+export default function runProcess(command: string, args: string[], options: SpawnOptions, argv: any, logPrefix?: string) {
     return new Promise((resolve, reject) => {
         /* istanbul ignore next */
         if (argv.verbose >= 4 || argv.stdio) {
@@ -40,17 +42,19 @@ export default function runProcess(command: string, args: string[], options: Spa
             if (runProc.stderr) {
                 runProc.stderr.on('data', (d: Buffer) => {
                     errBuffer = errBuffer ? Buffer.concat([errBuffer, Buffer.from(chalk.red(d.toString()))]) : d;
-                    d.toString().split(EOL).forEach(l => {
-                        /* tslint:disable-next-line no-console */
-                        console.log(wrap('[]', 'run-process', chalk.gray), chalk.red(l));
-                    });
+                    if (argv.verbose >= 3) {
+                        d.toString().split(EOL).forEach(l => {
+                            /* tslint:disable-next-line no-console */
+                            console.log(wrap('[]', logPrefix || 'run-process', chalk.gray), chalk.red(l));
+                        });
+                    }
                 });
             }
 
             runProc.on('error', (e) => {
                 errBuffer.toString().split(EOL).forEach(l => {
                     /* tslint:disable-next-line no-console */
-                    console.log(wrap('[]', 'run-process', chalk.gray), chalk.red(l));
+                    console.log(wrap('[]', logPrefix || 'run-process', chalk.bold.red), l);
                 });
                 reject(e);
             });
@@ -58,12 +62,15 @@ export default function runProcess(command: string, args: string[], options: Spa
             runProc.on('exit', (code: number, signal: string) => {
                 if (code !== 0) {
                     const e = new Error(
-                        `${wrap('[]', 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer && errBuffer.toString()}`);
+                        `${wrap('[]', logPrefix || 'run-process', chalk.bold.red)} failed: ${command} ${args.join(' ')}\nOutput\n======\n\n${errBuffer && errBuffer.toString()}`);
 
                     if (errBuffer) {
                         e.stack = errBuffer.toString();
                     }
-
+                    errBuffer.toString().split(EOL).forEach(l => {
+                        /* tslint:disable-next-line no-console */
+                        console.log(wrap('[]', logPrefix || 'run-process', chalk.bold.red), l);
+                    });
                     reject(e);
                 } else {
                     resolve();

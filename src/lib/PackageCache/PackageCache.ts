@@ -126,12 +126,7 @@ export default class PackageCache {
                 if (this.verbosity >= 2) {
                     // tslint:disable-next-line:no-console
                     console.log(
-                        wrap("[]", "mister cache", chalk.gray) +
-                            wrap(
-                                "[]",
-                                `${packageName}:${commandName}`,
-                                chalk.gray
-                            ),
+                        wrap("[]", `${packageName}:${commandName}`, chalk.gray) ,
                         `dependency ${d} is newer than at last command.`
                     );
                 }
@@ -169,12 +164,7 @@ export default class PackageCache {
                 if (this.verbosity >= 2) {
                     // tslint:disable-next-line:no-console
                     console.log(
-                        wrap("[]", "mister cache", chalk.gray) +
-                            wrap(
-                                "[]",
-                                `${packageName} ${thing} ${thingName}`,
-                                chalk.gray
-                            ),
+                        wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.gray),
                         `dependency ${d} is newer than at last command.`
                     );
                 }
@@ -196,7 +186,7 @@ export default class PackageCache {
                     if (this.verbosity >=3) {
                         // tslint:disable-next-line:no-console
                         console.log(
-                            wrap("[]", "mister cache", chalk.gray),
+                            wrap("[]", "mister", chalk.gray),
                             'cache file does not exist'
                         );
                     }
@@ -255,7 +245,7 @@ export default class PackageCache {
         if (this.verbosity >=3) {
             // tslint:disable-next-line:no-console
             console.log(
-                wrap("[]", "mister cache", chalk.gray),
+                wrap("[]", "mister", chalk.gray),
                 'writing cache file'
             );
         }
@@ -288,8 +278,7 @@ export default class PackageCache {
             if (this.verbosity >= 2) {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", "mister cache", chalk.gray) +
-                        wrap("[]", `${thing} ${thingName}`, chalk.gray),
+                    wrap("[]", `${thing} ${thingName}`, chalk.gray),
                     "has no build timestamp"
                 );
             }
@@ -330,15 +319,6 @@ export default class PackageCache {
                 return false;
             }
             if (stat.mtime >= lastSuccessTime) {
-                if (this.verbosity >= 2) {
-                    // tslint:disable-next-line:no-console
-                    console.log(
-                        f,
-                        "is out of date",
-                        stat.mtime,
-                        lastSuccessTime
-                    );
-                }
                 return true;
             } else {
                 return false;
@@ -349,16 +329,13 @@ export default class PackageCache {
             if (result) {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", "mister cache", chalk.bold.green) +
-                        wrap("[]", `${packageName} ${thing} ${thingName}`, chalk.green),
+                    wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.bold.green),
                     "is up to date"
                 );
             } else {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", "mister cache", chalk.bold.yellow) +
-                        wrap("[]", `${packageName} ${thing} ${thingName}`, chalk.yellow),
-                    packageName,
+                    wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.bold.yellow),
                     "is out of date"
                 );
             }
@@ -407,10 +384,10 @@ export default class PackageCache {
     // Migrations
 
     private migrate_1_0_0__to__1_0_1() {
-        if (this.verbosity >=3) {
+        if (this.verbosity) {
             // tslint:disable-next-line:no-console
             console.log(
-                wrap("[]", "mister cache", chalk.gray),
+                wrap("[]", "mister", chalk.green),
                 'migrating cache file from v1.0.0 to v1.0.1'
             );
         }
