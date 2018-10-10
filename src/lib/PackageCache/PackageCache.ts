@@ -273,7 +273,7 @@ export default class PackageCache {
         if (this.verbosity >= 3) {
             // tslint:disable-next-line:no-console
             console.log(
-                wrap("[]", `${thing} ${thingName}`, chalk.gray),
+                wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.gray),
                 "Checking if up to date"
             );
         }
@@ -281,7 +281,7 @@ export default class PackageCache {
             if (this.verbosity) {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", `${packageName} ${thing} ${thingName}`, chalk.gray),
+                    wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.gray),
                     "has no cache timestamp"
                 );
             }
@@ -379,7 +379,10 @@ export default class PackageCache {
             if (!cache.packages[packageName].dependencies.hasOwnProperty(d)) {
                 cache.packages[packageName].dependencies[d] = {}
             }
-            cache.packages[packageName].dependencies[d][key] = time;
+            if (!cache.packages[packageName].dependencies[d].hasOwnProperty(key)) {
+                cache.packages[packageName].dependencies[d][key] = {};
+            }
+            cache.packages[packageName].dependencies[d][key][thingName] = time;
         })
         this.flushFile(cache);
     }

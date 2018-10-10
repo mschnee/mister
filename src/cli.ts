@@ -19,6 +19,12 @@ require('yargs') // tslint:disable-line
         alias: 'verbose',
         count: true,
         description: 'Enable Verbose messaging.  -v to see basic output, -vv to see detailed outpur, -vvv to se subprocess output',
+        default: 1
+    })
+    .option('q', {
+        alias: 'quiet',
+        type: 'boolean',
+        default: 'false'
     })
     .option('package-prefix', {
         default: 'packages',

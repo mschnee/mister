@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import { sync as rimraf } from 'rimraf';
 import { Argv } from 'yargs';
 
+import normalizeArgs from '../normalize-args';
 import moveFile from '../move-file';
 import wrap from '../output/wrap';
 import runProcess from '../run-process';
@@ -28,7 +29,7 @@ export default class App {
     private packageCache: PackageCache;
 
     constructor(args: Argv, options?: AppOptions) {
-        this.args = args;
+        this.args = normalizeArgs(args);
         this.verbosity = this.args.verbose || 0;
         this.writeCache = options && options.writeCache || true;
         this.checkCommandCache = !!args.cache;
