@@ -211,6 +211,10 @@ export default class PackageCache {
         if (this.buildCache.version === '1.0.0') {
             this.migrate_1_0_0__to__1_0_1();
         }
+
+        if (this.buildCache.version !== '1.0.1') {
+            throw new Error(`No upgrade path from given cache version '${this.buildCache.version}' to '1.0.1'`)
+        }
         return this.buildCache;
     }
 

@@ -22,13 +22,32 @@ Finally, **mister is not necessary**.  Everything mister does, you could do your
 
 **mister** may not be the right tool for you.  There are plenty of monorepo systems available, from `yarn workspaces`, to `lerna`, and `bit`.  Consult your programmers if `mister` runs longer than 4 hours.
 
-## So how do I use it?
+## What's so great about it
+Mister tries to determine whether or not your task or command needs to be run.  In general, if you build a package successfully, make no changes, and attempt to build it again, mister will skip that process.  Tasks prefixed with an exclamation mark will skip this cache check and be run anyways- good for things like uni tests, integration tests, or acceptance testing.
 
-Mister's only real requirement is that your monorepository packages are in the folder `packages/node_modules`.
+```diff
+mister do-all build !test
++[@scope/packace1:task:build] is up to date
++[@scope/package2:task:build] is up to date
++[@scope/package3:task:build] is up to date
+-[@scope/package4:task:build] is out to date
+
+mister do-all build !test
++[@scope/packace1:task:build] is up to date
++[@scope/package2:task:build] is up to date
++[@scope/package3:task:build] is up to date
++[@scope/package4:task:build] is up to date
+```
+
+This currently works by testing the timestamps of all the files in a package, minus those that are filtered through `.gitignore` (ideally, your source files).  If you have a build task that generates files, and then you delete them yourself, `mister` won't try to rebuild them.
+
+
+## So how do I use it?
+Mister's only real requirement is that your monorepository packages are in the folder `packages/node_modules` (although you can change it with the command line switch `--package-prefix`)
 ```sh
 .
 ├── .mister             # You should .gitignore this if it gets created.
-│   └── build.json      # This is the file MR uses to keep track of build timestamps and dependencies.
+│   └── cache.json      # This is the file MR uses to keep track of build timestamps and dependencies.
 ├── node_modules        # This is where you put your external dependencies.
 │   ├── express
 │   └── underscore
@@ -44,10 +63,15 @@ Mister's only real requirement is that your monorepository packages are in the f
 
 Now, you can have `mister do` some things for you:
 ```sh
-mister do @scope/package4 --tasks clean test build
+mister do @scope/package4 --tasks clean !test build
 ```
 
-## How do I make packages?
+Or just do some things on all your packages, if you keep common task names:
+```sh
+mister do-all build !test
+```
+
+## How do I make package bundles? (TGZ)
 `mister` comes with a `pack` command, which honors `bundledDependencies`.
 
 ```sh
@@ -60,6 +84,44 @@ This process can be time-consuming.
 
 `mister pack` is a primitive that only creates packages.  You will need to build them first e.g. `mister do packageName --tasks build && mister pack packageName`
 
+## I want to share code between AWS functions easily!
+`mister` comes with a `zip` command, which honors `bundledDependencies`.  This is why I made `mister`:
+
+```
+tree
+.
+├── .mister
+│   └── cache.json
+├── node_modules
+│   ├── redis
+│   └── pg-promise
+└── packages
+    └── node_modules    # These are the packages of your monorepository.
+        ├── @lambda
+        │   ├── someLambdaFunction
+        │   └── someOtherLambdaFunction
+        ├── @shared
+        │   ├── some-useful-function
+        │   └── some-shared-utility
+```
+
+```
+mister do-all build !test && mister zip
+```
+
+```
+tree
+.
+├── .mister
+│   └── cache.json
+├── dist
+│   ├── lambda-some-lambda-function-1.0.0.zip # Here is my first function
+│   └── some-shared-utility-1.0.0.zip         # here is my second function
+├── node_modules
+( continues... )
+```
+
+Both functions have `redis`, `pg-promise`, `@shared/some-useful-function`, and `@shared/some-shared-utility` in `bundledDependencies` with all necessary dependencies, and are bundled in a zip with `package.json` at the top level, ready for direct deployment to AWS using your method of choice.
 
 ## Reference
 <table>
@@ -77,7 +139,7 @@ This process can be time-consuming.
     <tr>
         <td/>
         <td><code>--tasks</code></td>
-        <td>The list of tasks to run on each package, if that package has a given task</td>
+        <td>The list of tasks to run on each package, if that package has a given task.  Tasks prefixed with an exclamation mark, like <code>!taskName</code>, will skip cache/dependency checks, and always be run e.g. <code>mister do package1 @scope/package2 --tasks build !test</code></td>
     </tr>
     <tr>
         <td>Optional</td>
@@ -100,8 +162,13 @@ This process can be time-consuming.
     </tr>
     <tr>
         <td/>
-        <td><code>--verbose</code></td>
-        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+        <td><code>--verbose, -v, -vv, -vvv</code></td>
+        <td>Adds various level of verbosity, defaulting to 1</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--quiet</code></td>
+        <td>No output, except for process failures.</td>
     </tr>
 </table>
 <table>
@@ -119,12 +186,17 @@ This process can be time-consuming.
     <tr>
         <td></td>
         <td><code>tasks</code></td>
-        <td>Performs the tasks against all packages in dependency order</td>
+        <td>Performs the tasks against all packages in dependency order.  Tasks prefixed with an exclamation mark, like <code>!taskName</code>, will skip cache/dependency checks, and always be run e.g. <code>mister do-all update build !test !generate-coverage</code></td>
     </tr>
     <tr>
         <td/>
-        <td><code>--verbose</code></td>
-        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+        <td><code>--verbose, -v, -vv, -vvv</code></td>
+        <td>Adds various level of verbosity, defaulting to 1</td>
+    </tr>
+    <tr>
+        <td/>
+        <td><code>--quiet</code></td>
+        <td>No output, except for process failures.</td>
     </tr>
 </table>
 <table>
@@ -146,13 +218,13 @@ This process can be time-consuming.
     </tr>
     <tr>
         <td/>
-        <td><code>--verno-cache</code></td>
-        <td>Skips cache checks and re-zips, even if the code and dependencies haven't changed</td>
+        <td><code>--verbose, -v, -vv, -vvv</code></td>
+        <td>Adds various level of verbosity, defaulting to 1</td>
     </tr>
     <tr>
         <td/>
-        <td><code>--verbose</code></td>
-        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+        <td><code>--quiet</code></td>
+        <td>No output, except for process failures.</td>
     </tr>
 </table>
 <table>
@@ -174,13 +246,13 @@ This process can be time-consuming.
     </tr>
     <tr>
         <td/>
-        <td><code>--verno-cache</code></td>
-        <td>Skips cache checks and re-zips, even if the code and dependencies haven't changed</td>
+        <td><code>--verbose, -v, -vv, -vvv</code></td>
+        <td>Adds various level of verbosity, defaulting to 1</td>
     </tr>
     <tr>
         <td/>
-        <td><code>--verbose</code></td>
-        <td>Pipes <code>stdout</code> and <code>stderr</code> from the subprocesses</td>
+        <td><code>--quiet</code></td>
+        <td>No output, except for process failures.</td>
     </tr>
 </table>
 
@@ -198,11 +270,34 @@ Using `package/node_modules` to structure your monorepository means you can leve
 ## Caveats
 
 ### `node_modules` is Ignored
+
 Several tools, like `ts-node`, by default ignore `node_modules`, which means they do not work as expected in `packages/node_modules`.  If you have written tests in typescript, you will need to pass an updated `TS_NODE_IGNORE` environment variable either through your top-level script or your package-level script:
 ```json
 {
     "scripts": {
         "test": "cross-env TS_NODE_IGNORE=\"/(?<!packages\/)node_modules/\" nyc mocha",
+    }
+}
+```
+
+### github pull requests and diffs say changes in my packages are "binary" and won't show them.
+Just like above, GitHub treats `node_modules` as a magical string.  But for now you can click on the fake greyed-out files to show the diff.
+
+### Some npm scripts fail because they can't find installed bins.
+If you `cwd` into a package directory, `npm` will add `./node_modules/.bin` to PATH at runtime to try to run things there.
+You can use `PATH=$PATH:../../node_modules/.bin npm run script-name` as a shortcut.  Many editors also have an 'Open In Terminal': [Visual Studio Code](https://code.visualstudio.com) has a `integrated.terminal.env` option to allow you to make that path explicit to the workspace root.
+
+**./vscode/settings.json**
+```json
+{
+    "terminal.integrated.env.windows": {
+        "Path": "${workspaceRoot}\\node_modules\\.bin;${env:Path}"
+    },
+    "terminal.integrated.env.linux": {
+        "PATH": "${workspaceRoot}/node_modules/.bin:${env:PATH}"
+    },
+    "terminal.integrated.env.osx": {
+        "PATH": "${workspaceRoot}/node_modules/.bin:${env:PATH}"
     }
 }
 ```
@@ -215,6 +310,7 @@ Even worse, some like `uglifyjs-webpack-plugin` can break your builds because th
 
 Given this simplified structure:
 ```sh
+cwd = ./packages/node_modules/monorepo-package
 .
 ├── node_modules
 │   └── uglifyjs-webpack-plugin         # The first time, require('uglifyjs-webpack-plugin') resolves here
@@ -226,6 +322,7 @@ Given this simplified structure:
 
 Running webpack will create the file `./packages/node_modules/monorepo-package/node_modules/uglify-webpack-plugin/.cache`
 ```sh
+cwd = ./packages/node_modules/monorepo-package
 .
 ├── node_modules
 │   └── uglifyjs-webpack-plugin             # This is where the module really is!
@@ -238,12 +335,8 @@ Running webpack will create the file `./packages/node_modules/monorepo-package/n
                     └── .cache
 ```
 
-The next time you build, node will resolve `require('uglify-webpack-plugin')` to that that folder instead.  That folder only has the cache file, the require will throw an error, and your build will fail.
+The next time you build, node will resolve `require('uglify-webpack-plugin')` to that that folder instead.  That folder only has the cache file, the require will throw an error because it cannot find any exported function, and your build will fail.
 
-# Features in Active Development
-- Use `.mister/build.json` to track which packages have been successfully built, so that larger projects with multiple packages don't have to rebuild them.  See [this issue](https://github.com/mschnee/mister/issues/4)
-- Create a `mister pack` command that honors `bundledDependencies`.  See [this issue](https://github.com/mschnee/mister/issues/5).
-- Create a `mister pack --type=zip` variant that can be used to create zip files that include shared packages for deployment in AWS Lambda.  See [this issue](https://github.com/mschnee/mister/issues/6).
 
 # Thanks
 A huge thanks to [`@a-z`](https://www.npmjs.com/~a-z) for agreeing to free up the name `mister`.
