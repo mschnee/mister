@@ -251,7 +251,7 @@ export default class PackageCache {
         }
         fs.writeFileSync(
             this.cacheFilePath,
-            JSON.stringify(newCache),
+            JSON.stringify(newCache, null, 2),
             "utf8"
         );
         this.buildCache = newCache;
@@ -272,14 +272,17 @@ export default class PackageCache {
     private isPackageThingUpToDate(packageName: string, thing: string, thingName: string) {
         if (this.verbosity >= 3) {
             // tslint:disable-next-line:no-console
-            console.log('Checking if', thing, thingName, 'is up to date for', packageName)
+            console.log(
+                wrap("[]", `${thing} ${thingName}`, chalk.gray),
+                "Checking if up to date"
+            );
         }
         if (!this.doesThingTimestampExist(packageName, thing, thingName)) {
-            if (this.verbosity >= 2) {
+            if (this.verbosity) {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", `${thing} ${thingName}`, chalk.gray),
-                    "has no build timestamp"
+                    wrap("[]", `${packageName} ${thing} ${thingName}`, chalk.gray),
+                    "has no cache timestamp"
                 );
             }
             return false;
@@ -408,6 +411,7 @@ export default class PackageCache {
             }
         });
 
-        // Now, fix the dates.
+        this.buildCache.version = '1.0.1';
+        this.flushFile(this.buildCache);
     }
 }

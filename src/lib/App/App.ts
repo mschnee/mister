@@ -173,10 +173,11 @@ export default class App {
                             return;
                         } else {
                             await this.doTask(packageName, realTask);
-                            this.packageCache.isPackageTaskUpToDate(packageName, realTask);
+                            this.packageCache.writeTimestampForTask(packageName, realTask);
                         }
                     } else {
-                        return this.doTask(packageName, realTask);
+                        await this.doTask(packageName, realTask);
+                        this.packageCache.writeTimestampForTask(packageName, realTask);
                     }
                 }).catch(e => {
                     console.log(
