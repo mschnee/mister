@@ -1,3 +1,4 @@
+import { createHmac } from 'crypto';
 import * as fs from "fs";
 import { EOL } from "os";
 import * as path from "path";
@@ -19,12 +20,19 @@ export interface BuildCache {
 }
 
 export interface CommandTimestamps {
-    [commandName: string]: Date;
+    [commandName: string]: Date | string;
 }
 export interface BuildCacheEntry {
     commandTimestamps?: CommandTimestamps;
+    taskTimestamps?: CommandTimestamps;
+    commandHashes?: {
+        [packageName: string]: string;
+    };
     dependencies?: {
-        [packageName: string]: CommandTimestamps;
+        [packageName: string]: {
+            commandTimestamps?: CommandTimestamps;
+            taskTimestamps?: CommandTimestamps;
+        }
     };
 }
 
@@ -57,22 +65,58 @@ export default class PackageCache {
     }
 
     public doesCommandTimestampExist(packageName: string, commandName: string) {
-        const cache = this.getCache();
-        return (
-            this.doesPackageEntryExist(packageName) &&
-            cache.packages[packageName].commandTimestamps.hasOwnProperty(
-                commandName
-            )
-        );
+        return this.doesThingTimestampExist(packageName, 'command', commandName);
     }
+
+    /**
+     * uses npm-packlist logic to get all files that could be packed,
+     * and returns a checksum.  Run this after a command to compute a state,
+     * and then before the next invocation of that command to determine if
+     * content on disk is different.
+     *
+     * TLDR:
+     * If you run a build, but delete your build output, this is another way to test
+     * that in code.
+     */
+    // public getFilesArrayHash(packageName) {
+    //     const pjson = this.packageManager.getPackagePjson(packageName);
+    //     const packagePath = this.packageManager.getPackageDir(packageName);
+
+    //     if (pjson.files && Array.isArray(pjson.files)) {
+    //         const ignore = pjson.files.reduce((p, file) => {
+    //             p.push(`!${file}`);
+    //             p.push(`!${file.replace(/\/+$/, '')}/**`)
+    //         }, ['*']);
+    //         const filesToCheck: string[] = filteredGlob.sync("**", {
+    //             cwd: packagePath,
+    //             ignore
+    //         });
+    //         const hmac = createHmac('md5', '');
+    //         filesToCheck.forEach(f => {
+    //             hmac.update(fs.readFileSync(path.join(packagePath, f)))
+    //         });
+    //         return hmac.digest('base64');
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     public arePackageCommandDependenciesUpToDate(
         packageName: string,
         commandName: string
     ) {
+        return this.arePackageThingDependenciesUpToDate(packageName, 'command', commandName)
+    }
+
+    public arePackageThingDependenciesUpToDate(
+        packageName: string,
+        thing: string,
+        thingName: string
+    ) {
         const dependencies = this.packageManager.getPackageLocalDependencies(
             packageName
         );
+        const key = `${thing}Timestamps`;
         const cache = this.getCache();
 
         // we aren't checking if the dependency is up to date- the build process tree does that.
@@ -81,22 +125,17 @@ export default class PackageCache {
         // the dependency command succeeded as of the time the command was successful as well.
         return !dependencies.some(d => {
             const currentTimestamp =
-                cache.packages[packageName].commandTimestamps[commandName];
+                cache.packages[packageName][key][thingName];
             const  depTimestamp =
-                cache.packages[d].commandTimestamps[commandName];
+                cache.packages[d][key][thingName];
             const refTime =
-                cache.packages[packageName].dependencies[d][commandName];
+                cache.packages[packageName].dependencies[d][key][thingName];
 
             if (depTimestamp > refTime) {
                 if (this.verbosity >= 2) {
                     // tslint:disable-next-line:no-console
                     console.log(
-                        wrap("[]", "mister cache", chalk.gray) +
-                            wrap(
-                                "[]",
-                                `${packageName}:${commandName}`,
-                                chalk.gray
-                            ),
+                        wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.gray),
                         `dependency ${d} is newer than at last command.`
                     );
                 }
@@ -107,35 +146,141 @@ export default class PackageCache {
         });
     }
 
+    public getCache(): BuildCache {
+        if (!this.buildCache) {
+            try {
+                if (fs.existsSync(this.cacheFilePath)) {
+                    this.buildCache = JSON.parse(
+                        fs.readFileSync(this.cacheFilePath, "utf8")
+                    );
+                } else {
+                    if (this.verbosity >=3) {
+                        // tslint:disable-next-line:no-console
+                        console.log(
+                            wrap("[]", "mister", chalk.gray),
+                            'cache file does not exist'
+                        );
+                    }
+                    this.buildCache = {
+                        packages: {},
+                        version: "1.0.1"
+                    };
+                }
+            } catch (e) {
+                if (this.verbosity >= 2) {
+                    // tslint:disable-next-line no-console
+                    console.log(e);
+                }
+                this.buildCache = {
+                    packages: {},
+                    version: "1.0.1"
+                };
+            }
+        }
+
+        if (!this.buildCache.version) {
+            // nevermind, start fresh
+            return {
+                packages: {},
+                version: "1.0.1"
+            }
+        }
+
+        if (this.buildCache.version === '1.0.0') {
+            this.migrate_1_0_0__to__1_0_1();
+        } else if (this.buildCache.version !== '1.0.1') {
+            throw new Error(`No upgrade path from given cache version '${this.buildCache.version}' to '1.0.1'`)
+        }
+        return this.buildCache;
+    }
+
     public isPackageCommandUpToDate(packageName: string, commandName: string) {
+        return this.isPackageThingUpToDate(packageName, 'command', commandName);
+    }
+
+    public isPackageTaskUpToDate(packageName: string, taskName: string) {
+        return this.isPackageThingUpToDate(packageName, 'task', taskName);
+    }
+
+    public writeTimestampForCommand(
+        packageName: string,
+        packageCommand: string,
+        timestamp?: Date
+    ) {
+        return this.writeTimestampForThing(packageName, 'command', packageCommand, timestamp);
+    }
+
+    public writeTimestampForTask(
+        packageName: string,
+        taskName: string,
+        timestamp?: Date
+    ) {
+        return this.writeTimestampForThing(packageName, 'task', taskName, timestamp);
+    }
+
+    private flushFile(newCache) {
+        if (!fs.existsSync(path.dirname(this.cacheFilePath))) {
+            fs.mkdirSync(path.dirname(this.cacheFilePath));
+        }
+        if (this.verbosity >=3) {
+            // tslint:disable-next-line:no-console
+            console.log(
+                wrap("[]", "mister", chalk.gray),
+                'writing cache file'
+            );
+        }
+        fs.writeFileSync(
+            this.cacheFilePath,
+            JSON.stringify(newCache, null, 2),
+            "utf8"
+        );
+        this.buildCache = newCache;
+    }
+
+    private doesThingTimestampExist(packageName: string, thing: string, thingName: string) {
+        const key = `${thing}Timestamps`;
+        const cache = this.getCache();
+        return (
+            this.doesPackageEntryExist(packageName) &&
+            cache.packages[packageName].hasOwnProperty(key) &&
+            cache.packages[packageName][key].hasOwnProperty(
+                thingName
+            )
+        );
+    }
+
+    private isPackageThingUpToDate(packageName: string, thing: string, thingName: string) {
         if (this.verbosity >= 3) {
             // tslint:disable-next-line:no-console
-            console.log('Checking if', commandName, 'is up to date for', packageName)
+            console.log(
+                wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.gray),
+                "Checking if up to date"
+            );
         }
-        if (!this.doesCommandTimestampExist(packageName, commandName)) {
-            if (this.verbosity >= 2) {
+        if (!this.doesThingTimestampExist(packageName, thing, thingName)) {
+            if (this.verbosity) {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", "mister cache", chalk.gray) +
-                        wrap("[]", commandName, chalk.gray),
-                    "has no build timestamp"
+                    wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.gray),
+                    "has no cache timestamp"
                 );
             }
             return false;
         }
 
         if (
-            !this.arePackageCommandDependenciesUpToDate(
+            !this.arePackageThingDependenciesUpToDate(
                 packageName,
-                commandName
+                thing,
+                thingName
             )
         ) {
             return false;
         }
-
+        const key = `${thing}Timestamps`;
         const cache = this.getCache();
         const lastSuccessTime = new Date(
-            cache.packages[packageName].commandTimestamps[commandName]
+            cache.packages[packageName][key][thingName]
         );
 
         const packagePath = this.packageManager.getPackageDir(packageName);
@@ -157,15 +302,6 @@ export default class PackageCache {
                 return false;
             }
             if (stat.mtime >= lastSuccessTime) {
-                if (this.verbosity >= 2) {
-                    // tslint:disable-next-line:no-console
-                    console.log(
-                        f,
-                        "is out of date",
-                        stat.mtime,
-                        lastSuccessTime
-                    );
-                }
                 return true;
             } else {
                 return false;
@@ -176,17 +312,13 @@ export default class PackageCache {
             if (result) {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", "mister cache", chalk.bold.green) +
-                        wrap("[]", commandName, chalk.green),
-                    packageName,
+                    wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.bold.green),
                     "is up to date"
                 );
             } else {
                 // tslint:disable-next-line:no-console
                 console.log(
-                    wrap("[]", "mister cache", chalk.bold.yellow) +
-                        wrap("[]", commandName, chalk.yellow),
-                    packageName,
+                    wrap("[]", `${packageName}:${thing}:${thingName}`, chalk.bold.yellow),
                     "is out of date"
                 );
             }
@@ -194,25 +326,30 @@ export default class PackageCache {
         return result;
     }
 
-    public writeTimestampForCommand(
+    private writeTimestampForThing(
         packageName: string,
-        packageCommand: string,
+        thing: string,
+        thingName: string,
         timestamp?: Date
     ) {
         const time = timestamp || new Date();
         const cache = this.getCache();
+        const key = `${thing}Timestamps`;
         if (!cache.hasOwnProperty("packages")) {
             cache.packages = {};
         }
 
         if (!cache.packages.hasOwnProperty(packageName)) {
             cache.packages[packageName] = {
-                commandTimestamps: {},
                 dependencies: {}
             };
         }
 
-        cache.packages[packageName].commandTimestamps[packageCommand] = time;
+        if (!cache.packages[packageName].hasOwnProperty(key)) {
+            cache.packages[packageName][key] = {};
+        }
+
+        cache.packages[packageName][key][thingName] = time;
 
         const dependencies = this.packageManager.getPackageLocalDependencies(
             packageName
@@ -222,50 +359,42 @@ export default class PackageCache {
             if (!cache.packages[packageName].dependencies.hasOwnProperty(d)) {
                 cache.packages[packageName].dependencies[d] = {}
             }
-            cache.packages[packageName].dependencies[d][packageCommand] = time;
+            if (!cache.packages[packageName].dependencies[d].hasOwnProperty(key)) {
+                cache.packages[packageName].dependencies[d][key] = {};
+            }
+            cache.packages[packageName].dependencies[d][key][thingName] = time;
         })
         this.flushFile(cache);
     }
 
-    private flushFile(newCache) {
-        if (!fs.existsSync(path.dirname(this.cacheFilePath))) {
-            fs.mkdirSync(path.dirname(this.cacheFilePath));
-        }
-        fs.writeFileSync(
-            this.cacheFilePath,
-            JSON.stringify(newCache, null, 4),
-            "utf8"
-        );
-        this.buildCache = newCache;
-    }
+    // Migrations
 
-    private getCache(): BuildCache {
-        if (!this.buildCache) {
-            try {
-                if (fs.existsSync(this.cacheFilePath)) {
-                    this.buildCache = JSON.parse(
-                        fs.readFileSync(this.cacheFilePath, "utf8")
-                    );
-                } else {
-                    if (this.verbosity >= 2) {
-                        console.log(this.cacheFilePath, "does not exist"); // tslint:disable-line:no-console
+    private migrate_1_0_0__to__1_0_1() {
+        if (this.verbosity) {
+            // tslint:disable-next-line:no-console
+            console.log(
+                wrap("[]", "mister", chalk.green),
+                'migrating cache file from v1.0.0 to v1.0.1'
+            );
+        }
+        // First, fix the keys
+        Object.keys(this.buildCache.packages).forEach(p => {
+            if (this.buildCache.packages[p].hasOwnProperty('dependencies')) {
+                const newDeps = {}
+                Object.keys(this.buildCache.packages[p].dependencies).forEach(d => {
+                    if (!newDeps.hasOwnProperty(d)) {
+                        newDeps[d] = {
+                            commandTimestamps: {},
+                            taskTimestamps: {}
+                        }
                     }
-                    this.buildCache = {
-                        packages: {},
-                        version: "1.0.0"
-                    };
-                }
-            } catch (e) {
-                if (this.verbosity >= 2) {
-                    console.log(e); // tslint:disable-line:no-console
-                }
-                this.buildCache = {
-                    packages: {},
-                    version: "1.0.0"
-                };
+                    newDeps[d].commandTimestamps = this.buildCache.packages[p].dependencies[d];
+                });
+                this.buildCache.packages[p].dependencies = newDeps;
             }
-        }
+        });
 
-        return this.buildCache;
+        this.buildCache.version = '1.0.1';
+        this.flushFile(this.buildCache);
     }
 }

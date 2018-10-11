@@ -7,6 +7,7 @@ import { sync as rimraf } from 'rimraf';
 import { Argv } from 'yargs';
 
 import moveFile from '../move-file';
+import normalizeArgs from '../normalize-args';
 import wrap from '../output/wrap';
 import runProcess from '../run-process';
 import npmTgzToZip from '../stream/npm-tgz-to-zip';
@@ -28,7 +29,7 @@ export default class App {
     private packageCache: PackageCache;
 
     constructor(args: Argv, options?: AppOptions) {
-        this.args = args;
+        this.args = normalizeArgs(args);
         this.verbosity = this.args.verbose || 0;
         this.writeCache = options && options.writeCache || true;
         this.checkCommandCache = !!args.cache;
@@ -97,10 +98,6 @@ export default class App {
                 this.packageManager.writePackagePjson(this.args, packageName, newPjson);
                 rimraf(path.join(packageDir, 'node_modules'));
 
-                if (this.verbosity >= 1) {
-                    /* tslint:disable-next-line */
-                    console.log(wrap('[]', 'mister pack'), packageName);
-                }
 
                 await this.packageManager.preparePackage(packageName);
                 await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock']);
@@ -117,7 +114,7 @@ export default class App {
 
                 if (this.verbosity >= 1) {
                     /* tslint:disable-next-line */
-                    console.log(wrap('[]', 'mister pack'), 'created', chalk.bold.green(distFileLocation));
+                    console.log(wrap('[]', packageName), 'created', chalk.bold.green(distFileLocation));
                 }
                 this.packageCache.writeTimestampForCommand(packageName, 'pack')
 
@@ -125,7 +122,7 @@ export default class App {
                 rimraf(path.join(packageDir, 'node_modules'));
             }).catch((e: Error) => {
                 /* tslint:disable-next-line */
-                console.error(wrap('[]', 'mister pack', chalk.bold.red), e)
+                console.error(wrap('[]', packageName, chalk.bold.red), e)
                 this.packageManager.restorePackagePjson(this.args, packageName);
                 throw e;
             });
@@ -155,11 +152,11 @@ export default class App {
 
         if (this.args.verbose >= 2) {
             /* tslint:disable-next-line */
-            console.log(wrap('[]', 'do-task', chalk.yellow), 'running', chalk.bold(taskName), 'on', chalk.bold(packageName));
+            console.log(wrap('[]', packageName, chalk.yellow), 'running', chalk.bold(taskName), 'on', chalk.bold(packageName));
         }
 
         try {
-            return runProcess('npm', ['run', taskName], spawnOptions, this.args);
+            return runProcess('npm', ['run', taskName], spawnOptions, this.args, packageName);
         } catch (e) {
             return Promise.reject(e);
         }
@@ -169,10 +166,34 @@ export default class App {
         return packages.reduce((accum, packageName) => {
             const tasks  = this.packageManager.getMatchingPackageTasks(packageName, this.args.tasks || this.args._)
             return tasks.reduce((a: any, task) => {
-                return a.then( () => {
-                    return this.doTask(packageName, task);
-                }); }
-            ,accum);
+                return a.then(async () => {
+                    const realTask = task.replace(/^\!/, '');
+                    const checkCache = task.substring(0, 1) !== '!';
+                    if (checkCache) {
+                        if (this.packageCache.isPackageTaskUpToDate(packageName, realTask)) {
+                            return;
+                        } else {
+                            await this.doTask(packageName, realTask);
+                            this.packageCache.writeTimestampForTask(packageName, realTask);
+                        }
+                    } else {
+                        await this.doTask(packageName, realTask);
+                        this.packageCache.writeTimestampForTask(packageName, realTask);
+                    }
+                }).catch(e => {
+                    if (this.args.verbose) {
+                        /* tslint:disable-next-line:no-console */
+                        console.log(
+                            wrap('[]', packageName, chalk.bold.red),
+                            'error running',
+                            wrap('[]', task, chalk.red),
+                            'on',
+                            wrap('[]', packageName, chalk.red)
+                            );
+                    }
+                    throw e;
+                });
+            }, accum);
         }, Promise.resolve());
     }
 
@@ -198,7 +219,7 @@ export default class App {
 
         if (this.verbosity >= 1) {
             /* tslint:disable-next-line */
-            console.log(wrap('[]', 'mister zip'), 'created', chalk.bold.green(shortName));
+            console.log(wrap('[]', packageName), 'created', chalk.bold.green(shortName));
         }
         this.packageCache.writeTimestampForCommand(packageName, 'zip');
     }

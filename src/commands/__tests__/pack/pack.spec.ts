@@ -36,6 +36,7 @@ test('command: pack', (t) => {
     const args = {
         'debug-persist-package-json': false,
         'packages': ['@test-server/api'],
+        quiet: true
     };
     return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),

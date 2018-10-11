@@ -3,9 +3,9 @@ import { Argv } from 'yargs';
 import App from '../lib/App';
 
 export const command = 'do [packages...]';
-export const describe = 'Runs npm tasks on packages';
+export const describe = 'Runs npm tasks on packages.  Negate a task name to skip checking for previous invocations of that task';
 /* istanbul ignore file */
-export const usage = 'mister do package1 package2 --tasks=clean test build';
+export const usage = 'mister do package1 package2 --tasks=clean !test build';
 
 export const builder = (yargs: Argv) => yargs.option('all', {
     default: false,

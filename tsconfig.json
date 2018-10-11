@@ -1,17 +1,19 @@
 {
     "compilerOptions": {
-        "target": "esnext",
+        "target": "es6",
         "module": "commonjs",
         "outDir": "dist",
         "esModuleInterop": false,
         "allowSyntheticDefaultImports": false,
         "declaration": true,
-        "inlineSourceMap": true
+        "inlineSourceMap": true,
+        "removeComments": false
     },
     "include": [
         "src/**/*.ts"
     ],
     "exclude": [
         "src/**/__tests__/**"
-    ]
+    ],
+
 }

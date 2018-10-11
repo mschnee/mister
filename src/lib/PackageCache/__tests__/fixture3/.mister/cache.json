@@ -1,0 +1,32 @@
+{
+  "version": "1.0.1",
+  "packages": {
+    "@config/get-db": {
+      "commandTimestamps": {
+        "pack": "2018-09-20T22:09:51.262Z"
+      },
+      "dependencies": {}
+    },
+    "@config/get-ssm-params": {
+      "commandTimestamps": {
+        "pack": "2018-09-21T18:57:31.382Z"
+      },
+      "dependencies": {}
+    },
+    "@lambda/test-fn": {
+      "commandTimestamps": {
+        "pack": "2018-09-21T18:57:47.749Z",
+        "zip": "2018-09-21T18:57:48.287Z"
+      },
+      "dependencies": {
+        "@config/get-ssm-params": {
+          "commandTimestamps": {
+            "pack": "2018-09-21T18:57:47.749Z",
+            "zip": "2018-09-21T18:57:48.287Z"
+          },
+          "taskTimestamps": {}
+        }
+      }
+    }
+  }
+}

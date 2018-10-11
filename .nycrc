@@ -9,16 +9,10 @@
     "extension": [
         ".ts"
     ],
-    "require": [
-        "ts-node/register"
-    ],
     "reporter": [
       "text-summary",
       "html",
-      "lcov",
       "json"
     ],
-    "sourceMap": false,
-    "instrument": true,
     "all": true
 }

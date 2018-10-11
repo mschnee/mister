@@ -1,6 +1,6 @@
 {
   "name": "mister",
-  "version": "1.4.1",
+  "version": "1.5.0-alpha.1",
   "description": "",
   "main": "dist/index.js",
   "bin": {
@@ -11,6 +11,8 @@
   "scripts": {
     "build": "rimraf dist && tsc -p .",
     "test": "nyc ava",
+    "test:ci": "ava --reset-cache && npm run test && npm run test:xunit",
+    "test:xunit": "ava --tap | tap-xunit > coverage/xunit.xml",
     "lint": "tslint -p . --fix ",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
@@ -21,7 +23,7 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.10.1",
+    "@types/node": "^10.11.7",
     "@types/rimraf": "^2.0.2",
     "ava": "^1.0.0-beta.8",
     "cross-env": "^5.2.0",
@@ -31,11 +33,13 @@
     "nyc": "^13.0.1",
     "prettier": "^1.14.3",
     "rimraf": "^2.6.2",
-    "sinon": "^6.3.4",
+    "sinon": "^6.3.5",
+    "tap-xunit": "^2.3.0",
+    "transit-js": "^0.8.861",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.0.3",
+    "typescript": "^3.1.2",
     "unzip": "^0.1.11"
   },
   "dependencies": {
@@ -45,7 +49,7 @@
     "glob": "^7.1.3",
     "glob-gitignore": "^1.0.9",
     "mkdirp": "^0.5.1",
-    "snyk": "^1.96.0",
+    "snyk": "^1.103.1",
     "tar": "^4.4.6",
     "tar-to-zip": "^2.0.0",
     "yargs": "^12.0.2"

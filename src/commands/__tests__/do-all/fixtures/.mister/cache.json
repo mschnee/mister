@@ -1,0 +1,55 @@
+{
+  "packages": {
+    "package2": {
+      "dependencies": {},
+      "taskTimestamps": {
+        "test3": "2018-10-11T05:33:53.145Z"
+      }
+    },
+    "package1": {
+      "dependencies": {},
+      "taskTimestamps": {
+        "test1": "2018-10-11T05:33:55.980Z",
+        "test3": "2018-10-11T05:33:58.423Z"
+      }
+    },
+    "@test/package3": {
+      "dependencies": {
+        "package1": {
+          "taskTimestamps": {
+            "test2": "2018-10-11T05:34:00.214Z",
+            "test3": "2018-10-11T05:34:02.485Z"
+          }
+        },
+        "package2": {
+          "taskTimestamps": {
+            "test2": "2018-10-11T05:34:00.214Z",
+            "test3": "2018-10-11T05:34:02.485Z"
+          }
+        }
+      },
+      "taskTimestamps": {
+        "test2": "2018-10-11T05:34:00.214Z",
+        "test3": "2018-10-11T05:34:02.485Z"
+      }
+    },
+    "@test/package4": {
+      "dependencies": {
+        "package2": {
+          "taskTimestamps": {
+            "test3": "2018-10-11T05:34:04.336Z"
+          }
+        },
+        "@test/package3": {
+          "taskTimestamps": {
+            "test3": "2018-10-11T05:34:04.336Z"
+          }
+        }
+      },
+      "taskTimestamps": {
+        "test3": "2018-10-11T05:34:04.336Z"
+      }
+    }
+  },
+  "version": "1.0.1"
+}
