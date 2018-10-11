@@ -6,8 +6,8 @@ import chalk from 'chalk';
 import { sync as rimraf } from 'rimraf';
 import { Argv } from 'yargs';
 
-import normalizeArgs from '../normalize-args';
 import moveFile from '../move-file';
+import normalizeArgs from '../normalize-args';
 import wrap from '../output/wrap';
 import runProcess from '../run-process';
 import npmTgzToZip from '../stream/npm-tgz-to-zip';
@@ -182,6 +182,7 @@ export default class App {
                     }
                 }).catch(e => {
                     if (this.args.verbose) {
+                        /* tslint:disable-next-line:no-console */
                         console.log(
                             wrap('[]', packageName, chalk.bold.red),
                             'error running',
