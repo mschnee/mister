@@ -23,8 +23,9 @@ test.after(() => {
 test('command: do --with-dependencies', (t) => {
     const argv = {
         'packages': ['@test/package4'],
-        'tasks': ['test3'],
+        'tasks': ['!test3'],
         'with-dependencies': true,
+        quiet: true
     };
     const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');

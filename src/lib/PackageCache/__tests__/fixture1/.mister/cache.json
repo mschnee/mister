@@ -1,4 +1,5 @@
 {
+    "version": "1.0.0",
     "packages": {
         "@test/package3": {
             "commandTimestamps": {"build":  "2018-06-15T19:34:42.887Z"}

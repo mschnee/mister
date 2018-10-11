@@ -23,7 +23,8 @@ import App from '../../../lib/App';
 
 test('command: do-all - runs three commands' , (t) => {
     const argv = {
-        tasks: ['test1', 'test2', 'test3'],
+        tasks: ['!test1', '!test2', '!test3'],
+        quiet: true
     };
     const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');

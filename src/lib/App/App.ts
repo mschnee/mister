@@ -181,13 +181,15 @@ export default class App {
                         this.packageCache.writeTimestampForTask(packageName, realTask);
                     }
                 }).catch(e => {
-                    console.log(
-                        wrap('[]', packageName, chalk.bold.red),
-                        'error running',
-                        wrap('[]', task, chalk.red),
-                        'on',
-                        wrap('[]', packageName, chalk.red)
-                        );
+                    if (this.args.verbose) {
+                        console.log(
+                            wrap('[]', packageName, chalk.bold.red),
+                            'error running',
+                            wrap('[]', task, chalk.red),
+                            'on',
+                            wrap('[]', packageName, chalk.red)
+                            );
+                    }
                     throw e;
                 });
             }, accum);

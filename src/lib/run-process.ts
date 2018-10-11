@@ -52,10 +52,12 @@ export default function runProcess(command: string, args: string[], options: Spa
             }
 
             runProc.on('error', (e) => {
-                errBuffer.toString().split(EOL).forEach(l => {
-                    /* tslint:disable-next-line no-console */
-                    console.log(wrap('[]', logPrefix || 'run-process', chalk.bold.red), l);
-                });
+                if (errBuffer && !argv.quiet) {
+                    errBuffer.toString().split(EOL).forEach(l => {
+                        /* tslint:disable-next-line no-console */
+                        console.log(wrap('[]', logPrefix || 'run-process', chalk.bold.red), l);
+                    });
+                }
                 reject(e);
             });
 
@@ -66,11 +68,13 @@ export default function runProcess(command: string, args: string[], options: Spa
 
                     if (errBuffer) {
                         e.stack = errBuffer.toString();
+                        if (!argv.quiet) {
+                            errBuffer.toString().split(EOL).forEach(l => {
+                                /* tslint:disable-next-line no-console */
+                                console.log(wrap('[]', logPrefix || 'run-process', chalk.bold.red), l);
+                            });
+                        }
                     }
-                    errBuffer.toString().split(EOL).forEach(l => {
-                        /* tslint:disable-next-line no-console */
-                        console.log(wrap('[]', logPrefix || 'run-process', chalk.bold.red), l);
-                    });
                     reject(e);
                 } else {
                     resolve();

@@ -122,9 +122,16 @@ export default class PackageManager {
     }
 
     public getMatchingPackageTasks(packageName, tasks?: string[]) {
-        return this.getPackageTasks(packageName).filter((taskName) =>
-            tasks.find((t) => t.replace(/^\!/, '') === taskName)
-        );
+        // return this.getPackageTasks(packageName).filter((taskName) =>
+        //     tasks.find((t) => t.replace(/^\!/, '') === taskName)
+        // );
+        return this.getPackageTasks(packageName).reduce((res, taskName) => {
+            const found = tasks.find((t) => t.replace(/^\!/, '') === taskName);
+            if (found) {
+                res.push(found)
+            }
+            return res;
+        }, []);
     }
 
     public getMonorepoPjson(): PjsonFile {

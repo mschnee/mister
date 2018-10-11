@@ -23,7 +23,8 @@ test.after(() => {
 test('command: do - runs two commands on two packages' , async (t) => {
     const argv = {
         packages: ['package1', '@test/package3'],
-        tasks: ['test1', 'test2']
+        tasks: ['!test1', '!test2'],
+        quiet: true
     };
     const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');
@@ -38,7 +39,7 @@ test('command: do - runs two commands on two packages' , async (t) => {
 test('command: do - runs two commands given four packages but only two matching tasks' , async (t) => {
     const argv = {
         packages: ['package1', 'package2', '@test/package3', '@test/package4'],
-        tasks: ['test1', 'test2']
+        tasks: ['!test1', '!test2']
     };
     const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');

@@ -78,63 +78,34 @@ export default class PackageCache {
      * If you run a build, but delete your build output, this is another way to test
      * that in code.
      */
-    public getFilesArrayHash(packageName) {
-        const pjson = this.packageManager.getPackagePjson(packageName);
-        const packagePath = this.packageManager.getPackageDir(packageName);
+    // public getFilesArrayHash(packageName) {
+    //     const pjson = this.packageManager.getPackagePjson(packageName);
+    //     const packagePath = this.packageManager.getPackageDir(packageName);
 
-        if (pjson.files && Array.isArray(pjson.files)) {
-            const ignore = pjson.files.reduce((p, file) => {
-                p.push(`!${file}`);
-                p.push(`!${file.replace(/\/+$/, '')}/**`)
-            }, ['*']);
-            const filesToCheck: string[] = filteredGlob.sync("**", {
-                cwd: packagePath,
-                ignore
-            });
-            const hmac = createHmac('md5', '');
-            filesToCheck.forEach(f => {
-                hmac.update(fs.readFileSync(path.join(packagePath, f)))
-            });
-            return hmac.digest('base64');
-        } else {
-            return null;
-        }
-    }
+    //     if (pjson.files && Array.isArray(pjson.files)) {
+    //         const ignore = pjson.files.reduce((p, file) => {
+    //             p.push(`!${file}`);
+    //             p.push(`!${file.replace(/\/+$/, '')}/**`)
+    //         }, ['*']);
+    //         const filesToCheck: string[] = filteredGlob.sync("**", {
+    //             cwd: packagePath,
+    //             ignore
+    //         });
+    //         const hmac = createHmac('md5', '');
+    //         filesToCheck.forEach(f => {
+    //             hmac.update(fs.readFileSync(path.join(packagePath, f)))
+    //         });
+    //         return hmac.digest('base64');
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     public arePackageCommandDependenciesUpToDate(
         packageName: string,
         commandName: string
     ) {
-        const dependencies = this.packageManager.getPackageLocalDependencies(
-            packageName
-        );
-        const cache = this.getCache();
-
-        // we aren't checking if the dependency is up to date- the build process tree does that.
-        // we ARE checking if THIS package has a dependency that WAS updated.
-        // the key cache.packages[packageName].dependencies[depName][commandName] refers to the timestamp
-        // the dependency command succeeded as of the time the command was successful as well.
-        return !dependencies.some(d => {
-            const currentTimestamp =
-                cache.packages[packageName].commandTimestamps[commandName];
-            const  depTimestamp =
-                cache.packages[d].commandTimestamps[commandName];
-            const refTime =
-                cache.packages[packageName].dependencies[d][commandName];
-
-            if (depTimestamp > currentTimestamp) {
-                if (this.verbosity >= 2) {
-                    // tslint:disable-next-line:no-console
-                    console.log(
-                        wrap("[]", `${packageName}:${commandName}`, chalk.gray) ,
-                        `dependency ${d} is newer than at last command.`
-                    );
-                }
-                return true;
-            } else {
-                return false;
-            }
-        });
+        return this.arePackageThingDependenciesUpToDate(packageName, 'command', commandName)
     }
 
     public arePackageThingDependenciesUpToDate(
@@ -207,12 +178,17 @@ export default class PackageCache {
             }
         }
 
+        if (!this.buildCache.version) {
+            // nevermind, start fresh
+            return {
+                packages: {},
+                version: "1.0.1"
+            }
+        }
 
         if (this.buildCache.version === '1.0.0') {
             this.migrate_1_0_0__to__1_0_1();
-        }
-
-        if (this.buildCache.version !== '1.0.1') {
+        } else if (this.buildCache.version !== '1.0.1') {
             throw new Error(`No upgrade path from given cache version '${this.buildCache.version}' to '1.0.1'`)
         }
         return this.buildCache;
