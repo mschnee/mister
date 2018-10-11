@@ -122,7 +122,7 @@ export default class PackageCache {
             const refTime =
                 cache.packages[packageName].dependencies[d][commandName];
 
-            if (depTimestamp > refTime) {
+            if (depTimestamp > currentTimestamp) {
                 if (this.verbosity >= 2) {
                     // tslint:disable-next-line:no-console
                     console.log(
