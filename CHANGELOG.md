@@ -62,3 +62,11 @@ Under the hood, there's a significant refactor of the package functions into a P
 
 ### 1.4.1
 Fixes a bug in writing the cache file dependencies.
+
+## 1.5.0
+- Implements caching on all tasks passed to `do` and `do-all`
+- Implements caching on `pack` and `zip` commands.
+
+Task caching can be skipped with a bang: `mister do-all clean build !test !coverage`
+
+- Cleaned up logging a bit.
