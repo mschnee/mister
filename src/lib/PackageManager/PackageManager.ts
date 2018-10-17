@@ -2,11 +2,13 @@ import { SpawnOptions } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import chalk from 'chalk';
 import { DepGraph } from 'dependency-graph';
 import * as nodeGlob from 'glob';
 import { sync as rimraf } from 'rimraf';
 
 import moveFile from '../move-file';
+import wrap from '../output/wrap';
 import runProcess from '../run-process';
 
 export interface PackageManagerOptions {
@@ -54,9 +56,9 @@ export default class PackageManager {
         this.packagePrefix =
             options && options.packagePrefix
                 ? path.resolve(process.cwd(), options.packagePrefix)
-                : path.join(process.cwd(), "packages");
+                : path.join(process.cwd(), 'packages');
 
-        this.distPrefix = path.join(process.cwd(), "dist");
+        this.distPrefix = path.join(process.cwd(), 'dist');
         this.verbosity = options && options.verbosity || 0;
     }
 
@@ -99,19 +101,26 @@ export default class PackageManager {
     public getLocalPackages() {
         // CWD needs to be scoped because mister frequently changes directories.
         const PWD = process.cwd();
-        const pdir = path.join(this.packagePrefix, "node_modules");
+        const pdir = path.join(this.packagePrefix, 'node_modules');
 
         if (!this.localPackages) {
             const tlPackages = nodeGlob
-                .sync("*", { cwd: pdir })
-                .filter((m: string) => m.substring(0, 1) !== "@");
+                .sync('*', { cwd: pdir })
+                .filter((m: string) => m.substring(0, 1) !== '@');
 
-            const scopedPackages = nodeGlob.sync("@*/*", { cwd: pdir });
+            const scopedPackages = nodeGlob.sync('@*/*', { cwd: pdir });
 
             this.localPackages = []
                 .concat(tlPackages, scopedPackages)
                 .filter(pn => {
-                    //console.log(pdir, pn, 'package.json')
+
+                    if (this.verbosity >= 2) {
+                        // tslint:disable-next-line:no-console
+                        console.log(
+                            wrap('[]', `${packageName}`, chalk.grey),
+                            'has no package.json file'
+                        );
+                    }
                     return fs.existsSync(path.join(pdir, pn, 'package.json'))
                 });
         }
@@ -142,7 +151,7 @@ export default class PackageManager {
 
     public getMonorepoPjson(): PjsonFile {
         if (!this.monorepopjsonCache) {
-            const p = path.join(process.cwd(), "package.json");
+            const p = path.join(process.cwd(), 'package.json');
             if (!fs.existsSync(p)) {
                 throw new Error(
                     `Could not find a package.json file.  Are you in the right directory?`,
@@ -155,19 +164,19 @@ export default class PackageManager {
             return JSON.parse(this.monorepopjsonCache.toString());
         } catch (e) {
             // tslint:disable-next-line:no-console
-            console.error("Error parsing monorepo package.json");
+            console.error('Error parsing monorepo package.json');
             throw e;
         }
     }
 
     public getPackageDir(packageName: string) {
         if (!packageName) {
-            throw new Error("missing arguments");
+            throw new Error('missing arguments');
         }
         if (!this.pdirCache.hasOwnProperty(packageName)) {
             this.pdirCache[packageName] = path.join(
                 this.packagePrefix,
-                "node_modules",
+                'node_modules',
                 packageName,
             );
         }
@@ -206,8 +215,8 @@ export default class PackageManager {
 
         // see https://github.com/npm/cli/blob/latest/lib/pack.js
         const name =
-            packageName[0] === "@"
-                ? packageName.substr(1).replace(/\//g, "-")
+            packageName[0] === '@'
+                ? packageName.substr(1).replace(/\//g, '-')
                 : packageName;
 
         return `${name}-${mrjson.version}.tgz`;
@@ -223,7 +232,7 @@ export default class PackageManager {
 
     public getPackagePjson(packageName: string) {
         if (!this.pjsonCache.hasOwnProperty(packageName)) {
-            const p = path.join(this.getPackageDir(packageName), "package.json");
+            const p = path.join(this.getPackageDir(packageName), 'package.json');
             if (!fs.existsSync(p)) {
                 throw new Error(
                     `Package ${packageName} does not have a package.json file`,
@@ -242,14 +251,14 @@ export default class PackageManager {
             return JSON.parse(this.pjsonCache[packageName].buffer.toString());
         } catch (e) {
             // tslint:disable-next-line:no-console
-            console.error("Error parsing package.json for", packageName);
+            console.error('Error parsing package.json for', packageName);
             throw e;
         }
     }
 
     public getPackageTasks(packageName: string): string[] {
         const pjson = this.getPackagePjson(packageName);
-        if (pjson.hasOwnProperty("scripts")) {
+        if (pjson.hasOwnProperty('scripts')) {
             return Object.keys(pjson.scripts);
         } else {
             return [];
@@ -262,7 +271,7 @@ export default class PackageManager {
         } else if (argv.packages) {
             return this.getMatchingLocalPackages(argv.packages);
         } else {
-            throw new Error("No Packages supplied.  Did you mean to use --all?");
+            throw new Error('No Packages supplied.  Did you mean to use --all?');
         }
     }
 
@@ -281,8 +290,8 @@ export default class PackageManager {
 
     public preparePackage(packageName) {
         const dir = this.getPackageDir(packageName);
-        rimraf(path.join(dir, "node_modules"));
-        rimraf(path.join(dir, "package-lock.json"));
+        rimraf(path.join(dir, 'node_modules'));
+        rimraf(path.join(dir, 'package-lock.json'));
     }
 
     public resolveDistfileLocation(packageName) {
@@ -324,13 +333,13 @@ export default class PackageManager {
     public restorePackagePjson(argv, packageName: string) {
         /* istanbul ignore else */
         if (this.pjsonCache.hasOwnProperty(packageName)) {
-            const p = path.join(this.getPackageDir(packageName), "package.json");
+            const p = path.join(this.getPackageDir(packageName), 'package.json');
             /* istanbul ignore if */
-            if (argv["debug-persist-package-json"]) {
+            if (argv['debug-persist-package-json']) {
                 return moveFile(
                     argv,
                     p,
-                    path.join(this.getPackageDir(packageName), "package-debug.json"),
+                    path.join(this.getPackageDir(packageName), 'package-debug.json'),
                 ).then(() => {
                     fs.writeFileSync(p, this.pjsonCache[packageName].buffer);
                 });
