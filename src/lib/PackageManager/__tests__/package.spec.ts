@@ -19,11 +19,12 @@ test('getLocalPackages() -- Should correctly list all the packages', async (t) =
     const m = new PackageManager();
     const packageList = m.getLocalPackages();
     Promise.all([
-        t.is(packageList.length, 5),
+        t.is(packageList.length, 4),
         t.truthy(packageList.indexOf('package1') >= 0),
         t.truthy(packageList.indexOf('package2') >= 0),
         t.truthy(packageList.indexOf('@test/package3') >= 0),
         t.truthy(packageList.indexOf('@test/package4') >= 0),
+        t.truthy(packageList.indexOf('no-package') === -1),
     ]);
 });
 
@@ -50,11 +51,12 @@ test('getPackagesForArgs() - with no params should throw', (t) => {
 test('getPackagesForArgs() - with argv.all should return all packages', (t) => {
     const m = new PackageManager();
     const packageList = m.getPackagesForArgs({all: true});
-    t.is(packageList.length, 5);
+    t.is(packageList.length, 4);
     t.truthy(packageList.indexOf('package1') >= 0);
     t.truthy(packageList.indexOf('package2') >= 0);
     t.truthy(packageList.indexOf('@test/package3') >= 0);
     t.truthy(packageList.indexOf('@test/package4') >= 0);
+    t.truthy(packageList.indexOf('no-package') === -1);
 });
 
 test('getPackagesForArgs() - with argv.packages should return matching packages', (t) => {

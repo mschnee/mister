@@ -99,15 +99,21 @@ export default class PackageManager {
     public getLocalPackages() {
         // CWD needs to be scoped because mister frequently changes directories.
         const PWD = process.cwd();
+        const pdir = path.join(this.packagePrefix, "node_modules");
+
         if (!this.localPackages) {
-            const pdir = path.join(this.packagePrefix, "node_modules");
             const tlPackages = nodeGlob
                 .sync("*", { cwd: pdir })
                 .filter((m: string) => m.substring(0, 1) !== "@");
 
             const scopedPackages = nodeGlob.sync("@*/*", { cwd: pdir });
 
-            this.localPackages = [].concat(tlPackages, scopedPackages);
+            this.localPackages = []
+                .concat(tlPackages, scopedPackages)
+                .filter(pn => {
+                    //console.log(pdir, pn, 'package.json')
+                    return fs.existsSync(path.join(pdir, pn, 'package.json'))
+                });
         }
 
         return this.localPackages;
@@ -159,7 +165,6 @@ export default class PackageManager {
             throw new Error("missing arguments");
         }
         if (!this.pdirCache.hasOwnProperty(packageName)) {
-            const PWD = process.cwd();
             this.pdirCache[packageName] = path.join(
                 this.packagePrefix,
                 "node_modules",
