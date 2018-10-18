@@ -70,3 +70,6 @@ Fixes a bug in writing the cache file dependencies.
 Task caching can be skipped with a bang: `mister do-all clean build !test !coverage`
 
 - Cleaned up logging a bit.
+
+### 1.5.1
+- mister no longer throws an exception if a package in the list is missing a `package.json` file.

@@ -6,7 +6,7 @@
     ],
     "jsRules": {},
     "rules": {
-        "quotemark": false,
+        "quotemark": [true, "single"],
         "interface-name": false,
         "max-line-length": false,
         "indent": [true, "spaces", 4]
