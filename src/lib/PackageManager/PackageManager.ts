@@ -112,7 +112,7 @@ export default class PackageManager {
 
             this.localPackages = []
                 .concat(tlPackages, scopedPackages)
-                .filter(pn => {
+                .filter(packageName => {
 
                     if (this.verbosity >= 2) {
                         // tslint:disable-next-line:no-console
@@ -121,7 +121,7 @@ export default class PackageManager {
                             'has no package.json file'
                         );
                     }
-                    return fs.existsSync(path.join(pdir, pn, 'package.json'))
+                    return fs.existsSync(path.join(pdir, packageName, 'package.json'))
                 });
         }
 
