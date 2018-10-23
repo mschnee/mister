@@ -15,7 +15,7 @@
     "test:xunit": "ava --tap | tap-xunit > coverage/xunit.xml",
     "lint": "tslint -p . --fix ",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "prepare": "npm run snyk-protect && npm run build"
   },
   "keywords": [],
   "author": "",

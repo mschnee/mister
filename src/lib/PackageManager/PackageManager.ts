@@ -113,15 +113,15 @@ export default class PackageManager {
             this.localPackages = []
                 .concat(tlPackages, scopedPackages)
                 .filter(packageName => {
-
-                    if (this.verbosity >= 2) {
+                    const res = fs.existsSync(path.join(pdir, packageName, 'package.json'))
+                    if (!res && this.verbosity >= 2) {
                         // tslint:disable-next-line:no-console
                         console.log(
                             wrap('[]', `${packageName}`, chalk.grey),
                             'has no package.json file'
                         );
                     }
-                    return fs.existsSync(path.join(pdir, packageName, 'package.json'))
+                    return res;
                 });
         }
 
@@ -224,9 +224,14 @@ export default class PackageManager {
 
     public getPackageLocalDependencies(packageName) {
         const pjson = this.getPackagePjson(packageName);
+        const resultSet = new Set();
 
-        return Object.keys(pjson.dependencies || {})
-            .concat(Object.keys(pjson.devDependencies || {}))
+        Object.keys(pjson.dependencies|| {}).forEach(resultSet.add);
+        Object.keys(pjson.devDependencies || {}).forEach(resultSet.add);
+        Object.keys(pjson.bundledDependencies || {}).forEach(resultSet.add);
+        Object.keys(pjson.bundleDependencies || {}).forEach(resultSet.add);
+
+        return Array.from(resultSet)
             .filter((d) => !!this.getLocalPackages().find((l) => d === l));
     }
 
