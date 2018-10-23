@@ -47,7 +47,7 @@ export default class App {
     }
 
     public doCommand() {
-        if (this.args['with-dependencies']) {
+        if (this.args.dependencies) {
             return this.doCommandWithDependencies();
         } else {
             return this.doCommandWithoutDependencies();

@@ -23,8 +23,8 @@ test.after(() => {
 test('command: do - runs two commands on two packages' , async (t) => {
     const argv = {
         packages: ['package1', '@test/package3'],
+        quiet: true,
         tasks: ['!test1', '!test2'],
-        quiet: true
     };
     const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');
