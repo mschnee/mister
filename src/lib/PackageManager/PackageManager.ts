@@ -226,10 +226,10 @@ export default class PackageManager {
         const pjson = this.getPackagePjson(packageName);
         const resultSet = new Set();
 
-        Object.keys(pjson.dependencies|| {}).forEach(resultSet.add);
-        Object.keys(pjson.devDependencies || {}).forEach(resultSet.add);
-        Object.keys(pjson.bundledDependencies || {}).forEach(resultSet.add);
-        Object.keys(pjson.bundleDependencies || {}).forEach(resultSet.add);
+        Object.keys(pjson.dependencies|| {}).forEach(d => resultSet.add(d));
+        Object.keys(pjson.devDependencies || {}).forEach(d => resultSet.add(d));
+        Object.keys(pjson.bundledDependencies || {}).forEach(d => resultSet.add(d));
+        Object.keys(pjson.bundleDependencies || {}).forEach(d => resultSet.add(d));
 
         return Array.from(resultSet)
             .filter((d) => !!this.getLocalPackages().find((l) => d === l));

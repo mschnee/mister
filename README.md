@@ -157,8 +157,8 @@ Both functions have `redis`, `pg-promise`, `@shared/some-useful-function`, and `
     </tr>
     <tr>
         <td/>
-        <td><code>--dependencies</code></td>
-        <td>Includes all dependencies of the provided packages</td>
+        <td><code>--no-dependencies</code></td>
+        <td>Run the given tasks on named packages only, with no dependencies.</td>
     </tr>
     <tr>
         <td/>

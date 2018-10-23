@@ -20,12 +20,12 @@ test.after(() => {
     process.chdir(OCWD);
 });
 
-test('command: do --with-dependencies', (t) => {
+test('command: do --dependencies', (t) => {
     const argv = {
+        'dependencies': true,
         'packages': ['@test/package4'],
+        'quiet': true,
         'tasks': ['!test3'],
-        'with-dependencies': true,
-        quiet: true
     };
     const app = new App(argv, {writeCache: false});
     const spy = sinon.spy(app, 'doTask');

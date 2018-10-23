@@ -15,10 +15,10 @@ export const builder = (yargs: Argv) => yargs.option('all', {
     alias: ['task', 't'],
     default: ['build'],
     type: 'array',
-}).option('with-dependencies', {
+}).option('dependencies', {
     alias: ['d'],
-    default: false,
-    type: 'boolean',
+    default: true,
+    type: 'true',
 }).help();
 
 export function handler(argv) {
