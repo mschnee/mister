@@ -32,7 +32,7 @@ test('getPackageDistDependencies() - should get the correct bundleDependencies f
     const deps = m.getPackageDistDependencies('package2');
     t.true(deps.hasOwnProperty('package1'));
     t.true(deps.hasOwnProperty('express'));
-    t.is(deps.express, '1.0.0');
+    t.is(deps.express, '4.16.6');
 });
 
 test('getPackageDistDependencies() - should get the correct bundleDependencies for @test/package5', (t) => {
