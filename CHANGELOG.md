@@ -74,6 +74,9 @@ Task caching can be skipped with a bang: `mister do-all clean build !test !cover
 ### 1.5.1
 - mister no longer throws an exception if a package in the list is missing a `package.json` file.
 
-### 1.5.1
+### 1.5.2
 - Bugfix: change behavior of `do`.
 - Bugfix: change `--with-dependencies` to `--no-dependencies`;
+
+### 1.5.3
+- Adds `--why`, which will explain why your cache is considered invalid.
