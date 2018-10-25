@@ -39,7 +39,7 @@ export default class App {
             packagePrefix: args.packagePrefix || 'packages',
             verbosity: this.args.v || 0,
         });
-        this.packageCache = new PackageCache(this.packageManager, {verbosity: this.verbosity});
+        this.packageCache = new PackageCache(this.packageManager, {verbosity: this.verbosity, why: args.why});
     }
 
     public cleanCommand() {

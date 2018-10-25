@@ -31,6 +31,11 @@ require('yargs') // tslint:disable-line
         description: 'An alternative prefix to ${packagePrefix}/node_modules.  You can\'t change the node_modules part',
         type: 'string',
     })
+    .option('why', {
+        default: 'false',
+        description: 'Explains what files are out of date when determining cache invalidation',
+        type: 'boolean',
+    })
     .fail((msg, err, yargs) => {
         // process.exit(1);
     })

@@ -10,6 +10,7 @@ import PackageManager from '../PackageManager/PackageManager';
 
 export interface PackageCacheOptions {
     verbosity?: number;
+    why?: boolean;
 }
 export interface BuildCache {
     version: string;
@@ -39,6 +40,7 @@ export default class PackageCache {
     private packageManager: PackageManager;
     private verbosity: number;
     private cacheFilePath: string;
+    private why: boolean = false;
 
     // caches
     private buildCache: BuildCache = null;
@@ -46,7 +48,7 @@ export default class PackageCache {
     constructor(manager: PackageManager, options?: PackageCacheOptions) {
         this.packageManager = manager;
         this.verbosity = (options && options.verbosity) || 0;
-
+        this.why = options.why;
         this.cacheFilePath = path.resolve(
             process.cwd(),
             '.mister',
@@ -142,7 +144,7 @@ export default class PackageCache {
                 cache.packages[packageName].dependencies[d][key][thingName];
 
             if (depTimestamp > refTime) {
-                if (this.verbosity >= 2) {
+                if (this.why) {
                     // tslint:disable-next-line:no-console
                     console.log(
                         wrap(
@@ -337,6 +339,17 @@ export default class PackageCache {
                 return false;
             }
             if (stat.mtime >= lastSuccessTime) {
+                if (this.why) {
+                    // tslint:disable-next-line:no-console
+                    console.log(
+                        wrap(
+                            '[]',
+                            `${packageName}:${thing}:${thingName}`,
+                            chalk.gray
+                        ),
+                        `${f} is newer than at last command.`
+                    );
+                }
                 return true;
             } else {
                 return false;
