@@ -48,7 +48,7 @@ export default class PackageCache {
     constructor(manager: PackageManager, options?: PackageCacheOptions) {
         this.packageManager = manager;
         this.verbosity = (options && options.verbosity) || 0;
-        this.why = options.why;
+        this.why = (options && options.why);
         this.cacheFilePath = path.resolve(
             process.cwd(),
             '.mister',
