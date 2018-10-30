@@ -62,7 +62,7 @@ test('command: zip', (t) => {
 
 test('command: zip --no-package-version', (t) => {
     const args = {
-        'package-version': false,
+        'package-version': true,
         'packages': ['@test-server/api'],
         'quiet': true
     };

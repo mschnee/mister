@@ -70,7 +70,7 @@ export default class App {
         return this.doTasksOnAll(this.packageManager.getFullDependencyGraph().overallOrder());
     }
 
-    public packComand() {
+    public packCommand() {
         return this._packCommandInternal(!this.args['package-version']);
     }
 
