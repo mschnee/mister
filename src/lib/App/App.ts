@@ -70,65 +70,9 @@ export default class App {
         return this.doTasksOnAll(this.packageManager.getFullDependencyGraph().overallOrder());
     }
 
-    public packCommand() {
-        const mrjson = this.packageManager.getMonorepoPjson();
-        const manifestFile = {
-            packages: {},
-            version:  mrjson.version,
-        };
-        const packageOrder = this.packageManager.getDependencyGraph(this.packageManager.getPackagesForArgs(this.args)).overallOrder();
-
-
-        return packageOrder.reduce((accum, packageName) => {
-            return accum.then(async () => {
-                const packageDir = this.packageManager.getPackageDir(packageName);
-                const distFileName = this.packageManager.getPackageDistFileName(packageName);
-                const distFileLocation = this.packageManager.resolveDistfileLocation(packageName);
-
-                // do I need to build ?
-                if (!this.force && this.checkCommandCache) {
-                    if (fs.existsSync(distFileLocation) && this.packageCache.isPackageCommandUpToDate(packageName, 'pack')) {
-                        return;
-                    }
-                }
-
-                // othersie, time to package
-                await this.packageManager.verifyPackageName(packageName);
-                const newPjson = this.packageManager.getUpdatedPjsonForDist(packageName);
-                this.packageManager.writePackagePjson(this.args, packageName, newPjson);
-                rimraf(path.join(packageDir, 'node_modules'));
-
-
-                await this.packageManager.preparePackage(packageName);
-                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock']);
-                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['pack']);
-                manifestFile.packages[packageName] = {
-                    tgzFileName: distFileName,
-                    tgzFilePath: distFileLocation,
-                };
-                await moveFile(
-                    this.args,
-                    path.join(packageDir, distFileName),
-                    distFileLocation,
-                );
-
-                if (this.verbosity >= 1) {
-                    /* tslint:disable-next-line */
-                    console.log(wrap('[]', packageName), 'created', chalk.bold.green(distFileLocation));
-                }
-                this.packageCache.writeTimestampForCommand(packageName, 'pack')
-
-                this.packageManager.restorePackagePjson(this.args, packageName);
-                rimraf(path.join(packageDir, 'node_modules'));
-            }).catch((e: Error) => {
-                /* tslint:disable-next-line */
-                console.error(wrap('[]', packageName, chalk.bold.red), e)
-                this.packageManager.restorePackagePjson(this.args, packageName);
-                throw e;
-            });
-        }, Promise.resolve()).then(() => manifestFile);
+    public packComand() {
+        return this._packCommandInternal(!this.args['package-version']);
     }
-
 
     public doTask(packageName: string, taskName: string) {
         const packageDir = this.packageManager.getPackageDir(packageName);
@@ -198,7 +142,7 @@ export default class App {
     }
 
     public zipCommand() {
-        return this.packCommand().then(() => {
+        return this._packCommandInternal(false).then(() => {
             return Promise.all(this.packageManager.getPackagesForArgs(this.args)
                 .map((packageName) => this.zipLocalPackage(packageName)
             ));
@@ -206,7 +150,7 @@ export default class App {
     }
 
     public async zipLocalPackage(packageName) {
-        const tgzFile = this.packageManager.resolveDistfileLocation(packageName);
+        const tgzFile = this.packageManager.resolveDistfileLocation(packageName, !this.args['package-version']);
         const shortName = path.basename(tgzFile, '.tgz') + '.zip';
         const zipFile = path.join(path.dirname(tgzFile), shortName);
 
@@ -222,5 +166,64 @@ export default class App {
             console.log(wrap('[]', packageName), 'created', chalk.bold.green(shortName));
         }
         this.packageCache.writeTimestampForCommand(packageName, 'zip');
+    }
+
+    private _packCommandInternal(skipPackageVersion?: boolean) {
+        const mrjson = this.packageManager.getMonorepoPjson();
+        const manifestFile = {
+            packages: {},
+            version:  mrjson.version,
+        };
+        const packageOrder = this.packageManager.getDependencyGraph(this.packageManager.getPackagesForArgs(this.args)).overallOrder();
+
+
+        return packageOrder.reduce((accum, packageName) => {
+            return accum.then(async () => {
+                const packageDir = this.packageManager.getPackageDir(packageName);
+                const distFileName = this.packageManager.getPackageDistFileName(packageName, false);
+                const distFileLocation = this.packageManager.resolveDistfileLocation(packageName, skipPackageVersion);
+
+                // do I need to build ?
+                if (!this.force && this.checkCommandCache) {
+                    if (fs.existsSync(distFileLocation) && this.packageCache.isPackageCommandUpToDate(packageName, 'pack')) {
+                        return;
+                    }
+                }
+
+                // othersie, time to package
+                await this.packageManager.verifyPackageName(packageName);
+                const newPjson = this.packageManager.getUpdatedPjsonForDist(packageName);
+                this.packageManager.writePackagePjson(this.args, packageName, newPjson);
+                rimraf(path.join(packageDir, 'node_modules'));
+
+
+                await this.packageManager.preparePackage(packageName);
+                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock']);
+                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['pack']);
+                manifestFile.packages[packageName] = {
+                    tgzFileName: distFileName,
+                    tgzFilePath: distFileLocation,
+                };
+                await moveFile(
+                    this.args,
+                    path.join(packageDir, distFileName),
+                    distFileLocation,
+                );
+
+                if (this.verbosity >= 1) {
+                    /* tslint:disable-next-line */
+                    console.log(wrap('[]', packageName), 'created', chalk.bold.green(distFileLocation));
+                }
+                this.packageCache.writeTimestampForCommand(packageName, 'pack')
+
+                this.packageManager.restorePackagePjson(this.args, packageName);
+                rimraf(path.join(packageDir, 'node_modules'));
+            }).catch((e: Error) => {
+                /* tslint:disable-next-line */
+                console.error(wrap('[]', packageName, chalk.bold.red), e)
+                this.packageManager.restorePackagePjson(this.args, packageName);
+                throw e;
+            });
+        }, Promise.resolve()).then(() => manifestFile);
     }
 }

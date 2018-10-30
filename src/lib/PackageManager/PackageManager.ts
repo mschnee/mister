@@ -210,7 +210,7 @@ export default class PackageManager {
         }, {});
     }
 
-    public getPackageDistFileName(packageName) {
+    public getPackageDistFileName(packageName, skipVersion = false) {
         const mrjson = this.getMonorepoPjson();
 
         // see https://github.com/npm/cli/blob/latest/lib/pack.js
@@ -219,7 +219,11 @@ export default class PackageManager {
                 ? packageName.substr(1).replace(/\//g, '-')
                 : packageName;
 
-        return `${name}-${mrjson.version}.tgz`;
+        if (skipVersion) {
+            return `${name}.tgz`;
+        } else {
+            return `${name}-${mrjson.version}.tgz`;
+        }
     }
 
     public getPackageLocalDependencies(packageName) {
@@ -299,8 +303,8 @@ export default class PackageManager {
         rimraf(path.join(dir, 'package-lock.json'));
     }
 
-    public resolveDistfileLocation(packageName) {
-        return path.join(this.distPrefix, this.getPackageDistFileName(packageName));
+    public resolveDistfileLocation(packageName, skipVersion = false) {
+        return path.join(this.distPrefix, this.getPackageDistFileName(packageName, skipVersion));
     }
 
     public async runPackageProcess(argv: any, packageName: string, command: string, args: string[]) {

@@ -80,3 +80,6 @@ Task caching can be skipped with a bang: `mister do-all clean build !test !cover
 
 ### 1.5.3
 - Adds `--why`, which will explain why your cache is considered invalid.
+
+### 1.5.4
+- Adds `--no-version` to `npm pack` and `npm zip`.

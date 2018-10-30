@@ -46,3 +46,8 @@ test('resolveDistFileLocation() - should get the path for @test/package5', (t) =
     const m = new PackageManager();
     t.is(m.resolveDistfileLocation('@test/package5'), path.join(CWD, 'dist/test-package5-10.2.3.tgz'));
 });
+
+test('resolveDistFileLocation() - --no-package-version should get the path for @test/package5', (t) => {
+    const m = new PackageManager();
+    t.is(m.resolveDistfileLocation('@test/package5', true), path.join(CWD, 'dist/test-package5tgz'));
+});

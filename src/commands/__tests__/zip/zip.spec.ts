@@ -38,8 +38,9 @@ test.beforeEach(() => {
 
 test('command: zip', (t) => {
     const args = {
-        packages: ['@test-server/api'],
-        quiet: true
+        'package-version': true,
+        'packages': ['@test-server/api'],
+        'quiet': true,
     };
     return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),
@@ -54,7 +55,31 @@ test('command: zip', (t) => {
             t.true(fs.existsSync(path.join(tempDir, 'node_modules/express/index.js')))
             t.true(fs.existsSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json')))
             const fl = JSON.parse(fs.readFileSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json'), 'utf8'))
-            t.is(fl, {"name": "unscoped-lib1"})
+            t.is(fl, {'name': 'unscoped-lib1'})
+        });
+    });
+});
+
+test('command: zip --no-package-version', (t) => {
+    const args = {
+        'package-version': false,
+        'packages': ['@test-server/api'],
+        'quiet': true
+    };
+    return runProcess('npm', ['install', '--skip-package-lock'], {
+        cwd: path.join(CWD),
+    }, {}).then(() => handler(args)).then(() => {
+        // check that the tarballs exist.
+        t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api.zip')));
+
+        const zipStream = fs.createReadStream(path.join(CWD, 'dist', 'test-server-api.zip'))
+            .pipe(unzip.Extract({path: tempDir}));
+
+        zipStream.on('close', () => {
+            t.true(fs.existsSync(path.join(tempDir, 'node_modules/express/index.js')))
+            t.true(fs.existsSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json')))
+            const fl = JSON.parse(fs.readFileSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json'), 'utf8'))
+            t.is(fl, {'name': 'unscoped-lib1'})
         });
     });
 });

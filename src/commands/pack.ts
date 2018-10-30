@@ -7,9 +7,9 @@ export const command = 'pack [packages...]';
 export const describe = 'Creates npm packages with bundledDependencies.  Does not check if they are built first.';
 export const usage = 'mister pack package1 package2';
 
-export const builder = (yargs: Argv) => yargs.option('debug-persist-package-json', {
+export const builder = (yargs: Argv) => yargs.option('package-version', {
     default: false,
-    description: 'Persists changes made to package.json as package-debug.json for debug purposes.',
+    description: 'Includes the version with the package file',
     type: 'boolean',
 });
 

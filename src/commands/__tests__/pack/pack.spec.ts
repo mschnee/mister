@@ -35,6 +35,7 @@ test.beforeEach(() => {
 test('command: pack', (t) => {
     const args = {
         'debug-persist-package-json': false,
+        'package-version': false,
         'packages': ['@test-server/api'],
         quiet: true
     };

@@ -27,8 +27,9 @@ test.after(() => {
 
 test('Verify that cache creation works', (t) => {
     const args = {
-        packages: ['@test-server/api'],
-        quiet: true
+        'package-version': false,
+        'packages': ['@test-server/api'],
+        'quiet': true
     };
     return runProcess('npm', ['install', '--skip-package-lock'], {
         cwd: path.join(CWD),
