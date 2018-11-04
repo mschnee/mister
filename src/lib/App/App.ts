@@ -100,7 +100,7 @@ export default class App {
 
 
                 await this.packageManager.preparePackage(packageName);
-                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock']);
+                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock', '--no-package-lock']);
                 await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['pack']);
                 manifestFile.packages[packageName] = {
                     tgzFileName: distFileName,
