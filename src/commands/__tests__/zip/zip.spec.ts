@@ -20,6 +20,7 @@ test.before(() => {
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
     rimraf(path.join(CWD, 'packages/node_modules/**/*.zip'));
     rimraf(path.join(CWD, '.mister'));
+    rimraf(path.join(CWD, 'package-lock.json'));
     process.chdir(TDIR);
     tempDir = mktemp.createDirSync('zip-test-XXXX');
 });
@@ -28,11 +29,16 @@ test.after(() => {
     rimraf(tempDir);
     rimraf(path.join(CWD, 'packages/node_modules/**/*.tgz'));
     rimraf(path.join(CWD, 'packages/node_modules/**/*.zip'));
+    rimraf(path.join(CWD, 'package-lock.json'));
     rimraf(path.join(CWD, '.mister'));
     process.chdir(OCWD);
 });
 
 test.beforeEach(() => {
+    rimraf(path.join(CWD, 'dist'));
+});
+
+test.afterEach(() => {
     rimraf(path.join(CWD, 'dist'));
 });
 
@@ -42,7 +48,7 @@ test('command: zip', (t) => {
         'packages': ['@test-server/api'],
         'quiet': true,
     };
-    return runProcess('npm', ['install', '--skip-package-lock'], {
+    return runProcess('npm', ['install', '--skip-package-lock', '--no-save'], {
         cwd: path.join(CWD),
     }, {}).then(() => handler(args)).then(() => {
         // check that the tarballs exist.
@@ -66,7 +72,7 @@ test('command: zip --no-package-version', (t) => {
         'packages': ['@test-server/api'],
         'quiet': true
     };
-    return runProcess('npm', ['install', '--skip-package-lock'], {
+    return runProcess('npm', ['install', '--skip-package-lock', '--no-save'], {
         cwd: path.join(CWD),
     }, {}).then(() => handler(args)).then(() => {
         // check that the tarballs exist.

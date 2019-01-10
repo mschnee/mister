@@ -126,6 +126,7 @@ export default class PackageCache {
         thing: string,
         thingName: string
     ) {
+
         const dependencies = this.packageManager.getPackageLocalDependencies(
             packageName
         );
@@ -137,13 +138,30 @@ export default class PackageCache {
         // the key cache.packages[packageName].dependencies[depName][commandName] refers to the timestamp
         // the dependency command succeeded as of the time the command was successful as well.
         return !dependencies.some(d => {
-            const currentTimestamp =
-                cache.packages[packageName][key][thingName];
-            const depTimestamp = cache.packages[d][key][thingName];
-            const refTime =
-                cache.packages[packageName].dependencies[d][key][thingName];
+            try {
+                const currentTimestamp =
+                    cache.packages[packageName][key][thingName];
+                const depTimestamp = cache.packages[d][key][thingName];
+                const refTime =
+                    cache.packages[packageName].dependencies[d][key][thingName];
 
-            if (depTimestamp > refTime) {
+                if (depTimestamp > refTime) {
+                    if (this.why) {
+                        // tslint:disable-next-line:no-console
+                        console.log(
+                            wrap(
+                                '[]',
+                                `${packageName}:${thing}:${thingName}`,
+                                chalk.gray
+                            ),
+                            `dependency ${d} is newer than at last command.`
+                        );
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (e) {
                 if (this.why) {
                     // tslint:disable-next-line:no-console
                     console.log(
@@ -152,12 +170,10 @@ export default class PackageCache {
                             `${packageName}:${thing}:${thingName}`,
                             chalk.gray
                         ),
-                        `dependency ${d} is newer than at last command.`
+                        `error checking dependency ${d}.`
                     );
                 }
                 return true;
-            } else {
-                return false;
             }
         });
     }
