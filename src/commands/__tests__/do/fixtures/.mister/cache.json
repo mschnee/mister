@@ -3,26 +3,26 @@
     "package2": {
       "dependencies": {},
       "taskTimestamps": {
-        "test3": "2019-01-25T20:44:35.712Z"
+        "test3": "2019-01-25T23:32:08.071Z"
       }
     },
     "@test/package3": {
       "dependencies": {
         "package1": {
           "taskTimestamps": {
-            "test3": "2019-01-25T20:44:36.719Z",
+            "test3": "2019-01-25T23:32:09.017Z",
             "test2": "2018-10-23T17:59:49.638Z"
           }
         },
         "package2": {
           "taskTimestamps": {
-            "test3": "2019-01-25T20:44:36.719Z",
+            "test3": "2019-01-25T23:32:09.017Z",
             "test2": "2018-10-23T17:59:49.638Z"
           }
         }
       },
       "taskTimestamps": {
-        "test3": "2019-01-25T20:44:36.719Z",
+        "test3": "2019-01-25T23:32:09.017Z",
         "test2": "2018-10-23T17:59:49.638Z"
       }
     },
@@ -30,17 +30,17 @@
       "dependencies": {
         "package2": {
           "taskTimestamps": {
-            "test3": "2019-01-25T20:44:37.655Z"
+            "test3": "2019-01-25T23:32:09.845Z"
           }
         },
         "@test/package3": {
           "taskTimestamps": {
-            "test3": "2019-01-25T20:44:37.655Z"
+            "test3": "2019-01-25T23:32:09.845Z"
           }
         }
       },
       "taskTimestamps": {
-        "test3": "2019-01-25T20:44:37.655Z"
+        "test3": "2019-01-25T23:32:09.845Z"
       }
     },
     "package1": {

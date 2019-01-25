@@ -21,15 +21,15 @@ test.after(() => {
 test('command: do - should error', (t) => {
     const argv = {
         packages: ['package1', '@test/package3'],
+        quiet: true,
         stdio: false,
         tasks: ['!fails1', '!test2'],
-        quiet: true
     };
 
     const app = new App(argv, {writeCache: false});
 
-    return app.doCommand().then(() => {
-        t.fail('Running fails1 on package1 should fail')
+    return app.doCommand().then((r) => {
+        t.is(r, false)
     }).catch(e => {
         t.not(e, 0);
     })

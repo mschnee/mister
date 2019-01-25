@@ -7,7 +7,7 @@ export const usage = 'mister zip package1 package2';
 
 export async function handler(argv) {
     const app = new App(argv);
-    const result = app.zipCommand();
+    const result = await app.zipCommand();
     if (!result) {
         process.exit(-1)
     }

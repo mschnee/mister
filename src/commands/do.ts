@@ -23,7 +23,7 @@ export const builder = (yargs: Argv) => yargs.option('all', {
 
 export async function handler(argv) {
     const app = new App(argv);
-    const result = app.doCommand();
+    const result = await app.doCommand();
     if (!result) {
         process.exit(-1);
     }
