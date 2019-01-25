@@ -15,7 +15,8 @@
             "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
             "skipFiles": [
                 "<node_internals>/**/*.js"
-            ]
+            ],
+            "outputCapture": "std"
         }
     ]
 }

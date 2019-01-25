@@ -63,6 +63,10 @@ test('command: zip', (t) => {
             const fl = JSON.parse(fs.readFileSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json'), 'utf8'))
             t.is(fl, {'name': 'unscoped-lib1'})
         });
+
+        zipStream.on('error', (e) => {
+            console.error(e)
+        })
     });
 });
 
@@ -87,5 +91,9 @@ test('command: zip --no-package-version', (t) => {
             const fl = JSON.parse(fs.readFileSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json'), 'utf8'))
             t.is(fl, {'name': 'unscoped-lib1'})
         });
+
+        zipStream.on('error', e => {
+            console.error(e)
+        })
     });
 });
