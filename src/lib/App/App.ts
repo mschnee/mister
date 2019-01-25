@@ -44,6 +44,7 @@ export default class App {
 
     public cleanCommand() {
         this.packageCache.resetCache();
+        return true;
     }
 
     public doCommand() {
@@ -100,7 +101,7 @@ export default class App {
 
 
                 await this.packageManager.preparePackage(packageName);
-                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock']);
+                await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['install', '--production', '--skip-package-lock', '--no-save']);
                 await this.packageManager.runPackageProcess(this.args, packageName, 'npm', ['pack']);
                 manifestFile.packages[packageName] = {
                     tgzFileName: distFileName,
@@ -166,13 +167,14 @@ export default class App {
         return packages.reduce((accum, packageName) => {
             const tasks  = this.packageManager.getMatchingPackageTasks(packageName, this.args.tasks || this.args._)
             return tasks.reduce((a: any, task) => {
-                return a.then(async () => {
+                return a.then(async (previousSuccess) => {
+                    if (!previousSuccess) {
+                        return previousSuccess;
+                    }
                     const realTask = task.replace(/^\!/, '');
                     const checkCache = task.substring(0, 1) !== '!';
                     if (checkCache) {
-                        if (this.packageCache.isPackageTaskUpToDate(packageName, realTask)) {
-                            return;
-                        } else {
+                        if (!this.packageCache.isPackageTaskUpToDate(packageName, realTask)) {
                             await this.doTask(packageName, realTask);
                             this.packageCache.writeTimestampForTask(packageName, realTask);
                         }
@@ -180,6 +182,7 @@ export default class App {
                         await this.doTask(packageName, realTask);
                         this.packageCache.writeTimestampForTask(packageName, realTask);
                     }
+                    return true;
                 }).catch(e => {
                     if (this.args.verbose) {
                         /* tslint:disable-next-line:no-console */
@@ -191,10 +194,10 @@ export default class App {
                             wrap('[]', packageName, chalk.red)
                             );
                     }
-                    throw e;
+                    return false;
                 });
             }, accum);
-        }, Promise.resolve());
+        }, Promise.resolve(true));
     }
 
     public zipCommand() {

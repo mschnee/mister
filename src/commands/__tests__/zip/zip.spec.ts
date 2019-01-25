@@ -2,7 +2,7 @@
 import test from 'ava';
 
 import * as mktemp from 'mktemp';
-import * as unzip from 'unzip';
+import * as unzip from 'unzip2';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -41,9 +41,10 @@ test('command: zip', (t) => {
         packages: ['@test-server/api'],
         quiet: true
     };
-    return runProcess('npm', ['install', '--skip-package-lock'], {
+    return runProcess('npm', ['install', '--skip-package-lock', '--no-save'], {
         cwd: path.join(CWD),
-    }, {}).then(() => handler(args)).then(() => {
+    }, {}).then(() => handler(args)).then((result) => {
+
         // check that the tarballs exist.
         t.true(fs.existsSync(path.join(CWD, 'dist', 'test-server-api-2.4.6.zip')));
 
@@ -54,7 +55,7 @@ test('command: zip', (t) => {
             t.true(fs.existsSync(path.join(tempDir, 'node_modules/express/index.js')))
             t.true(fs.existsSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json')))
             const fl = JSON.parse(fs.readFileSync(path.join(tempDir, 'package/node_modules/@test-common/reducer1/package.json'), 'utf8'))
-            t.is(fl, {"name": "unscoped-lib1"})
+            t.is(fl, {'name': 'unscoped-lib1'})
         });
     });
 });

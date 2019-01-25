@@ -3,26 +3,26 @@
     "package2": {
       "dependencies": {},
       "taskTimestamps": {
-        "test3": "2018-10-25T21:01:21.465Z"
+        "test3": "2019-01-25T23:32:08.071Z"
       }
     },
     "@test/package3": {
       "dependencies": {
         "package1": {
           "taskTimestamps": {
-            "test3": "2018-10-25T21:01:22.145Z",
+            "test3": "2019-01-25T23:32:09.017Z",
             "test2": "2018-10-23T17:59:49.638Z"
           }
         },
         "package2": {
           "taskTimestamps": {
-            "test3": "2018-10-25T21:01:22.145Z",
+            "test3": "2019-01-25T23:32:09.017Z",
             "test2": "2018-10-23T17:59:49.638Z"
           }
         }
       },
       "taskTimestamps": {
-        "test3": "2018-10-25T21:01:22.145Z",
+        "test3": "2019-01-25T23:32:09.017Z",
         "test2": "2018-10-23T17:59:49.638Z"
       }
     },
@@ -30,23 +30,23 @@
       "dependencies": {
         "package2": {
           "taskTimestamps": {
-            "test3": "2018-10-25T21:01:22.814Z"
+            "test3": "2019-01-25T23:32:09.845Z"
           }
         },
         "@test/package3": {
           "taskTimestamps": {
-            "test3": "2018-10-25T21:01:22.814Z"
+            "test3": "2019-01-25T23:32:09.845Z"
           }
         }
       },
       "taskTimestamps": {
-        "test3": "2018-10-25T21:01:22.814Z"
+        "test3": "2019-01-25T23:32:09.845Z"
       }
     },
     "package1": {
       "dependencies": {},
       "taskTimestamps": {
-        "test1": "2018-10-25T21:01:21.449Z"
+        "test1": "2019-01-25T20:40:52.342Z"
       }
     }
   },
