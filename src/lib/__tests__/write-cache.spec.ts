@@ -30,7 +30,7 @@ test('Verify that cache creation works', (t) => {
         packages: ['@test-server/api'],
         quiet: true
     };
-    return runProcess('npm', ['install', '--skip-package-lock'], {
+    return runProcess('npm', ['install', '--skip-package-lock', '--no-save'], {
         cwd: path.join(CWD),
     }, {}).then(() => handler(args)).then(() => {
         // ensure all the things exist.

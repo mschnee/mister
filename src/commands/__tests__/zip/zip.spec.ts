@@ -2,7 +2,7 @@
 import test from 'ava';
 
 import * as mktemp from 'mktemp';
-import * as unzip from 'unzip';
+import * as unzip from 'unzip2';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -41,7 +41,7 @@ test('command: zip', (t) => {
         packages: ['@test-server/api'],
         quiet: true
     };
-    return runProcess('npm', ['install', '--skip-package-lock'], {
+    return runProcess('npm', ['install', '--skip-package-lock', '--no-save'], {
         cwd: path.join(CWD),
     }, {}).then(() => handler(args)).then(() => {
         // check that the tarballs exist.
