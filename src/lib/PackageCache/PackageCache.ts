@@ -126,6 +126,7 @@ export default class PackageCache {
         thing: string,
         thingName: string
     ) {
+
         const dependencies = this.packageManager.getPackageLocalDependencies(
             packageName
         );
@@ -137,27 +138,78 @@ export default class PackageCache {
         // the key cache.packages[packageName].dependencies[depName][commandName] refers to the timestamp
         // the dependency command succeeded as of the time the command was successful as well.
         return !dependencies.some(d => {
-            const currentTimestamp =
-                cache.packages[packageName][key][thingName];
-            const depTimestamp = cache.packages[d][key][thingName];
-            const refTime =
-                cache.packages[packageName].dependencies[d][key][thingName];
+            if (this.verbosity >= 3) {
+                // tslint:disable-next-line:no-console
+                console.log(
+                    wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                    'checking ' + d
+                );
+            }
 
-            if (depTimestamp > refTime) {
-                if (this.why) {
+            try {
+                const currentTimestamp =
+                    cache.packages[packageName][key][thingName];
+                if (this.verbosity >= 3) {
                     // tslint:disable-next-line:no-console
                     console.log(
-                        wrap(
-                            '[]',
-                            `${packageName}:${thing}:${thingName}`,
-                            chalk.gray
-                        ),
-                        `dependency ${d} is newer than at last command.`
+                        wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                        'Current Timestamp ' + currentTimestamp
+                    );
+                }
+                if (!cache.packages.hasOwnProperty(d)) {
+                    if (this.verbosity >= 3) {
+                        // tslint:disable-next-line:no-console
+                        console.log(
+                            wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                            'cache has no entry for  ' + d
+                        );
+                    }
+                    return true;
+                }
+                const depTimestamp = cache.packages[d][key][thingName];
+                if (this.verbosity >= 3) {
+                    // tslint:disable-next-line:no-console
+                    console.log(
+                        wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                        'Dep Timestamp ' + depTimestamp
+                    );
+                }
+
+                const refTime =
+                    cache.packages[packageName].dependencies[d][key][thingName];
+                if (this.verbosity >= 3) {
+                    // tslint:disable-next-line:no-console
+                    console.log(
+                        wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                        'Ref Timestamp ' + refTime
+                    );
+                }
+
+                if (depTimestamp > refTime) {
+                    if (this.why) {
+                        // tslint:disable-next-line:no-console
+                        console.log(
+                            wrap(
+                                '[]',
+                                `${packageName}:${thing}:${thingName}`,
+                                chalk.gray
+                            ),
+                            `dependency ${d} is newer than at last command.`
+                        );
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (e) {
+                if (this.verbosity >= 3) {
+                    // tslint:disable-next-line:no-console
+                    console.log(
+                        wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                        e
                     );
                 }
                 return true;
-            } else {
-                return false;
             }
         });
     }
@@ -273,6 +325,7 @@ export default class PackageCache {
         const cache = this.getCache();
         return (
             this.doesPackageEntryExist(packageName) &&
+            cache.packages.hasOwnProperty(packageName) &&
             cache.packages[packageName].hasOwnProperty(key) &&
             cache.packages[packageName][key].hasOwnProperty(thingName)
         );
@@ -305,6 +358,19 @@ export default class PackageCache {
             return false;
         }
 
+        if (this.verbosity >= 3) {
+            // tslint:disable-next-line:no-console
+            console.log(
+                wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                'has a timestamp'
+            );
+        }
+
+        // tslint:disable-next-line:no-console
+        console.log(
+            wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+            'Checking if dependencies are up to date'
+        );
         if (
             !this.arePackageThingDependenciesUpToDate(
                 packageName,
@@ -312,13 +378,36 @@ export default class PackageCache {
                 thingName
             )
         ) {
+            if (this.verbosity >= 3) {
+                // tslint:disable-next-line:no-console
+                console.log(
+                    wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                    'Dependencies are out of date'
+                );
+            }
             return false;
+        }
+
+        if (this.verbosity >= 3) {
+            // tslint:disable-next-line:no-console
+            console.log(
+                wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                'Checking last success time'
+            );
         }
         const key = `${thing}Timestamps`;
         const cache = this.getCache();
         const lastSuccessTime = new Date(
             cache.packages[packageName][key][thingName]
         );
+
+        if (this.verbosity >= 3) {
+            // tslint:disable-next-line:no-console
+            console.log(
+                wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
+                'last successful at ' + lastSuccessTime
+            );
+        }
 
         const packagePath = this.packageManager.getPackageDir(packageName);
         const gitIgnoreFile = path.join(packagePath, '.gitignore');

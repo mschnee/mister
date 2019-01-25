@@ -13,7 +13,10 @@ export const builder = (yargs: Argv) => yargs.option('debug-persist-package-json
     type: 'boolean',
 });
 
-export function handler(argv) {
+export async function handler(argv) {
     const app = new App(argv);
-    return app.packCommand();
+    const result = await app.packCommand();
+    if (!result) {
+        process.exit(-1);
+    }
 }

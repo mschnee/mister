@@ -5,7 +5,10 @@ export const command = 'clean';
 export const describe = 'Cleans the cache out.';
 export const usage = 'mister clean';
 
-export function handler(argv) {
+export async function handler(argv) {
     const app = new App(argv);
-    return app.cleanCommand();
+    const result = await app.cleanCommand();
+    if (!result) {
+        return process.exit(-1);
+    }
 }
