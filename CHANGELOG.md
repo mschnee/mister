@@ -83,3 +83,7 @@ Task caching can be skipped with a bang: `mister do-all clean build !test !cover
 
 ### 1.5.4
 - Fixes cache bugs that can arise when dependency tasks fail.
+
+### 1.5.5
+- Super performance increase across both time and space: `pack` commands perform `npm install --offline`.
+- Removes superfluous logging.

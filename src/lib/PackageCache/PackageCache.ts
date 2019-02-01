@@ -366,11 +366,6 @@ export default class PackageCache {
             );
         }
 
-        // tslint:disable-next-line:no-console
-        console.log(
-            wrap('[]', `${packageName}:${thing}:${thingName}`, chalk.gray),
-            'Checking if dependencies are up to date'
-        );
         if (
             !this.arePackageThingDependenciesUpToDate(
                 packageName,
