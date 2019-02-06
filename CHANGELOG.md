@@ -86,4 +86,7 @@ Task caching can be skipped with a bang: `mister do-all clean build !test !cover
 
 ### 1.5.5
 - Super performance increase across both time and space: `pack` commands perform `npm install --offline`.
-- Removes superfluous logging.
+- Removes superfluous logging.pac
+
+### 1.5.6
+- `npm install --prefer-offline` because some things like circlci have problems with offline caches.
