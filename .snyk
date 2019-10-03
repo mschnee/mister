@@ -1,10 +1,13 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.12.0
+version: v1.13.5
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:chownr:20180731':
-    - '*':
-      reason: "Known bug https://github.com/isaacs/chownr/issues/14, unknown time to patch"
-      expires: '2018-08-30T20:23:03.274Z'
+    - '*': null
+    - reason: >-
+        Known bug https://github.com/isaacs/chownr/issues/14, unknown time to
+        patch
+    - expires: '2018-08-30T20:23:03.274Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:hoek:20180212':
@@ -16,3 +19,8 @@ patch:
         patched: '2018-07-06T06:15:52.764Z'
     - codecov > request > hawk > cryptiles > boom > hoek:
         patched: '2018-07-06T06:15:52.764Z'
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-03T21:09:37.723Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-03T21:09:37.723Z'
